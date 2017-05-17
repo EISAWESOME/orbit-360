@@ -1,6 +1,7 @@
 /*global ob, window */
 'use strict';
 ob.directive('orbitview', ['Images', function (Images) {
+  //Vaste test 2
     return {
         restrict: 'E',
         transclude: true,
@@ -57,10 +58,10 @@ ob.directive('orbitview', ['Images', function (Images) {
                             //pour chaque position(images découpées de l'angle de vue)
                             for (var k = 0; k < Images.level[i].cols * Images.level[i].rows; k++) {
                                 var name = Images.url
-                                    +'images/'+ imgData[j].getAttribute('name') 
-                                    +'_'+ Images.level[i].value 
+                                    +'images/'+ imgData[j].getAttribute('name')
+                                    +'_'+ Images.level[i].value
                                     +'_'+ Math.floor(k / Images.level[i].rows)
-                                    +'_'+ k % Images.level[i].rows 
+                                    +'_'+ k % Images.level[i].rows
                                     +'.'+ Images.ext;
 
                                 Images.level[i].resources[j].push({'loaded': false, 'img': name});
