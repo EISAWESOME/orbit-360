@@ -21,6 +21,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
             $scope.draw();
             // if($scope.waitingload){
                 $scope.loadingReso = $scope.waitingload;
+                // Bug loading quand le client veut charger deux fois la même image
             // }
         }, 40);
 
