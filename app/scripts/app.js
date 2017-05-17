@@ -163,6 +163,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         }
     };
 
+    //Partie a recheck pour le bug loading
     $scope.onWheel = function (e) {
         var zoom = $scope.zoom;
         if (e.deltaY > 0) {
@@ -182,6 +183,8 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         if($scope.level < Images.level.length-1 && $scope.zoom*1000 <= Images.level[$scope.level+1].value)
             $scope.level++;
     };
+
+    //Surtout le zoomIn
     $scope.zoomIn = function () {
         $scope.zoom += 0.1;
         if ($scope.zoom >= $scope.maxZoom) {
