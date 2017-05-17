@@ -46,6 +46,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     $scope.goingFrom = null;
 
     $rootScope.$on('onFirstComplete', function () {
+        // Inutilisé
         // console.log('onFirstComplete');
         $scope.edited = true;
         $scope.setAngle($scope.angle + 1);

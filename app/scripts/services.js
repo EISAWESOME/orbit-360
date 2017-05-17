@@ -87,9 +87,9 @@ ob.factory('Images', ['$resource', '$rootScope', '$http', function ($resource, $
             if(this.loadSlot < 3 && this.loadingQueue.length > 0){
                 var current = this.loadingQueue.shift();
                 if(this.loadImage(current[0], current[1], current[2], true)){
-                    // console.log('deja chargé ' + current[0] +' '+ current[1] +' '+ current[2]);
+                     //console.log('deja chargé ' + current[0] +' '+ current[1] +' '+ current[2]);
                 }
-                // else console.log('chargement ' + current[0] +' '+ current[1] +' '+ current[2]);
+                 //else console.log('chargement ' + current[0] +' '+ current[1] +' '+ current[2]);
             }
         },
         //loading queue avec slot et sans slot
