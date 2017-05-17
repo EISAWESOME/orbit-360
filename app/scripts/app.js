@@ -2,6 +2,7 @@
 'use strict';
 
 var ob = angular.module('Orbit', ['ngResource', 'hmGestures', 'mousewheel']);
+//Vaste test git
 
 ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, $rootScope, Images) {
     $scope.init = function () {
