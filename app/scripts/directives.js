@@ -1,7 +1,6 @@
 /*global ob, window */
 'use strict';
 ob.directive('orbitview', ['Images', function (Images) {
-  //Vaste test 2
     return {
         restrict: 'E',
         transclude: true,
