@@ -18,7 +18,7 @@
 				<li ng-repeat="tooltip in tooltips" ng-click="selectTooltip($index)">{{tooltip.title}}</li>
 			</ul>
 		</li>
-		<li><i class="fa fa-undo"></i></li>
+		<li><i class="fa fa-undo" ng-click="rota=!rota;switchMode()"  ng-class="{'fa-arrows': !rota, 'fa-undo': rota}"></i></li>
 		<li><i class="fa fa-expand"></i></li>
 	</ul>
 </div>

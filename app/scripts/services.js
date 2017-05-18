@@ -4,8 +4,8 @@ ob.factory('Images', ['$resource', '$rootScope', '$http', function ($resource, $
     return {
         //url: '../hyracotherium_pied-a-4-doigts/',
         //url: '../Axinite_prenite_epidote/',
-        //url: '../amonite/',
         url: '../merycoidon/',
+        //url: '../amonite/',
         loadingQueue: [],
         loadSlot: 0,
         loaded: 0,
@@ -84,7 +84,7 @@ ob.factory('Images', ['$resource', '$rootScope', '$http', function ($resource, $
                 return false;
             }
         },
-        //load avec queue à plusieur slots
+        //load avec queue à plusieurs slots
         loadQueuedImages: function () {
             if(this.loadSlot < 3 && this.loadingQueue.length > 0){
                 var current = this.loadingQueue.shift();
@@ -100,7 +100,7 @@ ob.factory('Images', ['$resource', '$rootScope', '$http', function ($resource, $
             var percent = current*100 / max;
             percent = percent.toFixed(1);
 
-                //A analyser pour comprendre pourquoi l'image n'est pas directement disponible au déclanchement de 'onFirstComplete'
+                //A analyser pour comprendre pourquoi l'image n'est pas directement disponible au déclenchement de 'onFirstComplete'
             // if (this.loaded == 1) /*setTimeout(function(){*/$rootScope.$emit('onFirstComplete');/*}, 1000);*/
             if (percent >= 100) {
                 $rootScope.$emit('onComplete');

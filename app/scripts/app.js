@@ -17,9 +17,11 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
         $scope.visible = true;
         setInterval(function(){
+          $scope.loadingReso = $scope.waitingload;
+
             $scope.draw();
             // if($scope.waitingload){
-                $scope.loadingReso = $scope.waitingload;
+
                 // Bug loading quand le client veut charger deux fois la même image
             // }
         }, 40);
@@ -36,6 +38,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     $scope.angle = 0;         //id de l'angle de vue
     $scope.edited = true;
     $scope.waitingload = true;
+    console.log($scope.waitingload);
 
     $scope.fps = 0;
     $scope.renderRatio = 5;
@@ -101,6 +104,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         }
     };
 
+    //Pour l'autoplay
     $scope.goTo = function () {
         console.log('goTo');
         var t = $scope.iteration,
@@ -110,7 +114,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         d = (d === 0) ? 1 : d;
         t /= d;
         t--;
-        //$scope.draw(Math.round(c * (t * t * t + 1) + b));
+        $scope.draw(Math.round(c * (t * t * t + 1) + b));
         if ($scope.iteration > d) {
             $scope.goingFrom = null;
             $scope.tooltipVisible = true;
@@ -175,6 +179,17 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         if(zoom != $scope.zoom) $scope.edited = true;
         //$scope.draw();
     };
+
+    //Creer une fonction $scope.switchMode, qui se declenche au clic de l'icone dans le tooltype
+
+    $scope.switchMode = function () {
+
+    }
+
+
+
+
+
     $scope.zoomOut = function () {
         $scope.zoom -= 0.1;
         if ($scope.zoom < $scope.minZoom) {
@@ -198,6 +213,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     $scope.keymove = function (e) {
         console.log(e.keyCode);
+        //ICI
+        // Verifier l'état du déplacement : Rotation ou Translation ?
+        //Si translation, save le context, presser une fleche effectue un decalage de 10(?) dans sa directon
+
         if(e.keyCode === 39)
             $scope.setAngle($scope.angle -1);
         if(e.keyCode === 37)
@@ -205,6 +224,9 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     };
 
     $scope.drag = function (e) {
+        //ICI
+        //Verifier l'état du déplacement : Rotation ou Translation ?
+        //Si Translation, traduire e.gesture en translation
         console.log('drag');
         $scope.tooltipVisible = false;
         var dst = $scope.lastDrag - e.gesture.deltaX,
@@ -229,7 +251,11 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         if(($scope.waitingload && Images.resourcesLoaded($scope.level, $scope.angle)) || $scope.edited){
             $scope.waitingload = false;
             // console.log('draw '+ lvl +' '+ $scope.angle +' zoom: '+ $scope.zoom);
-            $scope.renderer.clearRect(0, 0, $scope.canvas.width, $scope.canvas.height);
+            //$scope.renderer.restore()  // a retenir
+            $scope.renderer.clearRect(0, 0, $scope.canvas.width, $scope.canvas.height); //Clear tout le canvas
+            //$scope.renderer.save() // a retenir
+            //$scope.renderer.translate(150,0); // a retenir
+
 
             var lvl = $scope.level;
             var current = Images.level[lvl].resources[$scope.angle];
@@ -242,6 +268,8 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                     lvl++;
                 }
                 current = Images.level[lvl].resources[$scope.angle];
+                //Image(s) courante, de 1 à 6
+
                 // console.log('draw lvl: '+ lvl);
             }
             var ILvl = Images.level[lvl],
