@@ -183,6 +183,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     //Creer une fonction $scope.switchMode, qui se declenche au clic de l'icone dans le tooltype
 
     $scope.switchMode = function () {
+      //Declarer un flag mode lors de l'init du scope
+      //L'execution de cette fonction change le flag
+      //En fonction de la valeur du flag, les comportement du drag, ainsi que des touche flèches sont
+      //differentes
 
     }
 
