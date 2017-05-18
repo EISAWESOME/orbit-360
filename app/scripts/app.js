@@ -29,6 +29,12 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         Images.loadLevel($scope.level);
     };
 
+
+    //Peut être exprimer autrement ?
+    $scope.clickRotation = true;
+    $scope.clickTranslation = false;
+
+
     $scope.loading = '0';
     $scope.loadingReso = false;
     $scope.visible = false;
@@ -183,10 +189,17 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     //Creer une fonction $scope.switchMode, qui se declenche au clic de l'icone dans le tooltype
 
     $scope.switchMode = function () {
-      //Declarer un flag mode lors de l'init du scope
+      //Declarer un flag clickMode lors de l'init du scope
       //L'execution de cette fonction change le flag
       //En fonction de la valeur du flag, les comportement du drag, ainsi que des touche flèches sont
       //differentes
+
+      $scope.renderer.restore();
+
+      $scope.clickRotation = !$scope.clickRotation;
+      console.log('Rotation : ' + $scope.clickRotation );
+      $scope.clickTranslation = !$scope.clickTranslation;
+      console.log('Translation : ' + $scope.clickTranslation );
 
     }
 
@@ -219,12 +232,43 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         console.log(e.keyCode);
         //ICI
         // Verifier l'état du déplacement : Rotation ou Translation ?
-        //Si translation, save le context, presser une fleche effectue un decalage de 10(?) dans sa directon
+        //Si translation, save le context, presser une fleche effectue un decalage de 10(?) dans sa direction
 
-        if(e.keyCode === 39)
+        if($scope.clickRotation && !$scope.clickTranslation){
+          if(e.keyCode === 39)
             $scope.setAngle($scope.angle -1);
-        if(e.keyCode === 37)
+          if(e.keyCode === 37)
             $scope.setAngle($scope.angle +1);
+        }
+
+        //$scope.renderer.restore()  // a retenir
+        //$scope.renderer.save() // a retenir
+        //$scope.renderer.translate(150,0); // a retenir
+
+        if($scope.clickTranslation && !$scope.clickRotation){
+          $scope.renderer.save()
+          if(e.keyCode === 37) {// Gauche
+            $scope.renderer.translate(0, -10);
+            $scope.draw();
+          }
+          if(e.keyCode === 38) {// Haut
+            $scope.renderer.translate(10, 0);
+            $scope.draw();
+          }
+          if(e.keyCode === 39) {// Droite
+            $scope.renderer.translate(0, 10);
+            $scope.draw();
+          }
+          if(e.keyCode === 40){// Bas
+            $scope.renderer.translate(-10,0);
+            $scope.draw();
+          }
+
+
+
+
+        }
+
     };
 
     $scope.drag = function (e) {
@@ -257,8 +301,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
             // console.log('draw '+ lvl +' '+ $scope.angle +' zoom: '+ $scope.zoom);
             //$scope.renderer.restore()  // a retenir
             $scope.renderer.clearRect(0, 0, $scope.canvas.width, $scope.canvas.height); //Clear tout le canvas
-            //$scope.renderer.save() // a retenir
-            //$scope.renderer.translate(150,0); // a retenir
+
 
 
             var lvl = $scope.level;
