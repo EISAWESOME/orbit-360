@@ -314,9 +314,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     };
 
     $scope.drag = function (e) {
-        //ICI
-        //Verifier l'état du déplacement : Rotation ou Translation ?
-        //Si Translation, traduire e.gesture en translation
+
         console.log('drag');
         if($scope.clickRotation && !$scope.clickTranslation) {
 
@@ -339,11 +337,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
         if($scope.clickTranslation && !$scope.clickRotation){
 
-          //$scope.incrTranslaX(e.gesture.deltaX / 10);
-          console.log("dX : " + e.gesture.deltaX );
-          //$scope.incrTranslaY(e.gesture.deltaY / 10);
-          console.log("dY : " + e.gesture.deltaY );
-
           $scope.setTranslaXY(e.gesture.deltaX / 10,e.gesture.deltaY / 10  );
 
         }
@@ -357,8 +350,9 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
             // console.log('draw '+ lvl +' '+ $scope.angle +' zoom: '+ $scope.zoom);
             //$scope.renderer.restore()  // a retenir
 
-            // C'est debile, mais ca marche
-            $scope.renderer.clearRect(-1000, -1000, $scope.canvas.width +1000, $scope.canvas.height +1000); //Clear tout le canvas
+            //Ca a l'air de marcher
+            // Rien a voir avec le rectangle noir en bord
+            $scope.renderer.clearRect(-1000, -1000, $scope.canvas.width +2000, $scope.canvas.height +2000); //Clear tout le canvas
 
             $scope.renderer.translate($scope.translaX,$scope.translaY);
             console.log("Draw : Transla X = "+ $scope.translaX + " ; Transla Y = " + $scope.translaY);
@@ -405,10 +399,11 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                         current[i].img.naturalHeight ,
                         posX,
                         posY,
-                        // le +1 permet de supprimé l'écart entre les 4 images sous Firefox et IE
-                        //Peut etre que les image sont clippé de 1px (zoom !=500) mais je ne le remarque pas
-                        1+ current[i].img.naturalWidth * $scope.zoom * 1000/ILvl.value,
-                        1+ current[i].img.naturalHeight * $scope.zoom * 1000/ILvl.value
+                        //le +1 permet de supprimé l'écart entre les 4 images sous Firefox et IE
+                        //Peut etre que les images sont clippé de 1px (zoom !=500)
+                        //Edit, clipping tres legerement visible en zoom max
+                        /* 1+ */current[i].img.naturalWidth * $scope.zoom * 1000/ILvl.value,
+                        /* 1+ */current[i].img.naturalHeight * $scope.zoom * 1000/ILvl.value
                     );
                 }
             }
