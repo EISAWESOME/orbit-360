@@ -22,7 +22,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
             $scope.draw();
             // if($scope.waitingload){
 
-                // Bug loading quand le client veut charger deux fois la même image
             // }
         }, 40);
 
@@ -37,7 +36,12 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     $scope.translaX = 0;
     $scope.translaY =0;
 
-    $scope.lastDragXY = {};
+    $scope.lastDeltaX = 0;
+    $scope.lastDeltaY = 0;
+
+    $scope.currentDeltaX = 0;
+    $scope.currentDeltaY = 0;
+
 
 
     $scope.loading = '0';
@@ -91,12 +95,14 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     //Fonctions d'incrémentation de la translation
     //Appellé a l'appui d'une touche flèche du clavier
-    $scope.incrTranslaX = function(translaX){
+    $scope.incrTranslaX = function(translaX, lastX=0){
+        $scope.lastDeltaX = lastX;
         $scope.translaX += translaX;
         $scope.edited = true;
     }
 
-    $scope.incrTranslaY = function(translaY){
+    $scope.incrTranslaY = function(translaY, lastY=0){
+        $scope.lastDeltaY = lastY;
         $scope.translaY += translaY;
         $scope.edited = true;
     }
@@ -104,8 +110,9 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     //Fonctions de definition de la translation
     //Appellé lors du drag en mode translation
     $scope.setTranslaXY = function(translaX, translaY){
-      $scope.translaX = translaX;
+      $scope.translaX  = translaX;
       $scope.translaY = translaY;
+
       $scope.edited = true;
     }
 
@@ -229,27 +236,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         //$scope.draw();
     };
 
-    //Creer une fonction $scope.switchMode, qui se declenche au clic de l'icone dans le tooltype
-
-    $scope.switchMode = function () {
-      //Declarer un flag clickMode lors de l'init du scope
-      //L'execution de cette fonction change le flag
-      //En fonction de la valeur du flag, les comportement du drag, ainsi que des touche flèches sont
-      //differentes
-
-      $scope.resetTransla();
-      $scope.renderer.restore();
-
-      $scope.clickRotation = !$scope.clickRotation;
-      console.log('Rotation : ' + $scope.clickRotation );
-      $scope.clickTranslation = !$scope.clickTranslation;
-      console.log('Translation : ' + $scope.clickTranslation );
-
-    }
-
-
-
-
 
     $scope.zoomOut = function () {
         $scope.zoom -= 0.1;
@@ -270,6 +256,25 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
             $scope.level--;
         //console.log($scope.zoom);
     };
+
+
+  //Creer une fonction $scope.switchMode, qui se declenche au clic de l'icone dans le tooltype
+
+  $scope.switchMode = function () {
+    //Declarer un flag clickMode lors de l'init du scope
+    //L'execution de cette fonction change le flag
+    //En fonction de la valeur du flag, les comportement du drag, ainsi que des touche flèches sont
+    //differentes
+
+    /*$scope.resetTransla();
+     $scope.renderer.restore();*/
+
+    $scope.clickRotation = !$scope.clickRotation;
+    console.log('Rotation : ' + $scope.clickRotation );
+    $scope.clickTranslation = !$scope.clickTranslation;
+    console.log('Translation : ' + $scope.clickTranslation );
+
+  }
 
 
     $scope.keymove = function (e) {
@@ -319,6 +324,8 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     };
 
+
+
     $scope.drag = function (e) {
 
         //console.log('drag');
@@ -343,13 +350,34 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
         if($scope.clickTranslation && !$scope.clickRotation){
 
-          $scope.setTranslaXY(e.gesture.deltaX + $scope.lastDragXY.x,e.gesture.deltaY + $scope.lastDragXY.y);
+          $scope.currentDeltaX = e.gesture.deltaX - $scope.lastDeltaX;
+          $scope.currentDeltaY = e.gesture.deltaY - $scope.lastDeltaY;
+          console.log($scope.currentDeltaX);
+          console.log($scope.currentDeltaY);
 
-          $scope.lastDragXY.x = e.gesture.deltaX;
-          $scope.lastDragXY.y = e.gesture.deltaY;
+          $scope.incrTranslaX($scope.currentDeltaX, e.gesture.deltaX);
+          $scope.incrTranslaY($scope.currentDeltaY, e.gesture.deltaY);
+          console.log("Transla : X" + $scope.translaX + " y : " + $scope.translaY );
+          /*console.log("dist: X" + distX + " y : " + distY )
+          console.log("last drag : X " + Math.round($scope.lastDeltaX) + " Y : " + Math.round($scope.lastDeltaY));*/
+
 
         }
     };
+
+    /*$scope.dragEnd = function (e){
+
+      if($scope.clickTranslation && !$scope.clickRotation) {
+
+        $scope.lastDragX = $scope.translaX;
+        $scope.lastDragY = $scope.translaY;
+
+        console.log("last drag : X " + Math.round($scope.lastDeltaX) + " Y : " + Math.round($scope.lastDeltaY));
+      }
+
+    }*/
+
+
 
     $scope.draw = function () {
         // console.log('draw '+$scope.angle);
@@ -357,16 +385,15 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         if(($scope.waitingload && Images.resourcesLoaded($scope.level, $scope.angle)) || $scope.edited){
             $scope.waitingload = false;
             // console.log('draw '+ lvl +' '+ $scope.angle +' zoom: '+ $scope.zoom);
-            //$scope.renderer.restore()  // a retenir
 
             //Il faut trouver un autre moyen de clear tout le canvas
-            //$scope.renderer.clearRect(-1000, -1000, $scope.canvas.width +2000, $scope.canvas.height +2000); //Clear tout le canvas
+            $scope.renderer.clearRect(0, 0, $scope.canvas.width, $scope.canvas.height); //Clear tout le canvas
 
             //Apparemment ca fait lag ? (source : internet)
             //Permet de reinitialisé le canvas
-            $scope.canvas.width = $scope.canvas.width;
+            //$scope.canvas.width = $scope.canvas.width;
 
-            $scope.renderer.translate($scope.translaX,$scope.translaY);
+            $scope.renderer.translate($scope.translaX + $scope.lastDeltaX,$scope.translaY + $scope.lastDeltaY);
             //console.log("Draw : Transla X = "+ $scope.translaX + " ; Transla Y = " + $scope.translaY);
 
 
@@ -387,7 +414,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
                 // console.log('draw lvl: '+ lvl);
             }
-            console.log(current);
             var ILvl = Images.level[lvl],
                 posOriX = $scope.getX(),
                 posOriY = $scope.getY(),

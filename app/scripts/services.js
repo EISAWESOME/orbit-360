@@ -61,12 +61,12 @@ ob.factory('Images', ['$resource', '$rootScope', '$http', function ($resource, $
                 var img = new Image();
 
                 img.src = source;
-                console.log(img);
+                //console.log(img);
                 scope.level[lvl].resources[angle][pos].img = img;
                 scope.loadSlot++;
                 $http.get(source, {method: 'GET'}).then(function() {
                     // setTimeout(function(){
-                        console.log(img);
+                        //console.log(img);
                         self.loaded = true;
                     // }, 1000);
                     // console.log(scope.level[lvl].resources[angle][pos].loaded);
