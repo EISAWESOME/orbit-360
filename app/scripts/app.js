@@ -146,7 +146,9 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     //Pour l'autoplay
     $scope.goTo = function () {
+
         console.log('goTo');
+        $scope.resetTransla();
         var t = $scope.iteration,
             b = $scope.goingFrom,
             c = $scope.tooltip.image - b,
@@ -154,7 +156,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         d = (d === 0) ? 1 : d;
         t /= d;
         t--;
-        $scope.draw(Math.round(c * (t * t * t + 1) + b));
+        //$scope.draw(Math.round(c * (t * t * t + 1) + b));
         if ($scope.iteration > d) {
             $scope.goingFrom = null;
             $scope.tooltipVisible = true;
@@ -188,6 +190,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     };
 
     $scope.play = function () {
+        $scope.resetTransla();
         var n = new Date();
         // console.log('play '+ n.getMilliseconds());
         if ($scope.autoPlay) {
@@ -315,7 +318,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     $scope.drag = function (e) {
 
-        console.log('drag');
+        //console.log('drag');
         if($scope.clickRotation && !$scope.clickTranslation) {
 
           $scope.tooltipVisible = false;
@@ -355,7 +358,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
             $scope.renderer.clearRect(-1000, -1000, $scope.canvas.width +2000, $scope.canvas.height +2000); //Clear tout le canvas
 
             $scope.renderer.translate($scope.translaX,$scope.translaY);
-            console.log("Draw : Transla X = "+ $scope.translaX + " ; Transla Y = " + $scope.translaY);
+            //console.log("Draw : Transla X = "+ $scope.translaX + " ; Transla Y = " + $scope.translaY);
 
 
 
@@ -372,8 +375,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                 current = Images.level[lvl].resources[$scope.angle];
                 //Image(s) courante, de 1 à 6
 
+
                 // console.log('draw lvl: '+ lvl);
             }
+            console.log(current);
             var ILvl = Images.level[lvl],
                 posOriX = $scope.getX(),
                 posOriY = $scope.getY(),
@@ -385,12 +390,18 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                 var posX = posOriX + lapX * Math.floor(i / ILvl.rows),
                     posY = posOriY + lapY * Math.floor(i % ILvl.rows);
 
+                /*console.log( "i = " +i+ " // " +  (-posOriX < posX + Math.floor(Images.level[0].width/ILvl.cols) &&
+                  -posOriY < posY + Math.floor(Images.level[0].height/ILvl.rows)) ||
+                ($scope.canvas.width > posX &&
+                $scope.canvas.height > posY ));
+
                 if (
                     (-posOriX < posX + Math.floor(Images.level[0].width/ILvl.cols) &&
                     -posOriY < posY + Math.floor(Images.level[0].height/ILvl.rows)) ||
                     ($scope.canvas.width > posX &&
                     $scope.canvas.height > posY )
-                ){
+                ){*/
+
                     $scope.renderer.drawImage(
                         current[i].img,
                         0,
@@ -402,10 +413,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                         //le +1 permet de supprimé l'écart entre les 4 images sous Firefox et IE
                         //Peut etre que les images sont clippé de 1px (zoom !=500)
                         //Edit, clipping tres legerement visible en zoom max
-                        /* 1+ */current[i].img.naturalWidth * $scope.zoom * 1000/ILvl.value,
+                        /* 1+ */current[i].img.naturalWidth * $scope.zoom * 1000/ILvl.value ,
                         /* 1+ */current[i].img.naturalHeight * $scope.zoom * 1000/ILvl.value
                     );
-                }
+                //}
             }
 
             $scope.edited = false;
