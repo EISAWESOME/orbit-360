@@ -37,6 +37,8 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     $scope.translaX = 0;
     $scope.translaY =0;
 
+    $scope.lastDragXY = {};
+
 
     $scope.loading = '0';
     $scope.loadingReso = false;
@@ -144,7 +146,8 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         }
     };
 
-    //Pour l'autoplay
+    //ICI
+    //Pour les points d'interet potentiellement ?
     $scope.goTo = function () {
 
         console.log('goTo');
@@ -340,7 +343,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
         if($scope.clickTranslation && !$scope.clickRotation){
 
-          $scope.setTranslaXY(e.gesture.deltaX / 10,e.gesture.deltaY / 10  );
+          $scope.setTranslaXY(e.gesture.deltaX + $scope.lastDragXY.x,e.gesture.deltaY + $scope.lastDragXY.y);
+
+          $scope.lastDragXY.x = e.gesture.deltaX;
+          $scope.lastDragXY.y = e.gesture.deltaY;
 
         }
     };
@@ -353,9 +359,12 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
             // console.log('draw '+ lvl +' '+ $scope.angle +' zoom: '+ $scope.zoom);
             //$scope.renderer.restore()  // a retenir
 
-            //Ca a l'air de marcher
-            // Rien a voir avec le rectangle noir en bord
-            $scope.renderer.clearRect(-1000, -1000, $scope.canvas.width +2000, $scope.canvas.height +2000); //Clear tout le canvas
+            //Il faut trouver un autre moyen de clear tout le canvas
+            //$scope.renderer.clearRect(-1000, -1000, $scope.canvas.width +2000, $scope.canvas.height +2000); //Clear tout le canvas
+
+            //Apparemment ca fait lag ? (source : internet)
+            //Permet de reinitialisé le canvas
+            $scope.canvas.width = $scope.canvas.width;
 
             $scope.renderer.translate($scope.translaX,$scope.translaY);
             //console.log("Draw : Transla X = "+ $scope.translaX + " ; Transla Y = " + $scope.translaY);
@@ -364,7 +373,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
             var lvl = $scope.level;
             var current = Images.level[lvl].resources[$scope.angle];
-            var pos = 0;
+            //var pos = 0;
             if(!Images.resourcesLoaded(lvl, $scope.angle)){
                 $scope.waitingload = true;
                 Images.loadResources(lvl, $scope.angle);
@@ -373,7 +382,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                     lvl++;
                 }
                 current = Images.level[lvl].resources[$scope.angle];
-                //Image(s) courante, de 1 à 6
+                //Image(s) courante, de 1 à 12 (index 0 à 11 ...)
 
 
                 // console.log('draw lvl: '+ lvl);
@@ -390,17 +399,14 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                 var posX = posOriX + lapX * Math.floor(i / ILvl.rows),
                     posY = posOriY + lapY * Math.floor(i % ILvl.rows);
 
-                /*console.log( "i = " +i+ " // " +  (-posOriX < posX + Math.floor(Images.level[0].width/ILvl.cols) &&
-                  -posOriY < posY + Math.floor(Images.level[0].height/ILvl.rows)) ||
-                ($scope.canvas.width > posX &&
-                $scope.canvas.height > posY ));
-
+                /*
                 if (
                     (-posOriX < posX + Math.floor(Images.level[0].width/ILvl.cols) &&
                     -posOriY < posY + Math.floor(Images.level[0].height/ILvl.rows)) ||
                     ($scope.canvas.width > posX &&
                     $scope.canvas.height > posY )
-                ){*/
+                 ){
+                */
 
                     $scope.renderer.drawImage(
                         current[i].img,
