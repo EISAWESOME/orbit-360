@@ -356,33 +356,54 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     $scope.pin = function (e){
       if($scope.pinMode) {
-        let cursorX = e.gesture.center.pageX;
-        let cursorY = e.gesture.center.pageY;
-        let canvasWidth = $scope.canvas.clientWidth;
-        let canvasHeight = $scope.canvas.clientHeight;
-        let imgName = "";
 
+        let canvasWidth = $scope.canvas.clientWidth, // Largeur du canvas
+            canvasHeight = $scope.canvas.clientHeight, // Hauteur du canvas
+            cursorX = (e.gesture.center.pageX - $scope.canvas.clientWidth/2)   - $scope.translaX , // Place l'origine de X au centre de l'image, prenant en compte la translation du canvas
+            cursorY = (e.gesture.center.pageY - $scope.canvas.clientHeight/2) - $scope.translaY ; // " Y " " " "
+
+
+        console.log("Canvas width : " + canvasWidth);
+        console.log("Canvas height : " + canvasHeight);
+
+
+        let imgName = "";
+        let lvl = $scope.level; // 0 = 12 img ; 1 = 4 img ; 2 = 1 img
+
+        // Ratios entre la resolution de l'image original et du canvas
+        let ratioX = (Images.level[lvl].cols * Images.level[lvl].tileWidth) / canvasWidth,
+            ratioY = (Images.level[lvl].rows * Images.level[lvl].tileHeight) / canvasHeight;
+        // on peut utilise $scole.level.cols et .rows pour connaitre le nombre d'image du zoom
+
+
+        //POUR LES ZOOM A 1 IMAGE
+        if(lvl == 2){
+          console.log("Cursor X : " + cursorX);
+          console.log("Cursor Y : " + cursorY);
+
+        }
 
         //POUR LES ZOOM A 4 IMAGES
+        if(lvl == 1) {
+          console.log("Cursor X : " + cursorX);
+          console.log("Cursor Y : " + cursorY);
 
-        if (cursorX <= canvasWidth /2 ){
-          imgName += "0_";
-          if(cursorY <= canvasHeight /2){
-            imgName +="0";
-          }
-          else imgName +="1";
-        }
 
-        if (cursorX > canvasWidth /2){
-          imgName += "1_";
-          if(cursorY <= canvasHeight /2){
-            imgName +="0";
-          }
-          else imgName +="1";
 
         }
 
-        //-------------------------
+        //POUR LES ZOOM A 12 IMAGES
+        if(lvl == 0 ) {
+          console.log("Cursor X : " + cursorX);
+          console.log("Cursor Y : " + cursorY);
+
+
+
+        }
+
+
+
+
 
         console.log(imgName);
 
@@ -395,7 +416,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     $scope.drag = function (e) {
 
         //console.log('drag');
-      if(!$scope.pinMode) {
         if ($scope.clickRotation && !$scope.clickTranslation) {
 
           //$scope.resetTransla();
@@ -446,11 +466,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
           // Meilleur alternative avant de trouver comment bien faire, près de 5h passer dessus sans resultat, je dois avancer
           // Presque parfait !! Manque que l'offset
           $scope.setTranslaXY(e.gesture.center.pageX - $scope.canvas.width / 2, e.gesture.center.pageY - $scope.canvas.height / 2);
-          console.log(e.gesture.center);
           //console.log("Apres Transla x: " + ~~$scope.translaX + " y : " + ~~$scope.translaY );
 
         }
-      }
+
     };
 
     $scope.dragEnd = function (e) {
@@ -485,6 +504,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
 
             var lvl = $scope.level;
+            console.log(Images.level[lvl]);
             var current = Images.level[lvl].resources[$scope.angle];
             //var pos = 0;
             if(!Images.resourcesLoaded(lvl, $scope.angle)){
