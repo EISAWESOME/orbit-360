@@ -359,7 +359,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
         let canvasWidth = $scope.canvas.clientWidth, // Largeur du canvas
             canvasHeight = $scope.canvas.clientHeight, // Hauteur du canvas
-            cursorX = (e.gesture.center.pageX - $scope.canvas.clientWidth/2)   - $scope.translaX , // Place l'origine de X au centre de l'image, prenant en compte la translation du canvas
+            cursorX = (e.gesture.center.pageX - $scope.canvas.clientWidth/2)   - $scope.translaX , // Place l'origine de X au centre de l'image, prennant en compte la translation du canvas
             cursorY = (e.gesture.center.pageY - $scope.canvas.clientHeight/2) - $scope.translaY ; // " Y " " " "
 
 
@@ -371,9 +371,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         let lvl = $scope.level; // 0 = 12 img ; 1 = 4 img ; 2 = 1 img
 
         // Ratios entre la resolution de l'image original et du canvas
-        let ratioX = (Images.level[lvl].cols * Images.level[lvl].tileWidth) / canvasWidth,
-            ratioY = (Images.level[lvl].rows * Images.level[lvl].tileHeight) / canvasHeight;
-        // on peut utilise $scole.level.cols et .rows pour connaitre le nombre d'image du zoom
+        //N'a pas lieu d'être (?)
+        //let ratioX = (Images.level[lvl].cols * Images.level[lvl].tileWidth) / canvasWidth,
+        //    ratioY = (Images.level[lvl].rows * Images.level[lvl].tileHeight) / canvasHeight;
+
 
 
         //POUR LES ZOOM A 1 IMAGE
@@ -388,6 +389,24 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
           console.log("Cursor X : " + cursorX);
           console.log("Cursor Y : " + cursorY);
 
+          if(cursorX <= 0) {
+            imgName += "0_";
+
+            if(cursorY <= 0) {
+              imgName += "0";
+            } else
+              imgName +="1"
+
+          }
+          else {
+            imgName += "1_"
+            if (cursorY <= 0) {
+              imgName += "0";
+            } else
+              imgName += "1"
+          }
+
+
 
 
         }
@@ -396,6 +415,26 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         if(lvl == 0 ) {
           console.log("Cursor X : " + cursorX);
           console.log("Cursor Y : " + cursorY);
+
+          if(cursorX <=0) {
+            console.log(-Images.level[lvl].tileWidth);
+            if (cursorX <= -Images.level[lvl].tileWidth) {
+              imgName += "0_";
+
+
+            }
+
+
+          }
+            else {
+              imgName += '1_'
+            }
+
+
+
+
+
+
 
 
 
