@@ -36,12 +36,11 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     $scope.translaX = 0;
     $scope.translaY =0;
 
-    $scope.lastDeltaX = 0;
-    $scope.lastDeltaY = 0;
+    $scope.offsetX = 0;
+    $scope.offsetY = 0;
 
-    $scope.currentDeltaX = 0;
-    $scope.currentDeltaY = 0;
 
+    $scope.pinMode = false;
 
 
     $scope.loading = '0';
@@ -95,14 +94,12 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     //Fonctions d'incrémentation de la translation
     //Appellé a l'appui d'une touche flèche du clavier
-    $scope.incrTranslaX = function(translaX, lastX=0){
-        $scope.lastDeltaX = lastX;
+    $scope.incrTranslaX = function(translaX, lastX = 0){
         $scope.translaX += translaX;
         $scope.edited = true;
     }
 
-    $scope.incrTranslaY = function(translaY, lastY=0){
-        $scope.lastDeltaY = lastY;
+    $scope.incrTranslaY = function(translaY, lastY = 0){
         $scope.translaY += translaY;
         $scope.edited = true;
     }
@@ -238,6 +235,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
 
     $scope.zoomOut = function () {
+        //$scope.renderer.clearRect(0, 0, $scope.canvas.width, $scope.canvas.height);
         $scope.zoom -= 0.1;
         if ($scope.zoom < $scope.minZoom) {
             $scope.zoom = $scope.minZoom;
@@ -260,21 +258,49 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
   //Creer une fonction $scope.switchMode, qui se declenche au clic de l'icone dans le tooltype
 
-  $scope.switchMode = function () {
-    //Declarer un flag clickMode lors de l'init du scope
-    //L'execution de cette fonction change le flag
-    //En fonction de la valeur du flag, les comportement du drag, ainsi que des touche flèches sont
-    //differentes
+    $scope.switchMode = function () {
+      //Declarer un flag clickMode lors de l'init du scope
+      //L'execution de cette fonction change le flag
+      //En fonction de la valeur du flag, les comportement du drag, ainsi que des touche flèches sont
+      //differentes
 
-    /*$scope.resetTransla();
-     $scope.renderer.restore();*/
+      /*$scope.resetTransla();
+       $scope.renderer.restore();*/
 
-    $scope.clickRotation = !$scope.clickRotation;
-    console.log('Rotation : ' + $scope.clickRotation );
-    $scope.clickTranslation = !$scope.clickTranslation;
-    console.log('Translation : ' + $scope.clickTranslation );
+      $scope.clickRotation = !$scope.clickRotation;
+      console.log('Rotation : ' + $scope.clickRotation );
+      $scope.clickTranslation = !$scope.clickTranslation;
+      console.log('Translation : ' + $scope.clickTranslation );
 
-  }
+
+
+      if($scope.clickRotation && !$scope.clickTranslation)
+        $scope.canvas.style.cursor = "default";
+
+
+      if($scope.clickTranslation && !$scope.clickRotation)
+        $scope.canvas.style.cursor = "move";
+
+
+    };
+
+    $scope.togglePinMode = function(){
+      let pinButton = document.querySelector('#test');
+      //Declarer un flag pinMode au l'init du scope
+      //L'execution de cette fonction change de le flag
+      //En fonction de la valeur du flag, le comportement du clic change + le drag est disabled.
+      $scope.pinMode = !$scope.pinMode;
+      console.log("pin mode : " + $scope.pinMode);
+
+      if (!$scope.pinMode) {
+        pinButton.className = 'fa fa-thumb-tack Rotate-360';
+      }
+
+      if ($scope.pinMode) {
+        pinButton.className =  'fa fa-thumb-tack Rotate180';
+      }
+
+    };
 
 
     $scope.keymove = function (e) {
@@ -283,45 +309,55 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         // Verifier l'état du déplacement : Rotation ou Translation ?
         //Si translation, save le context, presser une fleche effectue un decalage de 10(?) dans sa direction
 
-        if($scope.clickRotation && !$scope.clickTranslation){
-          if(e.keyCode === 39)
-            $scope.setAngle($scope.angle -1);
-          if(e.keyCode === 37)
-            $scope.setAngle($scope.angle +1);
+      if(!$scope.pinMode) {
+
+        if ($scope.clickRotation && !$scope.clickTranslation) {
+          if (e.keyCode === 39)
+            $scope.setAngle($scope.angle - 1);
+          if (e.keyCode === 37)
+            $scope.setAngle($scope.angle + 1);
         }
 
         //$scope.renderer.restore()  // a retenir
         //$scope.renderer.save() // a retenir
         //$scope.renderer.translate(150,0); // a retenir
 
-        if($scope.clickTranslation && !$scope.clickRotation){
+        if ($scope.clickTranslation && !$scope.clickRotation) {
           $scope.renderer.restore();
           $scope.renderer.save();
 
-          if(e.keyCode === 37) {// Gauche
+          if (e.keyCode === 37) {// Gauche
             $scope.incrTranslaX(-10);
-            console.log('Gauche, transla x :' + $scope.translaX );
+            console.log('Gauche, transla x :' + $scope.translaX);
 
 
           }
-          if(e.keyCode === 38) {// Haut
+          if (e.keyCode === 38) {// Haut
             $scope.incrTranslaY(-10);
-            console.log('Haut, transla y :' + $scope.translaY );
+            console.log('Haut, transla y :' + $scope.translaY);
 
           }
-          if(e.keyCode === 39) {// Droite
+          if (e.keyCode === 39) {// Droite
             $scope.incrTranslaX(10);
-            console.log('Droite, transla x :' + $scope.translaX );
+            console.log('Droite, transla x :' + $scope.translaX);
 
           }
-          if(e.keyCode === 40){// Bas
+          if (e.keyCode === 40) {// Bas
             $scope.incrTranslaY(10);
-            console.log('Bas, transla Y :' + $scope.translaY );
+            console.log('Bas, transla Y :' + $scope.translaY);
 
           }
 
         }
+      }
 
+    };
+
+    $scope.pin = function (e){
+      if($scope.pinMode) {
+        console.log('test');
+
+      }
     };
 
 
@@ -329,7 +365,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     $scope.drag = function (e) {
 
         //console.log('drag');
-        if($scope.clickRotation && !$scope.clickTranslation) {
+      if(!$scope.pinMode) {
+        if ($scope.clickRotation && !$scope.clickTranslation) {
+
+          //$scope.resetTransla();
 
           $scope.tooltipVisible = false;
           var dst = $scope.lastDrag - e.gesture.deltaX,
@@ -348,34 +387,51 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
           $scope.setAngle($scope.angle + parseInt(ratio));
         }
 
-        if($scope.clickTranslation && !$scope.clickRotation){
+        if ($scope.clickTranslation && !$scope.clickRotation) {
 
-          $scope.currentDeltaX = e.gesture.deltaX - $scope.lastDeltaX;
-          $scope.currentDeltaY = e.gesture.deltaY - $scope.lastDeltaY;
-          console.log($scope.currentDeltaX);
-          console.log($scope.currentDeltaY);
+          /*console.log('Avant');
+           console.log($scope.lastDeltaX);
+           console.log($scope.lastDeltaY);
 
-          $scope.incrTranslaX($scope.currentDeltaX, e.gesture.deltaX);
-          $scope.incrTranslaY($scope.currentDeltaY, e.gesture.deltaY);
-          console.log("Transla : X" + $scope.translaX + " y : " + $scope.translaY );
-          /*console.log("dist: X" + distX + " y : " + distY )
-          console.log("last drag : X " + Math.round($scope.lastDeltaX) + " Y : " + Math.round($scope.lastDeltaY));*/
 
+           $scope.currentDeltaX = e.gesture.deltaX - $scope.lastDeltaX;
+           $scope.currentDeltaY = e.gesture.deltaY - $scope.lastDeltaY;
+
+           console.log('---------------------------------');
+           console.log("Deplacement X : " + $scope.lastDeltaX + " - " + $scope.lastDeltaX);
+           console.log("gesture X : " + e.gesture.deltaX );
+           console.log("Deplacement Y : " + $scope.lastDeltaY + " - " + $scope.lastDeltaY);
+           console.log("gesture Y : " + e.gesture.deltaY );
+
+           $scope.setTranslaXY($scope.lastDeltaX, $scope.lastDeltaY)
+
+           console.log("Avant Transla y : " + ~~$scope.translaX + " y : " + ~~$scope.translaY );
+           console.log("Prevision Transla x : " + ~~($scope.translaX + $scope.lastDeltaX)  +" y : " + ~~($scope.translaY + $scope.lastDeltaY) );
+
+
+           $scope.incrTranslaX($scope.currentDeltaX, $scope.lastDeltaX);
+           $scope.incrTranslaY($scope.currentDeltaY, $scope.lastDeltaY);*/
+
+
+          // Meilleur alternative avant de trouver comment bien faire, près de 5h passer dessus sans resultat, je dois avancer
+          // Presque parfait !! Manque que l'offset
+          $scope.setTranslaXY(e.gesture.center.pageX - $scope.canvas.width / 2, e.gesture.center.pageY - $scope.canvas.height / 2);
+          console.log(e.gesture.center);
+          //console.log("Apres Transla x: " + ~~$scope.translaX + " y : " + ~~$scope.translaY );
 
         }
+      }
     };
 
-    /*$scope.dragEnd = function (e){
+    $scope.dragEnd = function (e) {
 
-      if($scope.clickTranslation && !$scope.clickRotation) {
-
-        $scope.lastDragX = $scope.translaX;
-        $scope.lastDragY = $scope.translaY;
-
-        console.log("last drag : X " + Math.round($scope.lastDeltaX) + " Y : " + Math.round($scope.lastDeltaY));
+      if(!$scope.pinMode) {
       }
 
-    }*/
+      //Creer une variable offset = a l'origine du canvas a la fin du drag
+
+
+    };
 
 
 
@@ -387,13 +443,13 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
             // console.log('draw '+ lvl +' '+ $scope.angle +' zoom: '+ $scope.zoom);
 
             //Il faut trouver un autre moyen de clear tout le canvas
-            $scope.renderer.clearRect(0, 0, $scope.canvas.width, $scope.canvas.height); //Clear tout le canvas
+            //$scope.renderer.clearRect(0, 0, $scope.canvas.width+5000, $scope.canvas.height+5000); //Clear tout le canvas
 
             //Apparemment ca fait lag ? (source : internet)
             //Permet de reinitialisé le canvas
-            //$scope.canvas.width = $scope.canvas.width;
+            $scope.canvas.width = $scope.canvas.width;
 
-            $scope.renderer.translate($scope.translaX + $scope.lastDeltaX,$scope.translaY + $scope.lastDeltaY);
+            $scope.renderer.translate($scope.translaX,$scope.translaY);
             //console.log("Draw : Transla X = "+ $scope.translaX + " ; Transla Y = " + $scope.translaY);
 
 
@@ -445,8 +501,8 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                         //le +1 permet de supprimé l'écart entre les 4 images sous Firefox et IE
                         //Peut etre que les images sont clippé de 1px (zoom !=500)
                         //Edit, clipping tres legerement visible en zoom max
-                        /* 1+ */current[i].img.naturalWidth * $scope.zoom * 1000/ILvl.value ,
-                        /* 1+ */current[i].img.naturalHeight * $scope.zoom * 1000/ILvl.value
+                          current[i].img.naturalWidth * $scope.zoom * 1000/ILvl.value -5 ,
+                          current[i].img.naturalHeight * $scope.zoom * 1000/ILvl.value -5
                     );
                 //}
             }

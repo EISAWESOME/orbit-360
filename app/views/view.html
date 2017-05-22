@@ -19,8 +19,10 @@
 			</ul>
 		</li>
 		<li ng-click=switchMode()><i class="fa fa-undo" ng-class="{'fa-arrows': clickTranslation, 'fa-undo': clickRotation}"></i></li>
+    <li ng-click=togglePinMode()><i class = "fa fa-thumb-tack" id="test"></i></li>
 		<li><i class="fa fa-expand"></i></li>
 	</ul>
 </div>
-<canvas id="orbit-canvas" hm-tap="autoPlay=false" hm-drag="drag($event);" hm-dragstart="autoPlay=false; lastDrag=0" hm-dragend="dragEnd($event)" msd-wheel="onWheel($event);" hm-pinch-in="zoomOut();" hm-pinch-out="zoomIn();"></canvas>
+<!-- hm-press pour les mobile ? A testé... -->
+<canvas id="orbit-canvas" hm-press="pin($event)" hm-tap="autoPlay=false; pin($event)" hm-drag="drag($event);" hm-dragstart="autoPlay=false; lastDrag=0" hm-dragend="dragEnd($event)" msd-wheel="onWheel($event);" hm-pinch-in="zoomOut();" hm-pinch-out="zoomIn();"></canvas>
 <div ng-transclude></div>
