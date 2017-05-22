@@ -259,13 +259,13 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
   //Creer une fonction $scope.switchMode, qui se declenche au clic de l'icone dans le tooltype
 
     $scope.switchMode = function () {
-      //Declarer un flag clickMode lors de l'init du scope
-      //L'execution de cette fonction change le flag
-      //En fonction de la valeur du flag, les comportement du drag, ainsi que des touche flèches sont
+
+      //L'execution de cette fonction le mode Roation / Translation
+      //En fonction du mode, les comportements du drag, ainsi que des touche flèches sont
       //differentes
 
-      /*$scope.resetTransla();
-       $scope.renderer.restore();*/
+
+
 
       $scope.clickRotation = !$scope.clickRotation;
       console.log('Rotation : ' + $scope.clickRotation );
@@ -286,9 +286,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     $scope.togglePinMode = function(){
       let pinButton = document.querySelector('#test');
-      //Declarer un flag pinMode au l'init du scope
-      //L'execution de cette fonction change de le flag
-      //En fonction de la valeur du flag, le comportement du clic change + le drag est disabled.
+
+      //L'execution de cette fonction change de le flag pinMode
+      //En fonction de la valeur du flag, le comportement du clic change + le drag est disabled (??).
+
       $scope.pinMode = !$scope.pinMode;
       console.log("pin mode : " + $scope.pinMode);
 
@@ -355,7 +356,36 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     $scope.pin = function (e){
       if($scope.pinMode) {
-        console.log('test');
+        let cursorX = e.gesture.center.pageX;
+        let cursorY = e.gesture.center.pageY;
+        let canvasWidth = $scope.canvas.clientWidth;
+        let canvasHeight = $scope.canvas.clientHeight;
+        let imgName = "";
+
+
+        //POUR LES ZOOM A 4 IMAGES
+
+        if (cursorX <= canvasWidth /2 ){
+          imgName += "0_";
+          if(cursorY <= canvasHeight /2){
+            imgName +="0";
+          }
+          else imgName +="1";
+        }
+
+        if (cursorX > canvasWidth /2){
+          imgName += "1_";
+          if(cursorY <= canvasHeight /2){
+            imgName +="0";
+          }
+          else imgName +="1";
+
+        }
+
+        //-------------------------
+
+        console.log(imgName);
+
 
       }
     };
