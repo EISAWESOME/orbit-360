@@ -430,8 +430,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
             height = $scope.actualTileHeight,
             width = $scope.actualTileWidth;
 
-        let ratioX = Images.level[lvl].width / width,
-            ratioY = Images.level[lvl].height / height;
+        let ratioX = Images.level[lvl].tileWidth / width,
+          ratioY = Images.level[lvl].tileHeight / height;
+        console.log(ratioX);
+
 
 
         //Pour chaque cas, une fois les coordonnée du point d'interet determiné, il faudra ecrire dans le fichier XML content
@@ -450,13 +452,24 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
               pinY = cursorY * ratioY;
 
 
-          console.log(pinCoord = {x: pinX, y: pinY});
+          pinCoord = {x: pinX, y: pinY};
 
           //return pinCoord = {x: pinX, y: pinY};
 
         }
 
+        //On connais les coordonné par rapport au centre du canvas
+        //Il faut maintenant les transformé pour que l'origine
+        //soit le bord haut gauche de l'image en question.
+
+
+
+        //Connaissant le ratio, les largeur et hauteur de cases, ca devrait pas être très dur
+
+
+
         //POUR LES ZOOM A 4 IMAGES
+        // TERMINER (?)
         if(lvl == 1) {
           console.log("Cursor X : " + cursorX);
           console.log("Cursor Y : " + cursorY);
@@ -468,16 +481,18 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
               imgID += "0";
 
               //0_0
-              let pinX = cursorX * ratioX,
-                  pinY = cursorY * ratioY;
+              let pinX = (cursorX + width ) * ratioX,
+                  pinY = (cursorY + height) * ratioY;
+              pinCoord = {x: pinX, y: pinY}
 
 
 
             }
             else {
               //0_1
-              let pinX = cursorX * ratioX,
+              let pinX = (cursorX + width) * ratioX,
                   pinY = cursorY * ratioY;
+              pinCoord = {x: pinX, y: pinY}
 
               imgID += "1"
             }
@@ -490,7 +505,8 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
               //1_0
               let pinX = cursorX * ratioX,
-                  pinY = cursorY * ratioY;
+                  pinY = (cursorY + height) * ratioY;
+              pinCoord = {x: pinX, y: pinY}
 
             }
             else {
@@ -498,13 +514,11 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
               //1_1
               let pinX = cursorX * ratioX,
                   pinY = cursorY * ratioY;
+              pinCoord = {x: pinX, y: pinY}
 
               imgID += "1"
             }
           }
-
-
-
 
         }
 
@@ -549,7 +563,9 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
 
 
+        console.log(pinCoord);
         console.log(imgID);
+
 
 
 
