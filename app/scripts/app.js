@@ -662,19 +662,9 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                  ){
                 */
 
-                /*console.log(
-                  current[i].img,
-                  0,
-                  0,
-                  current[i].img.naturalWidth ,
-                  current[i].img.naturalHeight ,
+                console.log(
                   posX,
-                  posY,
-                  //le +1 permet de supprimé l'écart entre les 4 images sous Firefox et IE
-                  //Peut etre que les images sont clippé de 1px (zoom !=500)
-                  //Edit, clipping tres legerement visible en zoom max
-                  $scope.actualTileWidth ,
-                  $scope.actualTileHeight);*/
+                  posY);
 
                     $scope.renderer.drawImage(
                         current[i].img,
@@ -697,14 +687,16 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
                     /*
                     //Dessine un cercle
+                    //posX et posY represente l'origine de l'image dessiné
 
-                    var centerX = pinX;
-                    var centerY = pinY;
+                    var centerX = posX + pinX;
+                    var centerY = posY + pinY;
                     var radius = 10;
 
                     $scope.renderer.beginPath();
                     $scope.renderer.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
                     $scope.renderer.fillStyle = 'green';
+                    //+ flashy effect, genre gradient etc, à voir
                     $scope.renderer.fill();
                     $scope.renderer.lineWidth = 5;
                     $scope.renderer.strokeStyle = '#003300';
