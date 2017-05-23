@@ -469,7 +469,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
 
         //POUR LES ZOOM A 4 IMAGES
-        // TERMINER (?)
+        // FINI (?)
         if(lvl == 1) {
           console.log("Cursor X : " + cursorX);
           console.log("Cursor Y : " + cursorY);
@@ -523,6 +523,8 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         }
 
         //POUR LES ZOOM A 12 IMAGES
+        //FINI
+        //Faire une fonction surement !!!
         if(lvl == 0 ) {
           console.log("Cursor X : " + cursorX);
           console.log("Cursor Y : " + cursorY);
@@ -533,11 +535,47 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
               imgID += $scope.whichRow12(cursorY, height);
 
+              if(imgID == '0_0'){
+                let pinX = (cursorX + 2 * width) * ratioX,
+                    pinY = (cursorY + 3/2 * width) * ratioY;
+                pinCoord = {x: pinX, y: pinY};
+              }
+
+              if(imgID == '0_1'){
+                let pinX = (cursorX + 2 * width) * ratioX,
+                    pinY = (cursorY + 1/2 * width) * ratioY;
+                pinCoord = {x: pinX, y: pinY};
+              }
+
+              if(imgID == '0_2'){
+                let pinX = (cursorX + 2 * width) * ratioX,
+                    pinY = (cursorY - 1/2 * width) * ratioY;
+                pinCoord = {x: pinX, y: pinY};
+              }
+
             }
             else {
               imgID +="1_";
 
               imgID += $scope.whichRow12(cursorY, height);
+
+              if(imgID == '1_0'){
+                let pinX = (cursorX +  width) * ratioX,
+                    pinY = (cursorY + 3/2 * width) * ratioY;
+                pinCoord = {x: pinX, y: pinY};
+              }
+
+              if(imgID == '1_1'){
+                let pinX = (cursorX +  width) * ratioX,
+                    pinY = (cursorY + 1/2 * width) * ratioY;
+                pinCoord = {x: pinX, y: pinY};
+              }
+
+              if(imgID == '1_2'){
+                let pinX = (cursorX + width) * ratioX,
+                    pinY = (cursorY - 1/2 * width) * ratioY;
+                pinCoord = {x: pinX, y: pinY};
+              }
             }
 
 
@@ -548,11 +586,47 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
               imgID += $scope.whichRow12(cursorY, height);
 
+              if(imgID == '2_0'){
+                let pinX = (cursorX) * ratioX,
+                    pinY = (cursorY + 3/2 * width) * ratioY;
+                pinCoord = {x: pinX, y: pinY};
+              }
+
+              if(imgID == '2_1'){
+                let pinX = (cursorX) * ratioX,
+                    pinY = (cursorY + 1/2 * width) * ratioY;
+                pinCoord = {x: pinX, y: pinY};
+              }
+
+              if(imgID == '2_2'){
+                let pinX = (cursorX) * ratioX,
+                    pinY = (cursorY - 1/2 * width) * ratioY;
+                pinCoord = {x: pinX, y: pinY};
+              }
+
             }
             else {
               imgID +="3_";
 
               imgID += $scope.whichRow12(cursorY, height);
+
+              if(imgID == '3_0'){
+                let pinX = (cursorX - width) * ratioX,
+                    pinY = (cursorY + 3/2 * width) * ratioY;
+                pinCoord = {x: pinX, y: pinY};
+              }
+
+              if(imgID == '3_1'){
+                let pinX = (cursorX - width) * ratioX,
+                    pinY = (cursorY + 1/2 * width) * ratioY;
+                pinCoord = {x: pinX, y: pinY};
+              }
+
+              if(imgID == '3_2'){
+                let pinX = (cursorX - width) * ratioX,
+                    pinY = (cursorY - 1/2 * width) * ratioY;
+                pinCoord = {x: pinX, y: pinY};
+              }
             }
 
           }
@@ -666,8 +740,8 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                 var posX = posOriX + lapX * Math.floor(i / ILvl.rows),
                     posY = posOriY + lapY * Math.floor(i % ILvl.rows);
 
-              $scope.actualTileWidth = current[i].img.naturalWidth * $scope.zoom * 1000/ILvl.value -5;
-              $scope.actualTileHeight = current[i].img.naturalHeight * $scope.zoom * 1000/ILvl.value -5;
+              $scope.actualTileWidth = current[i].img.naturalWidth * $scope.zoom * 1000/ILvl.value -2;
+              $scope.actualTileHeight = current[i].img.naturalHeight * $scope.zoom * 1000/ILvl.value -2;
 
                 /*
                 if (
@@ -677,10 +751,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                     $scope.canvas.height > posY )
                  ){
                 */
-
-                console.log(
-                  posX,
-                  posY);
 
                     $scope.renderer.drawImage(
                         current[i].img,
