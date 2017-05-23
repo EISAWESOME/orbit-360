@@ -1,7 +1,7 @@
 /*global angular, window, document, navigator, parseInt */
 'use strict';
 
-var ob = angular.module('Orbit', ['ngResource', 'hmGestures', 'mousewheel']);
+var ob = angular.module('Orbit', ['ngResource', 'hmGestures', 'mousewheel',]);
 
 ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, $rootScope, Images) {
     $scope.init = function () {
@@ -57,7 +57,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     $scope.angle = 0;         //id de l'angle de vue
     $scope.edited = true;
     $scope.waitingload = true;
-    console.log($scope.waitingload);
+    //console.log($scope.waitingload);
 
     $scope.fps = 0;
     $scope.renderRatio = 5;
@@ -74,6 +74,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         $scope.edited = true;
         $scope.setAngle($scope.angle + 1);
     });
+
     //A revoir
     $rootScope.$on('onCurrentComplete', function (/*event, angle*/) {
         // console.log('onCurrentComplete '+ angle);
@@ -297,9 +298,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
       //En fonction du mode, les comportements du drag, ainsi que des touche flèches sont
       //differentes
 
-
-
-
       $scope.clickRotation = !$scope.clickRotation;
       console.log('Rotation : ' + $scope.clickRotation );
       $scope.clickTranslation = !$scope.clickTranslation;
@@ -367,29 +365,59 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     };
 
+
+    // A REVOIR !!
+
+    $scope.writePin = function (){
+      Images.loadxml().success(function(dataXML) {
+
+        if (window.DOMParser) { // Standard
+          var tmp = new DOMParser();
+          var xml = tmp.parseFromString(dataXML, "text/xml");
+        }
+        else { // IE
+          var xml = new ActiveXObject("Microsoft.XMLDOM");
+          xml.async = "false";
+          xml.loadXML(dataXML);
+        }
+
+        //var newEle = xml.createElement('test');
+        //xml.getElementsByTagName('sequence')[0].removeChild(newEle);
+        console.log(xml);
+
+      });
+    }
+
+
+
     //Determine dans quelle ligne de case se trouve le curseur pour les zoom a 12 cases
     $scope.whichRow12 = function(cursorY, tileHeight){
 
-      let imgName;
+      let rowID;
 
       if(cursorY > 0){
         if(cursorY <= tileHeight/2){
-           imgName ="1";
+           rowID ="1";
         }
-        else imgName ="2";
+        else rowID ="2";
       }
       if(cursorY < 0){
 
         if(cursorY >= -tileHeight/2){
-          imgName ="1";
+          rowID ="1";
         }
-        else imgName ="0";
+        else rowID ="0";
       }
-      return imgName;
-    }
+
+      return rowID;
+    };
 
     $scope.pin = function (e){
       if($scope.pinMode) {
+
+        $scope.writePin();
+        //L'objet contenant les coordonnée du point d'interet a crée
+        let pinCoord = {};
 
         // Place l'origine de X et de Y au centre de l'image, prennant en compte la translation du canvas
         let cursorX = (e.gesture.center.pageX - $scope.canvas.clientWidth/2)   - $scope.translaX ,
@@ -397,15 +425,33 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
 
 
-        let imgName = "",
+        let imgID = "",
             lvl = $scope.level, // 0 = 12 img ; 1 = 4 img ; 2 = 1 img
             height = $scope.actualTileHeight,
             width = $scope.actualTileWidth;
 
+        //Pour chaque cas, une fois les coordonnée du point d'interet determiné, il faudra ecrire dans le fichier XML content
+
         //POUR LES ZOOM A 1 IMAGE
         if(lvl == 2){
+
+          //Le ratio de dessin entre l'image du canvas et l'original
+          let ratioX = Images.level[lvl].width / width,
+              ratioY = Images.level[lvl].height / height;
+
           console.log("Cursor X : " + cursorX);
           console.log("Cursor Y : " + cursorY);
+
+
+          //Coordonnées du pin avec les proportion de l'image original, par rapport au centre du canvas
+          let pinX = cursorX * ratioX,
+              pinY = cursorY * ratioY;
+
+          console.log(pinCoord = {x: pinX, y: pinY});
+
+          //return pinCoord = {x: pinX, y: pinY};
+
+
 
         }
 
@@ -415,20 +461,20 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
           console.log("Cursor Y : " + cursorY);
 
           if(cursorX <= 0) {
-            imgName += "0_";
+            imgID += "0_";
 
             if(cursorY <= 0) {
-              imgName += "0";
+              imgID += "0";
             } else
-              imgName +="1"
+              imgID +="1"
 
           }
           else {
-            imgName += "1_"
+            imgID += "1_"
             if (cursorY <= 0) {
-              imgName += "0";
+              imgID += "0";
             } else
-              imgName += "1"
+              imgID += "1"
           }
 
 
@@ -443,36 +489,33 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
           if(cursorX <=0) {
             if (cursorX <= -width) {
-              imgName += "0_";
+              imgID += "0_";
 
-              imgName += $scope.whichRow12(cursorY, height);
+              imgID += $scope.whichRow12(cursorY, height);
 
             }
             else {
-              imgName +="1_";
+              imgID +="1_";
 
-              imgName += $scope.whichRow12(cursorY, height);
+              imgID += $scope.whichRow12(cursorY, height);
             }
 
 
           }
           else {
             if (cursorX <= width) {
-              imgName += "2_";
+              imgID += "2_";
 
-              imgName += $scope.whichRow12(cursorY, height);
+              imgID += $scope.whichRow12(cursorY, height);
 
             }
             else {
-              imgName +="3_";
+              imgID +="3_";
 
-              imgName += $scope.whichRow12(cursorY, height);
+              imgID += $scope.whichRow12(cursorY, height);
             }
 
-
           }
-
-
 
         }
 
@@ -480,11 +523,30 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
 
 
-        console.log(imgName);
+        console.log(imgID);
+
 
 
       }
     };
+
+
+    /*
+    $scope.showPrompt = function(ev) {
+      // Appending dialog to document.body to cover sidenav in docs app
+      let confirm = $mdDialog.prompt()
+        .title('What would you name your dog?')
+        .textContent('Bowser is a common name.')
+        .placeholder('Dog name')
+        .ariaLabel('Dog name')
+        .initialValue('Buddy')
+        .targetEvent(ev)
+        .ok('Okay!')
+        .cancel('I\'m a cat person');
+
+    };
+
+  */
 
 
 
