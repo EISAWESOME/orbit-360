@@ -412,10 +412,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
       return rowID;
     };
 
+
     $scope.pin = function (e){
       if($scope.pinMode) {
 
-        $scope.writePin();
         //L'objet contenant les coordonnée du point d'interet a crée
         let pinCoord = {};
 
@@ -430,28 +430,29 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
             height = $scope.actualTileHeight,
             width = $scope.actualTileWidth;
 
+        let ratioX = Images.level[lvl].width / width,
+            ratioY = Images.level[lvl].height / height;
+
+
         //Pour chaque cas, une fois les coordonnée du point d'interet determiné, il faudra ecrire dans le fichier XML content
 
         //POUR LES ZOOM A 1 IMAGE
         if(lvl == 2){
 
           //Le ratio de dessin entre l'image du canvas et l'original
-          let ratioX = Images.level[lvl].width / width,
-              ratioY = Images.level[lvl].height / height;
-
           console.log("Cursor X : " + cursorX);
           console.log("Cursor Y : " + cursorY);
 
 
           //Coordonnées du pin avec les proportion de l'image original, par rapport au centre du canvas
+          //Une seul image, donc pas d'opérations
           let pinX = cursorX * ratioX,
               pinY = cursorY * ratioY;
+
 
           console.log(pinCoord = {x: pinX, y: pinY});
 
           //return pinCoord = {x: pinX, y: pinY};
-
-
 
         }
 
@@ -465,16 +466,41 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
             if(cursorY <= 0) {
               imgID += "0";
-            } else
-              imgID +="1"
+
+              //0_0
+              let pinX = cursorX * ratioX,
+                  pinY = cursorY * ratioY;
+
+
+
+            }
+            else {
+              //0_1
+              let pinX = cursorX * ratioX,
+                  pinY = cursorY * ratioY;
+
+              imgID += "1"
+            }
 
           }
           else {
             imgID += "1_"
             if (cursorY <= 0) {
               imgID += "0";
-            } else
+
+              //1_0
+              let pinX = cursorX * ratioX,
+                  pinY = cursorY * ratioY;
+
+            }
+            else {
+
+              //1_1
+              let pinX = cursorX * ratioX,
+                  pinY = cursorY * ratioY;
+
               imgID += "1"
+            }
           }
 
 
@@ -530,26 +556,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
       }
     };
 
-
-    /*
-    $scope.showPrompt = function(ev) {
-      // Appending dialog to document.body to cover sidenav in docs app
-      let confirm = $mdDialog.prompt()
-        .title('What would you name your dog?')
-        .textContent('Bowser is a common name.')
-        .placeholder('Dog name')
-        .ariaLabel('Dog name')
-        .initialValue('Buddy')
-        .targetEvent(ev)
-        .ok('Okay!')
-        .cancel('I\'m a cat person');
-
-    };
-
-  */
-
-
-
     $scope.drag = function (e) {
 
         //console.log('drag');
@@ -575,30 +581,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         }
 
         if ($scope.clickTranslation && !$scope.clickRotation) {
-
-          /*console.log('Avant');
-           console.log($scope.lastDeltaX);
-           console.log($scope.lastDeltaY);
-
-
-           $scope.currentDeltaX = e.gesture.deltaX - $scope.lastDeltaX;
-           $scope.currentDeltaY = e.gesture.deltaY - $scope.lastDeltaY;
-
-           console.log('---------------------------------');
-           console.log("Deplacement X : " + $scope.lastDeltaX + " - " + $scope.lastDeltaX);
-           console.log("gesture X : " + e.gesture.deltaX );
-           console.log("Deplacement Y : " + $scope.lastDeltaY + " - " + $scope.lastDeltaY);
-           console.log("gesture Y : " + e.gesture.deltaY );
-
-           $scope.setTranslaXY($scope.lastDeltaX, $scope.lastDeltaY)
-
-           console.log("Avant Transla y : " + ~~$scope.translaX + " y : " + ~~$scope.translaY );
-           console.log("Prevision Transla x : " + ~~($scope.translaX + $scope.lastDeltaX)  +" y : " + ~~($scope.translaY + $scope.lastDeltaY) );
-
-
-           $scope.incrTranslaX($scope.currentDeltaX, $scope.lastDeltaX);
-           $scope.incrTranslaY($scope.currentDeltaY, $scope.lastDeltaY);*/
-
 
           // Meilleur alternative avant de trouver comment bien faire, près de 5h passer dessus sans resultat, je dois avancer
           // Presque parfait !! Manque que l'offset
@@ -680,6 +662,20 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                  ){
                 */
 
+                /*console.log(
+                  current[i].img,
+                  0,
+                  0,
+                  current[i].img.naturalWidth ,
+                  current[i].img.naturalHeight ,
+                  posX,
+                  posY,
+                  //le +1 permet de supprimé l'écart entre les 4 images sous Firefox et IE
+                  //Peut etre que les images sont clippé de 1px (zoom !=500)
+                  //Edit, clipping tres legerement visible en zoom max
+                  $scope.actualTileWidth ,
+                  $scope.actualTileHeight);*/
+
                     $scope.renderer.drawImage(
                         current[i].img,
                         0,
@@ -694,8 +690,29 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                         $scope.actualTileWidth ,
                         $scope.actualTileHeight
                     );
-                    console.log();
-                //}
+
+                    //ICI
+                    // On vérifie si l'image dessiné possède un point d'interet
+                    // Si oui on recup ses coordonnée et on le dessine
+
+                    /*
+                    //Dessine un cercle
+
+                    var centerX = pinX;
+                    var centerY = pinY;
+                    var radius = 10;
+
+                    $scope.renderer.beginPath();
+                    $scope.renderer.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+                    $scope.renderer.fillStyle = 'green';
+                    $scope.renderer.fill();
+                    $scope.renderer.lineWidth = 5;
+                    $scope.renderer.strokeStyle = '#003300';
+                    $scope.renderer.stroke();
+                    */
+
+
+
             }
 
             $scope.edited = false;
