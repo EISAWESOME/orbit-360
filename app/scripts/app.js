@@ -41,6 +41,11 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
 
     $scope.pinMode = false;
+    $scope.isFullscreen= false;
+
+
+    $scope.actualTileWidth = 0;
+    $scope.actualTileHeight = 0;
 
 
     $scope.loading = '0';
@@ -57,7 +62,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     $scope.fps = 0;
     $scope.renderRatio = 5;
     $scope.showTooltips = false;
-    $scope.autoPlay = true;
+    $scope.autoPlay = false;
     $scope.tooltips = [];
     $scope.tooltip = null;
     $scope.tooltipVisible = false;
@@ -169,6 +174,34 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
             $scope.tooltipVisible = true;
             $scope.$apply();
         }
+    };
+
+    $scope.toggleFullscreen = function () {
+      let elem = document.querySelector("html");
+      if($scope.isFullscreen) {
+
+
+        if (elem.requestFullscreen) {
+          elem.requestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+          elem.msRequestFullscreen();
+        } else if (elem.mozRequestFullScreen) {
+          elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) {
+          elem.webkitRequestFullscreen();
+        }
+      }
+      else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
     };
 
 
@@ -284,26 +317,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     };
 
-    $scope.togglePinMode = function(){
-      let pinButton = document.querySelector('#test');
-
-      //L'execution de cette fonction change de le flag pinMode
-      //En fonction de la valeur du flag, le comportement du clic change + le drag est disabled (??).
-
-      $scope.pinMode = !$scope.pinMode;
-      console.log("pin mode : " + $scope.pinMode);
-
-      if (!$scope.pinMode) {
-        pinButton.className = 'fa fa-thumb-tack Rotate-360';
-      }
-
-      if ($scope.pinMode) {
-        pinButton.className =  'fa fa-thumb-tack Rotate180';
-      }
-
-    };
-
-
     $scope.keymove = function (e) {
         console.log(e.keyCode);
         //ICI
@@ -354,28 +367,40 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     };
 
+    //Determine dans quelle ligne de case se trouve le curseur pour les zoom a 12 cases
+    $scope.whichRow12 = function(cursorY, tileHeight){
+
+      let imgName;
+
+      if(cursorY > 0){
+        if(cursorY <= tileHeight/2){
+           imgName ="1";
+        }
+        else imgName ="2";
+      }
+      if(cursorY < 0){
+
+        if(cursorY >= -tileHeight/2){
+          imgName ="1";
+        }
+        else imgName ="0";
+      }
+      return imgName;
+    }
+
     $scope.pin = function (e){
       if($scope.pinMode) {
 
-        let canvasWidth = $scope.canvas.clientWidth, // Largeur du canvas
-            canvasHeight = $scope.canvas.clientHeight, // Hauteur du canvas
-            cursorX = (e.gesture.center.pageX - $scope.canvas.clientWidth/2)   - $scope.translaX , // Place l'origine de X au centre de l'image, prennant en compte la translation du canvas
-            cursorY = (e.gesture.center.pageY - $scope.canvas.clientHeight/2) - $scope.translaY ; // " Y " " " "
+        // Place l'origine de X et de Y au centre de l'image, prennant en compte la translation du canvas
+        let cursorX = (e.gesture.center.pageX - $scope.canvas.clientWidth/2)   - $scope.translaX ,
+            cursorY = (e.gesture.center.pageY - $scope.canvas.clientHeight/2) - $scope.translaY ;
 
 
-        console.log("Canvas width : " + canvasWidth);
-        console.log("Canvas height : " + canvasHeight);
 
-
-        let imgName = "";
-        let lvl = $scope.level; // 0 = 12 img ; 1 = 4 img ; 2 = 1 img
-
-        // Ratios entre la resolution de l'image original et du canvas
-        //N'a pas lieu d'être (?)
-        //let ratioX = (Images.level[lvl].cols * Images.level[lvl].tileWidth) / canvasWidth,
-        //    ratioY = (Images.level[lvl].rows * Images.level[lvl].tileHeight) / canvasHeight;
-
-
+        let imgName = "",
+            lvl = $scope.level, // 0 = 12 img ; 1 = 4 img ; 2 = 1 img
+            height = $scope.actualTileHeight,
+            width = $scope.actualTileWidth;
 
         //POUR LES ZOOM A 1 IMAGE
         if(lvl == 2){
@@ -417,24 +442,35 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
           console.log("Cursor Y : " + cursorY);
 
           if(cursorX <=0) {
-            console.log(-Images.level[lvl].tileWidth);
-            if (cursorX <= -Images.level[lvl].tileWidth) {
+            if (cursorX <= -width) {
               imgName += "0_";
 
+              imgName += $scope.whichRow12(cursorY, height);
 
+            }
+            else {
+              imgName +="1_";
+
+              imgName += $scope.whichRow12(cursorY, height);
             }
 
 
           }
+          else {
+            if (cursorX <= width) {
+              imgName += "2_";
+
+              imgName += $scope.whichRow12(cursorY, height);
+
+            }
             else {
-              imgName += '1_'
+              imgName +="3_";
+
+              imgName += $scope.whichRow12(cursorY, height);
             }
 
 
-
-
-
-
+          }
 
 
 
@@ -543,7 +579,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
 
             var lvl = $scope.level;
-            console.log(Images.level[lvl]);
+            //console.log(Images.level[lvl]);
             var current = Images.level[lvl].resources[$scope.angle];
             //var pos = 0;
             if(!Images.resourcesLoaded(lvl, $scope.angle)){
@@ -570,6 +606,9 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                 var posX = posOriX + lapX * Math.floor(i / ILvl.rows),
                     posY = posOriY + lapY * Math.floor(i % ILvl.rows);
 
+              $scope.actualTileWidth = current[i].img.naturalWidth * $scope.zoom * 1000/ILvl.value -5;
+              $scope.actualTileHeight = current[i].img.naturalHeight * $scope.zoom * 1000/ILvl.value -5;
+
                 /*
                 if (
                     (-posOriX < posX + Math.floor(Images.level[0].width/ILvl.cols) &&
@@ -590,9 +629,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                         //le +1 permet de supprimé l'écart entre les 4 images sous Firefox et IE
                         //Peut etre que les images sont clippé de 1px (zoom !=500)
                         //Edit, clipping tres legerement visible en zoom max
-                          current[i].img.naturalWidth * $scope.zoom * 1000/ILvl.value -5 ,
-                          current[i].img.naturalHeight * $scope.zoom * 1000/ILvl.value -5
+                        $scope.actualTileWidth ,
+                        $scope.actualTileHeight
                     );
+                    console.log();
                 //}
             }
 
