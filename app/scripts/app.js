@@ -1,9 +1,9 @@
 /*global angular, window, document, navigator, parseInt */
 'use strict';
 
-var ob = angular.module('Orbit', ['ngResource', 'hmGestures', 'mousewheel',]);
+var ob = angular.module('Orbit', ['ngResource', 'hmGestures', 'mousewheel', 'ui.bootstrap', 'cgPrompt']);
 
-ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, $rootScope, Images) {
+ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, $rootScope, Images, prompt) {
     $scope.init = function () {
         console.log('init');
         $scope.canvas = document.getElementById('orbit-canvas');
@@ -26,6 +26,19 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         }, 40);
 
         Images.loadLevel($scope.level);
+
+      Images.loadxml().success(function(dataXML) {
+
+        if (window.DOMParser) { // Standard
+          var tmp = new DOMParser();
+          $scope.xml = tmp.parseFromString(dataXML, "text/xml");
+        }
+        else { // IE
+          $scope.xml = new ActiveXObject("Microsoft.XMLDOM");
+          xml.async = "false";
+          xml.loadXML(dataXML);
+        }
+      });
     };
 
 
@@ -33,16 +46,18 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     $scope.clickRotation = true;
     $scope.clickTranslation = false;
 
-    $scope.translaX = 0;
-    $scope.translaY =0;
 
     $scope.offsetX = 0;
     $scope.offsetY = 0;
+
+    $scope.oldDragX = 0;
+    $scope.oldDragY = 0;
 
 
     $scope.pinMode = false;
     $scope.isFullscreen= false;
 
+    $scope.interestPoint = {};
 
     $scope.actualTileWidth = 0;
     $scope.actualTileHeight = 0;
@@ -113,8 +128,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     //Fonctions de definition de la translation
     //Appellé lors du drag en mode translation
     $scope.setTranslaXY = function(translaX, translaY){
-      $scope.translaX  = translaX;
-      $scope.translaY = translaY;
+
+
+      $scope.translaX = translaX ;
+      $scope.translaY = translaY ;
 
       $scope.edited = true;
     }
@@ -366,30 +383,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     };
 
 
-    // A REVOIR !!
-
-    $scope.writePin = function (){
-      Images.loadxml().success(function(dataXML) {
-
-        if (window.DOMParser) { // Standard
-          var tmp = new DOMParser();
-          var xml = tmp.parseFromString(dataXML, "text/xml");
-        }
-        else { // IE
-          var xml = new ActiveXObject("Microsoft.XMLDOM");
-          xml.async = "false";
-          xml.loadXML(dataXML);
-        }
-
-        //var newEle = xml.createElement('test');
-        //xml.getElementsByTagName('sequence')[0].removeChild(newEle);
-        console.log(xml);
-
-      });
-    }
-
-
-
     //Determine dans quelle ligne de case se trouve le curseur pour les zoom a 12 cases
     $scope.whichRow12 = function(cursorY, tileHeight){
 
@@ -397,254 +390,269 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
       if(cursorY > 0){
         if(cursorY <= tileHeight/2){
-           rowID ="1";
+           rowID =1;
         }
-        else rowID ="2";
+        else rowID =2;
       }
       if(cursorY < 0){
 
         if(cursorY >= -tileHeight/2){
-          rowID ="1";
+          rowID =1;
         }
-        else rowID ="0";
+        else rowID =0;
       }
 
       return rowID;
     };
 
+    $scope.whichCol12 = function(cursorX, tileWidth) {
 
-    $scope.pin = function (e){
-      if($scope.pinMode) {
+      let colID;
+
+      if(cursorX < 0 ){
+        if(cursorX >= -tileWidth){
+          colID = 3;
+        }
+        else colID = 0;
+      }
+
+      if(cursorX > 0){
+        if(cursorX <= tileWidth){
+          colID = 6;
+        }
+        else colID = 9;
+
+      }
+
+      return colID;
+    };
+
+
+
+
+
+
+    $scope.pin = function (e) {
+      if ($scope.pinMode) {
+
+        //console.log(Images.level[lvl].resources[$scope.angle]);
 
         //L'objet contenant les coordonnée du point d'interet a crée
         let pinCoord = {};
 
         // Place l'origine de X et de Y au centre de l'image, prennant en compte la translation du canvas
-        let cursorX = (e.gesture.center.pageX - $scope.canvas.clientWidth/2)   - $scope.translaX ,
-            cursorY = (e.gesture.center.pageY - $scope.canvas.clientHeight/2) - $scope.translaY ;
-
-
+        let cursorX = (e.gesture.center.pageX - $scope.canvas.clientWidth / 2) - $scope.translaX,
+          cursorY = (e.gesture.center.pageY - $scope.canvas.clientHeight / 2 + 4) - $scope.translaY;
 
         let imgID = "",
-            lvl = $scope.level, // 0 = 12 img ; 1 = 4 img ; 2 = 1 img
-            height = $scope.actualTileHeight,
-            width = $scope.actualTileWidth;
+          lvl = $scope.level, // 0 = 12 img ; 1 = 4 img ; 2 = 1 img
+          height = $scope.actualTileHeight,
+          width = $scope.actualTileWidth;
 
         let ratioX = Images.level[lvl].tileWidth / width,
           ratioY = Images.level[lvl].tileHeight / height;
-        console.log(ratioX);
 
-
-
-        //Pour chaque cas, une fois les coordonnée du point d'interet determiné, il faudra ecrire dans le fichier XML content
-
+        //Pour chaque cas, une fois les coordonnées du point d'interet determiné, il faudra ecrire dans le fichier XML content
         //POUR LES ZOOM A 1 IMAGE
-        if(lvl == 2){
+        if (lvl == 2) {
 
           //Le ratio de dessin entre l'image du canvas et l'original
           console.log("Cursor X : " + cursorX);
           console.log("Cursor Y : " + cursorY);
 
-
           //Coordonnées du pin avec les proportion de l'image original, par rapport au centre du canvas
           //Une seul image, donc pas d'opérations
           let pinX = cursorX * ratioX,
-              pinY = cursorY * ratioY;
-
+            pinY = cursorY * ratioY;
 
           pinCoord = {x: pinX, y: pinY};
-
           //return pinCoord = {x: pinX, y: pinY};
-
         }
 
-        //On connais les coordonné par rapport au centre du canvas
-        //Il faut maintenant les transformé pour que l'origine
-        //soit le bord haut gauche de l'image en question.
-
-
-
-        //Connaissant le ratio, les largeur et hauteur de cases, ca devrait pas être très dur
-
-
-
         //POUR LES ZOOM A 4 IMAGES
-        // FINI (?)
-        if(lvl == 1) {
+        if (lvl == 1) {
           console.log("Cursor X : " + cursorX);
           console.log("Cursor Y : " + cursorY);
 
-          if(cursorX <= 0) {
-            imgID += "0_";
-
-            if(cursorY <= 0) {
-              imgID += "0";
+          if (cursorX <= 0) {
+            if (cursorY <= 0) {
+              imgID = 0;
 
               //0_0
               let pinX = (cursorX + width ) * ratioX,
-                  pinY = (cursorY + height) * ratioY;
+                pinY = (cursorY + height) * ratioY;
               pinCoord = {x: pinX, y: pinY}
-
 
 
             }
             else {
               //0_1
               let pinX = (cursorX + width) * ratioX,
-                  pinY = cursorY * ratioY;
+                pinY = cursorY * ratioY;
               pinCoord = {x: pinX, y: pinY}
 
-              imgID += "1"
+              imgID = 1;
             }
 
           }
           else {
-            imgID += "1_"
             if (cursorY <= 0) {
-              imgID += "0";
+              imgID = 2;
 
               //1_0
               let pinX = cursorX * ratioX,
-                  pinY = (cursorY + height) * ratioY;
+                pinY = (cursorY + height) * ratioY;
               pinCoord = {x: pinX, y: pinY}
 
             }
             else {
 
+              imgID = 3;
+
               //1_1
               let pinX = cursorX * ratioX,
-                  pinY = cursorY * ratioY;
+                pinY = cursorY * ratioY;
               pinCoord = {x: pinX, y: pinY}
 
-              imgID += "1"
+
             }
           }
 
         }
 
         //POUR LES ZOOM A 12 IMAGES
-        //FINI
-        //Faire une fonction surement !!!
-        if(lvl == 0 ) {
+        if (lvl == 0) {
           console.log("Cursor X : " + cursorX);
           console.log("Cursor Y : " + cursorY);
 
-          if(cursorX <=0) {
-            if (cursorX <= -width) {
-              imgID += "0_";
+          imgID = $scope.whichRow12(cursorY, height) + $scope.whichCol12(cursorX, width);
 
-              imgID += $scope.whichRow12(cursorY, height);
-
-              if(imgID == '0_0'){
-                let pinX = (cursorX + 2 * width) * ratioX,
-                    pinY = (cursorY + 3/2 * width) * ratioY;
-                pinCoord = {x: pinX, y: pinY};
-              }
-
-              if(imgID == '0_1'){
-                let pinX = (cursorX + 2 * width) * ratioX,
-                    pinY = (cursorY + 1/2 * width) * ratioY;
-                pinCoord = {x: pinX, y: pinY};
-              }
-
-              if(imgID == '0_2'){
-                let pinX = (cursorX + 2 * width) * ratioX,
-                    pinY = (cursorY - 1/2 * width) * ratioY;
-                pinCoord = {x: pinX, y: pinY};
-              }
-
-            }
-            else {
-              imgID +="1_";
-
-              imgID += $scope.whichRow12(cursorY, height);
-
-              if(imgID == '1_0'){
-                let pinX = (cursorX +  width) * ratioX,
-                    pinY = (cursorY + 3/2 * width) * ratioY;
-                pinCoord = {x: pinX, y: pinY};
-              }
-
-              if(imgID == '1_1'){
-                let pinX = (cursorX +  width) * ratioX,
-                    pinY = (cursorY + 1/2 * width) * ratioY;
-                pinCoord = {x: pinX, y: pinY};
-              }
-
-              if(imgID == '1_2'){
-                let pinX = (cursorX + width) * ratioX,
-                    pinY = (cursorY - 1/2 * width) * ratioY;
-                pinCoord = {x: pinX, y: pinY};
-              }
-            }
-
-
-          }
-          else {
-            if (cursorX <= width) {
-              imgID += "2_";
-
-              imgID += $scope.whichRow12(cursorY, height);
-
-              if(imgID == '2_0'){
-                let pinX = (cursorX) * ratioX,
-                    pinY = (cursorY + 3/2 * width) * ratioY;
-                pinCoord = {x: pinX, y: pinY};
-              }
-
-              if(imgID == '2_1'){
-                let pinX = (cursorX) * ratioX,
-                    pinY = (cursorY + 1/2 * width) * ratioY;
-                pinCoord = {x: pinX, y: pinY};
-              }
-
-              if(imgID == '2_2'){
-                let pinX = (cursorX) * ratioX,
-                    pinY = (cursorY - 1/2 * width) * ratioY;
-                pinCoord = {x: pinX, y: pinY};
-              }
-
-            }
-            else {
-              imgID +="3_";
-
-              imgID += $scope.whichRow12(cursorY, height);
-
-              if(imgID == '3_0'){
-                let pinX = (cursorX - width) * ratioX,
-                    pinY = (cursorY + 3/2 * width) * ratioY;
-                pinCoord = {x: pinX, y: pinY};
-              }
-
-              if(imgID == '3_1'){
-                let pinX = (cursorX - width) * ratioX,
-                    pinY = (cursorY + 1/2 * width) * ratioY;
-                pinCoord = {x: pinX, y: pinY};
-              }
-
-              if(imgID == '3_2'){
-                let pinX = (cursorX - width) * ratioX,
-                    pinY = (cursorY - 1/2 * width) * ratioY;
-                pinCoord = {x: pinX, y: pinY};
-              }
-            }
-
+          if (imgID == 0) { //0_0
+            let pinX = (cursorX + 2 * width) * ratioX,
+              pinY = (cursorY + 3 / 2 * height) * ratioY;
+            pinCoord = {x: pinX, y: pinY};
           }
 
+          if (imgID == 1) { //0_1
+            let pinX = (cursorX + 2 * width) * ratioX,
+              pinY = (cursorY + 1 / 2 * height) * ratioY;
+            pinCoord = {x: pinX, y: pinY};
+          }
+
+          if (imgID == 2) { //0_2
+            let pinX = (cursorX + 2 * width) * ratioX,
+              pinY = (cursorY - 1 / 2 * height) * ratioY;
+            pinCoord = {x: pinX, y: pinY};
+          }
+
+          if (imgID == 3) { //1_0
+            let pinX = (cursorX + width) * ratioX,
+              pinY = (cursorY + 3 / 2 * height) * ratioY;
+            pinCoord = {x: pinX, y: pinY};
+          }
+
+          if (imgID == 4) { //1_1
+            let pinX = (cursorX + width) * ratioX,
+              pinY = (cursorY + 1 / 2 * height) * ratioY;
+            pinCoord = {x: pinX, y: pinY};
+          }
+
+          if (imgID == 5) { //1_2
+            let pinX = (cursorX + width) * ratioX,
+              pinY = (cursorY - 1 / 2 * height) * ratioY;
+            pinCoord = {x: pinX, y: pinY};
+          }
+
+          if (imgID == 6) { //2_0
+            let pinX = (cursorX) * ratioX,
+              pinY = (cursorY + 3 / 2 * height) * ratioY;
+            pinCoord = {x: pinX, y: pinY};
+          }
+
+          if (imgID == 7) { //2_1
+            let pinX = (cursorX) * ratioX,
+              pinY = (cursorY + 1 / 2 * height) * ratioY;
+            pinCoord = {x: pinX, y: pinY};
+          }
+
+          if (imgID == 8) {//2_2
+            let pinX = (cursorX) * ratioX,
+              pinY = (cursorY - 1 / 2 * height) * ratioY;
+            pinCoord = {x: pinX, y: pinY};
+          }
+
+          if (imgID == 9) { //3_0
+            let pinX = (cursorX - width) * ratioX,
+              pinY = (cursorY + 3 / 2 * height) * ratioY;
+            pinCoord = {x: pinX, y: pinY};
+          }
+
+          if (imgID == 10) { //3_1
+            let pinX = (cursorX - width) * ratioX,
+              pinY = (cursorY + 1 / 2 * height) * ratioY;
+            pinCoord = {x: pinX, y: pinY};
+          }
+
+          if (imgID == 11) { //3_2
+            let pinX = (cursorX - width) * ratioX,
+              pinY = (cursorY - 1 / 2 * height) * ratioY;
+            pinCoord = {x: pinX, y: pinY};
+          }
+
+
+          //console.log(pinCoord);
+          //console.log(imgID);
         }
 
-
-
-
-
-        console.log(pinCoord);
-        console.log(imgID);
-
-
-
+        //console.log(imgID);
+        let title = 'Test titre';
+        let desc = 'Ceci est une description de test';
+        $scope.writePin(title, desc, $scope.angle, imgID, pinCoord.x, pinCoord.y );
+        $scope.edited = true;
 
       }
     };
+
+  // A REVOIR !!
+
+  $scope.writePin = function (titre, desc, angle, tile, x, y){
+
+    /*let elmPoint = $scope.xml.createElement('PointInteret');
+    elmPoint.setAttribute('Titre', titre);
+    elmPoint.setAttribute('Description', desc);
+    elmPoint.setAttribute('Angle', angle);
+    elmPoint.setAttribute('Case', tile );
+    elmPoint.setAttribute('CoordX', x);
+    elmPoint.setAttribute('CoordY', y);
+    $scope.xml.getElementsByTagName('sequence')[0].appendChild(elmPoint);*/
+
+    let elmPoint = $scope.xml.createElement('PointInteret'),
+        elmTitre = $scope.xml.createElement('Titre'),
+        elmDesc = $scope.xml.createElement('Description'),
+
+        cdataDesc = $scope.xml.createCDATASection(desc),
+        cdataTitre = $scope.xml.createCDATASection(titre);
+
+    elmTitre.appendChild(cdataTitre);
+    elmDesc.appendChild(cdataDesc);
+
+    elmPoint.setAttribute('Angle',angle);
+    elmPoint.setAttribute('Case',tile);
+
+    elmPoint.setAttribute('CoordX', ~~x);
+    elmPoint.setAttribute('CoordY', ~~y);
+
+    elmPoint.appendChild(elmTitre);
+    elmPoint.appendChild(elmDesc);
+
+    $scope.xml.getElementsByTagName('sequence')[0].appendChild(elmPoint);
+
+
+
+
+    console.log($scope.xml);
+
+  }
 
     $scope.drag = function (e) {
 
@@ -672,10 +680,11 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
         if ($scope.clickTranslation && !$scope.clickRotation) {
 
+
           // Meilleur alternative avant de trouver comment bien faire, près de 5h passer dessus sans resultat, je dois avancer
           // Presque parfait !! Manque que l'offset
           $scope.setTranslaXY(e.gesture.center.pageX - $scope.canvas.width / 2, e.gesture.center.pageY - $scope.canvas.height / 2);
-          //console.log("Apres Transla x: " + ~~$scope.translaX + " y : " + ~~$scope.translaY );
+          //$scope.setTranslaXY(e.gesture.deltaX, e.gesture.deltaY);
 
         }
 
@@ -684,6 +693,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     $scope.dragEnd = function (e) {
 
       if(!$scope.pinMode) {
+
+        $scope.oldDragX = $scope.translaX;
+        $scope.oldDragY = $scope.translaY;
+
       }
 
       //Creer une variable offset = a l'origine du canvas a la fin du drag
@@ -740,6 +753,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                 var posX = posOriX + lapX * Math.floor(i / ILvl.rows),
                     posY = posOriY + lapY * Math.floor(i % ILvl.rows);
 
+
+              //le +1 permet de supprimé l'écart entre les 4 images sous Firefox et IE
+              //Peut etre que les images sont clippé de 1px (zoom !=500)
+              //Edit, clipping tres legerement visible en zoom max
               $scope.actualTileWidth = current[i].img.naturalWidth * $scope.zoom * 1000/ILvl.value -2;
               $scope.actualTileHeight = current[i].img.naturalHeight * $scope.zoom * 1000/ILvl.value -2;
 
@@ -752,6 +769,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                  ){
                 */
 
+                /*console.log(i);
+                console.log(current);*/
+
+
                     $scope.renderer.drawImage(
                         current[i].img,
                         0,
@@ -760,20 +781,32 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                         current[i].img.naturalHeight ,
                         posX,
                         posY,
-                        //le +1 permet de supprimé l'écart entre les 4 images sous Firefox et IE
-                        //Peut etre que les images sont clippé de 1px (zoom !=500)
-                        //Edit, clipping tres legerement visible en zoom max
                         $scope.actualTileWidth ,
                         $scope.actualTileHeight
                     );
+
+                    if($scope.interestPoint.angle = $scope.angle){
+                      console.log($scope.interestPoint.angle);
+                      //Si il existe un ou plusieurs point d'interet sur cet angle
+                      //console.log($scope.interestPoint.angle[$scope.angle]);
+                      //console.log($scope.angle);
+
+                    };
+
+
+
 
                     //ICI
                     // On vérifie si l'image dessiné possède un point d'interet
                     // Si oui on recup ses coordonnée et on le dessine
 
-                    /*
+
+
                     //Dessine un cercle
                     //posX et posY represente l'origine de l'image dessiné
+              /*
+                    let pinX = $scope.interestPoint.coord.x,
+                        pinY = $scope.interestPoint.coord.y;
 
                     var centerX = posX + pinX;
                     var centerY = posY + pinY;
@@ -786,8 +819,8 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                     $scope.renderer.fill();
                     $scope.renderer.lineWidth = 5;
                     $scope.renderer.strokeStyle = '#003300';
-                    $scope.renderer.stroke();
-                    */
+                    $scope.renderer.stroke();*/
+
 
 
 

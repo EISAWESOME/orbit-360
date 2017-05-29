@@ -108,61 +108,10 @@ ob.factory('Images', ['$resource', '$rootScope', '$http', function ($resource, $
                 $rootScope.$emit('onLoading', percent);
             }
         }
-        //loadResources avec queue sans slot
-/*        loadResources: function (lvl, angle) {
-            for (var i = 0; i < this.level[lvl].resources[angle].length; i++) {
-                this.loadingQueue.push([lvl, angle, i]);
-            }
-            if(this.loaded != 0){
-                this.loaded = 0;
-                this.loadImage();
-            }
 
-            // console.log(angle);
-        },*/
-        //load avec queue sans slot
-/*        loadImage: function () {
-            // console.log('loadImage');
-            // $rootScope.$emit('onLoading', percent);
-            var scope = this;
-            var queue = scope.loadingQueue.length;
-            console.log('loadImage '+ queue );
-            // if(scope.loadSlot < 10 && scope.loadingQueue.length > 0){
-            //     scope.loadSlot++;
-            var current = scope.loadingQueue.shift();
-            var img = new Image();
-            var source = this.level[current[0]].resources[current[1]][current[2]];//necessaire car cette info se perd si loadImage est executé plusieurs fois en parallèle
-            // console.log(source);
-            $resource(source).get(function () {
-                // console.log('$resource.get: ' + scope.level[current[0]].resources[current[1]][current[2]]);
-                // console.log(source);
 
-                // scope.loadSlot -= 1;
-                img.src = source;
-                img.isLoaded = true;
-                scope.level[current[0]].resources[current[1]][current[2]] = img;
-                // console.log(angle);
-                $rootScope.$emit('onCurrentComplete', current[1]);
-                scope.loading();
-                if(scope.loadingQueue.length == 0) scope.loaded = 1;
-                if(scope.loaded == 0){
-                    scope.loadImage();
-                }
-            });
-            // }
-        },*/
-        //loading queue sans slot
-/*        loading: function (lvl) {
-            // this.loaded += 1;
-            // var percent = this.loaded * 100 / this.level[0].resources.length;
-            var percent = this.loaded * 100;
-            percent = percent.toFixed(1);
-            if (this.loaded == 1) $rootScope.$emit('onFirstComplete');
-            if (this.loaded !== this.level[lvl].resources.length) {
-                $rootScope.$emit('onLoading', percent);
-            } else {
-                $rootScope.$emit('onComplete');
-            }
-        }*/
+
     };
 }]);
+
+

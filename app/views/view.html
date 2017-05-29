@@ -25,5 +25,7 @@
 	</ul>
 </div>
 <!-- hm-press pour les mobile ? A testé... -->
+<div id="container">
 <canvas id="orbit-canvas" hm-press="pin($event)" hm-tap="autoPlay=false; pin($event)" hm-drag="drag($event);" hm-dragstart="autoPlay=false; lastDrag=0" hm-dragend="dragEnd($event)" msd-wheel="onWheel($event);" hm-pinch-in="zoomOut();" hm-pinch-out="zoomIn();"></canvas>
+</div>
 <div ng-transclude></div>
