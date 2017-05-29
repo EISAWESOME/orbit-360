@@ -338,7 +338,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         // Verifier l'état du déplacement : Rotation ou Translation ?
         //Si translation, save le context, presser une fleche effectue un decalage de 10(?) dans sa direction
 
-      if(!$scope.pinMode) {
+
 
         if ($scope.clickRotation && !$scope.clickTranslation) {
           if (e.keyCode === 39)
@@ -378,7 +378,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
           }
 
         }
-      }
+
 
     };
 
@@ -457,8 +457,8 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         if (lvl == 2) {
 
           //Le ratio de dessin entre l'image du canvas et l'original
-          console.log("Cursor X : " + cursorX);
-          console.log("Cursor Y : " + cursorY);
+          //console.log("Cursor X : " + cursorX);
+          //console.log("Cursor Y : " + cursorY);
 
           //Coordonnées du pin avec les proportion de l'image original, par rapport au centre du canvas
           //Une seul image, donc pas d'opérations
@@ -604,7 +604,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
           //console.log(imgID);
         }
 
-        //console.log(imgID);
+        console.log(pinCoord);
         let title = 'Test titre';
         let desc = 'Ceci est une description de test';
         $scope.writePin(title, desc, $scope.angle, imgID, pinCoord.x, pinCoord.y );
@@ -785,13 +785,33 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                         $scope.actualTileHeight
                     );
 
-                    if($scope.interestPoint.angle = $scope.angle){
-                      console.log($scope.interestPoint.angle);
-                      //Si il existe un ou plusieurs point d'interet sur cet angle
-                      //console.log($scope.interestPoint.angle[$scope.angle]);
-                      //console.log($scope.angle);
+                    let points = $scope.xml.getElementsByTagName('PointInteret');
+                    for (let j = 0; j < points.length; j++) {
+                      if (points[j].getAttribute('Angle') == $scope.angle && points[j].getAttribute('Case')== i ){
 
-                    };
+                        let pinX = Number(points[j].getAttribute('CoordX')) * $scope.zoom * 1000/ILvl.value -2,
+                            pinY = Number(points[j].getAttribute('CoordY')) * $scope.zoom * 1000/ILvl.value -2;
+                        console.log(pinX );
+                        console.log(pinY );
+
+                        var centerX = posX + pinX ;
+                        var centerY = posY + pinY ;
+
+                        var radius = 10;
+
+                        $scope.renderer.beginPath();
+                        $scope.renderer.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+                        $scope.renderer.fillStyle = 'green';
+                        //+ flashy effect, genre gradient etc, à voir
+                        $scope.renderer.fill();
+                        $scope.renderer.lineWidth = 5;
+                        $scope.renderer.strokeStyle = '#003300';
+                        $scope.renderer.stroke();
+
+                      }
+                    }
+
+
 
 
 
