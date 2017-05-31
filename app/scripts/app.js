@@ -362,300 +362,35 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     };
 
-    $scope.whichRow4 = function(cursorY){
-      let rowID;
-
-      if (cursorY <= 0) {
-        rowID = 0;
-      }
-      else {
-
-        rowID = 1;
-      }
-
-      return rowID;
-
-    }
-
-
-    //Determine dans quelle ligne de case se trouve le curseur pour les zoom a 12 cases
-    $scope.whichRow12 = function(cursorY, tileHeight){
-
-      let rowID;
-
-      if(cursorY > 0){
-        if(cursorY <= tileHeight/2){
-           rowID =1;
-        }
-        else rowID =2;
-      }
-      if(cursorY < 0){
-
-        if(cursorY >= -tileHeight/2){
-          rowID =1;
-        }
-        else rowID =0;
-      }
-
-      return rowID;
-    };
-
-    $scope.whichCol4 = function(cursorX, tileWidth) {
-
-      let colID;
-
-      if(cursorX <0) {
-        colID = 0;
-      }
-      else {
-        colID = 2;
-      }
-
-      return colID;
-
-    }
-
-    $scope.whichCol12 = function(cursorX, tileWidth) {
-
-      let colID;
-
-      if(cursorX < 0 ){
-        if(cursorX >= -tileWidth){
-          colID = 3;
-        }
-        else colID = 0;
-      }
-
-      if(cursorX > 0){
-        if(cursorX <= tileWidth){
-          colID = 6;
-        }
-        else colID = 9;
-
-      }
-
-      return colID;
-    };
-
-    $scope.transfoCoord4 = function(imgID, cursorX, cursorY, ratioX, ratioY, height, width) {
-
-      let pinCoord = {};
-
-      if(imgID == 0){
-        //0_0
-        let pinX = (cursorX + width ) * ratioX,
-          pinY = (cursorY + height) * ratioY;
-        pinCoord = {x: pinX, y: pinY}
-      };
-
-      if(imgID == 1) {
-        //0_1
-        let pinX = (cursorX + width) * ratioX,
-          pinY = cursorY * ratioY;
-        pinCoord = {x: pinX, y: pinY}
-      };
-
-      if(imgID == 2) {
-        //1_0
-        let pinX = cursorX * ratioX,
-          pinY = (cursorY + height) * ratioY;
-        pinCoord = {x: pinX, y: pinY}
-
-      };
-
-      if(imgID == 3) {
-        //1_1
-        let pinX = cursorX * ratioX,
-          pinY = cursorY * ratioY;
-        pinCoord = {x: pinX, y: pinY}
-
-
-      };
-
-      return pinCoord;
-
-    };
-
-    $scope.transfoCoord12 = function(imgID, cursorX, cursorY, ratioX, ratioY, height, width) {
-
-      let pinCoord = {};
-
-      if (imgID == 0) { //0_0
-        let pinX = (cursorX + 2 * width) * ratioX,
-          pinY = (cursorY + 3 / 2 * height) * ratioY;
-        pinCoord = {x: pinX, y: pinY};
-      };
-
-      if (imgID == 1) { //0_1
-        let pinX = (cursorX + 2 * width) * ratioX,
-          pinY = (cursorY + 1 / 2 * height) * ratioY;
-        pinCoord = {x: pinX, y: pinY};
-      };
-
-      if (imgID == 2) { //0_2
-        let pinX = (cursorX + 2 * width) * ratioX,
-          pinY = (cursorY - 1 / 2 * height) * ratioY;
-        pinCoord = {x: pinX, y: pinY};
-      };
-
-      if (imgID == 3) { //1_0
-        let pinX = (cursorX + width) * ratioX,
-          pinY = (cursorY + 3 / 2 * height) * ratioY;
-        pinCoord = {x: pinX, y: pinY};
-      };
-
-      if (imgID == 4) { //1_1
-        let pinX = (cursorX + width) * ratioX,
-          pinY = (cursorY + 1 / 2 * height) * ratioY;
-        pinCoord = {x: pinX, y: pinY};
-      };
-
-      if (imgID == 5) { //1_2
-        let pinX = (cursorX + width) * ratioX,
-          pinY = (cursorY - 1 / 2 * height) * ratioY;
-        pinCoord = {x: pinX, y: pinY};
-      };
-
-      if (imgID == 6) { //2_0
-        let pinX = (cursorX) * ratioX,
-          pinY = (cursorY + 3 / 2 * height) * ratioY;
-        pinCoord = {x: pinX, y: pinY};
-      };
-
-      if (imgID == 7) { //2_1
-        let pinX = (cursorX) * ratioX,
-          pinY = (cursorY + 1 / 2 * height) * ratioY;
-        pinCoord = {x: pinX, y: pinY};
-      };
-
-      if (imgID == 8) {//2_2
-        let pinX = (cursorX) * ratioX,
-          pinY = (cursorY - 1 / 2 * height) * ratioY;
-        pinCoord = {x: pinX, y: pinY};
-      };
-
-      if (imgID == 9) { //3_0
-        let pinX = (cursorX - width) * ratioX,
-          pinY = (cursorY + 3 / 2 * height) * ratioY;
-        pinCoord = {x: pinX, y: pinY};
-      };
-
-      if (imgID == 10) { //3_1
-        let pinX = (cursorX - width) * ratioX,
-          pinY = (cursorY + 1 / 2 * height) * ratioY;
-        pinCoord = {x: pinX, y: pinY};
-      };
-
-      if (imgID == 11) { //3_2
-        let pinX = (cursorX - width) * ratioX,
-          pinY = (cursorY - 1 / 2 * height) * ratioY;
-        pinCoord = {x: pinX, y: pinY};
-      };
-
-      return pinCoord;
-
-    }
-
-
-
-
 
 
     $scope.pin = function (e) {
       if ($scope.pinMode) {
 
-        //console.log(Images.level[lvl].resources[$scope.angle]);
-
-        //Les coord du poit d'interet pour les lvl 2+
-        let pinCoord2 = {};
-        // pour le lvl 1
-        let pinCoord1 = {};
-        //pour le lvl 0
-        let pinCoord0 = {};
+        let lvl= $scope.level;
 
         // Place l'origine de X et de Y au centre de l'image, prennant en compte la translation du canvas
-        let cursorX = (e.gesture.center.pageX - $scope.canvas.clientWidth / 2) - $scope.translaX,
-          cursorY = (e.gesture.center.pageY - $scope.canvas.clientHeight / 2 + 4) - $scope.translaY;
+        let
+          cursorX = (e.gesture.center.pageX - $scope.canvas.clientWidth / 2) - $scope.translaX,
+          cursorY = (e.gesture.center.pageY - $scope.canvas.clientHeight / 2) - $scope.translaY;
 
-        let imgID2,
-          imgID1,
-          imgID0,
-          lvl = $scope.level, // 0 = 12 img ; 1 = 4 img ; 2 = 1 img
-          height = $scope.actualTileHeight,
-          width = $scope.actualTileWidth,
-          canvH = $scope.canvas.clientHeight,
-          canvW = $scope.canvas.clientWidth;
+        let
+          ratioX = Images.level[0].width /  ($scope.actualTileWidth * Images.level[lvl].cols),
+          ratioY = Images.level[0].height /  ($scope.actualTileHeight * Images.level[lvl].rows);
 
-        let ratioX = Images.level[lvl].tileWidth / width,
-          ratioY = Images.level[lvl].tileHeight / height;
+        console.log(cursorX, cursorY);
 
-        console.log($scope.actualTileHeight);
+        //Les coordonnées du point à l'echelle 1:1 de l'image d'origine scale 100%
+        let trueCoord = { x: cursorX * ratioX, y: cursorY * ratioY};
 
 
 
 
-
-
-
-        //Pour chaque cas, une fois les coordonnées du point d'interet determiné, il faudra ecrire dans le fichier XML content
-        //POUR LES ZOOM A 1 IMAGE
-        if (lvl >= 2 ) {
-          //Une seul image, donc pas d'opérations
-          let pinX = (e.gesture.center.pageX) * ratioX,
-            pinY = (e.gesture.center.pageY - $scope.posY) * ratioY;
-
-          console.log(cursorY)
-
-          pinCoord2 = {x: pinX, y: pinY};
-          imgID2 = 0; //Il n'y a qu'une seul image, l'ID de la case est toujours 0
-        }
-
-        //POUR LES ZOOM A 4 IMAGES
-        if (lvl == 1) {
-          console.log("Cursor X : " + cursorX);
-          console.log("Cursor Y : " + cursorY);
-
-          imgID1 = $scope.whichRow4(cursorY) + $scope.whichCol4(cursorX);
-          pinCoord1 = $scope.transfoCoord4(imgID1, cursorX, cursorY, ratioX, ratioY, height, width);
-
-
-          //CA FONCTIONNE !!!!!!!!!!!
-          //On prend width/2 et height*2/3 car c'est le rapport entre les cases des different level
-          // ex : Une case de lvl0 est deux fois moins large qu'une case de lvl1
-          let nextRatioX = Images.level[0].tileWidth / (width/2),
-            nextRatioY = Images.level[0].tileHeight / (height*2/3);
-
-
-          imgID0 = $scope.whichRow12(cursorY, height*2/3) + $scope.whichCol12(cursorX, width/2);
-          console.log(imgID0);
-          pinCoord0 = $scope.transfoCoord12(imgID0, cursorX, cursorY, nextRatioX, nextRatioY, height*2/3, width/2)
-
-        }
-
-        //POUR LES ZOOM A 12 IMAGES
-        if (lvl == 0) {
-          console.log("Cursor X : " + cursorX);
-          console.log("Cursor Y : " + cursorY);
-
-          imgID0 = $scope.whichRow12(cursorY, height) + $scope.whichCol12(cursorX, width);
-          pinCoord0 = $scope.transfoCoord12(imgID0, cursorX, cursorY, ratioX, ratioY, height, width);
-
-          let nextRatioX = Images.level[1].tileWidth / (width*2),
-            nextRatioY = Images.level[1].tileHeight / (height*3/2);
-
-
-          imgID1 = $scope.whichRow4(cursorY, height*3/2) + $scope.whichCol4(cursorX, width*2);
-          console.log(imgID1);
-          pinCoord1 = $scope.transfoCoord4(imgID1, cursorX, cursorY, nextRatioX, nextRatioY, height*3/2, width*2)
-
-
-
-        }
 
         //console.log(pinCoord);
         let title = 'Test titre';
         let desc = 'Ceci est une description de test';
-        $scope.writePin(title, desc, $scope.angle, imgID2, imgID1, imgID0, pinCoord2, pinCoord1, pinCoord0, canvW, canvH );
+        $scope.writePin(title, desc, $scope.angle, trueCoord, lvl );
 
         $scope.edited = true;
 
@@ -664,72 +399,32 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
   // A REVOIR !!
 
-  $scope.writePin = function (titre, desc, angle, tile2, tile1, tile0, coordLvl2, coordLvl1, coordLvl0, canvW, canvH){
+  $scope.writePin = function (titre, desc, angle, coord, lvl){
 
     let elmPoint = $scope.xml.createElement('PointInteret'),
         elmTitre = $scope.xml.createElement('Titre'),
         elmDesc = $scope.xml.createElement('Description'),
-        elmLevel = $scope.xml.createElement('Level'),
-        elmCase = $scope.xml.createElement('Case'),
         elmCoord = $scope.xml.createElement('Coord'),
-        elmOrig = $scope.xml.createElement('CanvOrig'),
 
         cdataDesc = $scope.xml.createCDATASection(desc),
         cdataTitre = $scope.xml.createCDATASection(titre);
 
     elmPoint.setAttribute('Angle',angle);
+    elmPoint.setAttribute('Level', lvl)
+    elmCoord.setAttribute('x', coord.x);
+    elmCoord.setAttribute('y', coord.y);
 
-    elmOrig.setAttribute('width', canvW);
-    elmOrig.setAttribute('height', canvH);
 
     elmTitre.appendChild(cdataTitre);
     elmDesc.appendChild(cdataDesc);
 
 
-    let elmLevel2 = $scope.xml.createElement('lvl2'),
-        elmLevel1 = $scope.xml.createElement('lvl1'),
-        elmLevel0 = $scope.xml.createElement('lvl0');
-
-    let elmCase2 = elmCase.cloneNode(true),
-        elmCase1 = elmCase.cloneNode(true),
-        elmCase0 = elmCase.cloneNode(true);
-
-    let elmCoord2= elmCoord.cloneNode(true),
-        elmCoord1= elmCoord.cloneNode(true),
-        elmCoord0= elmCoord.cloneNode(true);
-
-    elmCase2.setAttribute('tile', tile2);
-    elmCase1.setAttribute('tile', tile1);
-    elmCase0.setAttribute('tile', tile0);
-
-    elmCoord2.setAttribute('x', coordLvl2.x);
-    elmCoord2.setAttribute('y', coordLvl2.y);
-
-    elmCoord1.setAttribute('x', coordLvl1.x);
-    elmCoord1.setAttribute('y', coordLvl1.y);
-
-    elmCoord0.setAttribute('x', coordLvl0.x);
-    elmCoord0.setAttribute('y', coordLvl0.y);
-
-
-    elmLevel2.appendChild(elmCase2);
-    elmLevel2.appendChild(elmCoord2);
-
-    elmLevel1.appendChild(elmCase1);
-    elmLevel1.appendChild(elmCoord1);
-
-    elmLevel0.appendChild(elmCase0);
-    elmLevel0.appendChild(elmCoord0);
-
-    elmLevel.appendChild(elmLevel0);
-    elmLevel.appendChild(elmLevel1);
-    elmLevel.appendChild(elmLevel2);
-
 
 
     elmPoint.appendChild(elmTitre);
     elmPoint.appendChild(elmDesc);
-    elmPoint.appendChild(elmLevel);
+    elmPoint.appendChild(elmCoord);
+
 
 
 
@@ -854,71 +549,73 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                         $scope.actualTileHeight
                     );
 
-                    let points = $scope.xml.getElementsByTagName('PointInteret');
-
-                    console.log('Lvl: ' + lvl);
-                    for (let j = 0; j < points.length; j++) {
-
-                      //Si il existe un ou plusieur point d'interet sur cet angle
-                      if (points[j].getAttribute('Angle') == $scope.angle){
-
-                        //Recupere les trois balise level
-                        let level = points[j].getElementsByTagName('Level');
-
-                        //console.log(level[0]);
-
-                        let currentLevel;
-                        if(lvl >= 2) {
-                           currentLevel = level[0].childNodes[2];
-                        }
-                        else
-                          currentLevel = level[0].childNodes[lvl];
-
-                        let tile = currentLevel.getElementsByTagName('Case');
-                        let tileID = tile[0].getAttribute('tile');
-
-                        //console.log(tileID);
-
-
-                        if(tileID == i) {
-
-                          let coord = currentLevel.getElementsByTagName('Coord');
-                          let x = Number(coord[0].getAttribute('x'));
-                          let y = Number(coord[0].getAttribute('y'));
-
-
-                           let pinX = x * $scope.zoom * 1000/ILvl.value -2,
-                           pinY = y * $scope.zoom * 1000/ILvl.value -2;
-
-                           //console.log( posY);
-
-                           var centerX = pinX + posX ;
-
-                           var centerY = pinY + posY  ;
-                           var radius = 5;
-                           //console.log(pinX, pinY);
-
-                           $scope.renderer.beginPath();
-                           $scope.renderer.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-                           $scope.renderer.fillStyle = 'black';
-                           //+ flashy effect, genre gradient etc, à voir
-                           $scope.renderer.fill();
-                           $scope.renderer.lineWidth = 5;
-                           $scope.renderer.strokeStyle = 'red';
-                           $scope.renderer.stroke();
-
-                          /*Il faut Resize l'image, et prendre en compte sa taille pour que ce soit la point qui soit a l'endroit du clic
-                           Et non pas le coin haut gauche
-                           let img = new Image();
-                           img.onload = function() {
-                           $scope.renderer.drawImage(img,centerX,centerY);
-                           }
-                           img.src = 'images/pinIcon.ico';*/
-                        }
-
-                      }
-                    }
             }
+            //Une fois que toute les cases sont dessinées, on dessine les points d'interet
+            let points = $scope.xml.getElementsByTagName('PointInteret');
+            //console.log(points);
+            for (let j = 0; j < points.length; j++) {
+
+              //Si il existe un ou plusieurs point d'interet sur cet angle
+              if (points[j].getAttribute('Angle') == $scope.angle) {
+
+                //On recupere le level de reference du point
+                let
+                  refLevel = points[j].getAttribute('Level'),
+                  ratioX = Images.level[0].width / Images.level[lvl].width,
+                  ratioY = Images.level[0].height / Images.level[lvl].height;
+
+                //console.log(ratioX, ratioY);
+
+
+
+                let
+                  pinCoord = points[j].getElementsByTagName('Coord'),
+                  pinX = Number(pinCoord[0].getAttribute('x')),
+                  pinY = Number(pinCoord[0].getAttribute('y'));
+
+                let
+                  drawX = pinX * $scope.zoom,
+                  drawY = pinY * $scope.zoom;
+
+                var centerX = (drawX + posX)   ;
+                var centerY = (drawY + posY)   ;
+
+                //console.log($scope.zoom)
+
+                //console.log(pinX, pinY)
+
+                console.log(centerX, centerY);
+
+                var radius = 5;
+                //console.log(pinX, pinY);
+
+                $scope.renderer.beginPath();
+                $scope.renderer.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+                $scope.renderer.fillStyle = 'black';
+                $scope.renderer.fill();
+                $scope.renderer.lineWidth = 5;
+                $scope.renderer.strokeStyle = 'red';
+                $scope.renderer.stroke();
+
+
+
+
+
+
+                //console.log(level[0]);
+
+              }
+            }
+
+
+
+
+
+
+
+
+
+
             $scope.edited = false;
         }
     };
