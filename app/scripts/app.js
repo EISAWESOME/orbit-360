@@ -374,11 +374,13 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
           cursorX = (e.gesture.center.pageX - $scope.canvas.clientWidth / 2) - $scope.translaX,
           cursorY = (e.gesture.center.pageY - $scope.canvas.clientHeight / 2) - $scope.translaY;
 
+
+        //On etablie le ratio de proportion entre l'image scale 100% et l'image affiché à l'écran
         let
           ratioX = Images.level[0].width /  ($scope.actualTileWidth * Images.level[lvl].cols),
           ratioY = Images.level[0].height /  ($scope.actualTileHeight * Images.level[lvl].rows);
 
-        console.log(cursorX, cursorY);
+        console.log(ratioX, ratioY);
 
         //Les coordonnées du point à l'echelle 1:1 de l'image d'origine scale 100%
         let trueCoord = { x: cursorX * ratioX, y: cursorY * ratioY};
@@ -577,12 +579,15 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                   drawX = pinX * $scope.zoom,
                   drawY = pinY * $scope.zoom;
 
-                var centerX = (drawX + posX)   ;
-                var centerY = (drawY + posY)   ;
+                var centerX = ($scope.canvas.clientWidth/2 + drawX)   ;
+                var centerY = ($scope.canvas.clientHeight/2 + drawY)   ;
 
                 //console.log($scope.zoom)
 
-                //console.log(pinX, pinY)
+                console.log('PosX : ' + posX, 'PosY : ' +  posY)
+
+                console.log('drawX : ' + drawX, 'drawY : ' +  drawY)
+
 
                 console.log(centerX, centerY);
 
