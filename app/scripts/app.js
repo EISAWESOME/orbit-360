@@ -71,16 +71,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
 
 
-        /*var tooltip = {
-          title: "test aaaa",
-          image: "999",
-          x: "0",
-          y: "0",
-          content: "abc"
-        };
 
-
-        $scope.tooltips.push(tooltip);*/
 
 
       });
@@ -174,12 +165,30 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         $scope.loading = percent;
     });
 
+
+    $scope.exportXML = function(){
+
+
+      let content = new XMLSerializer().serializeToString($scope.xml);
+      if(content){
+        console.log(content);
+        let popup = window.open();
+        popup.document.write("<textarea style='width: 100%; height: 100%; border:none;'>" + content + "</textarea>");
+      }
+
+
+
+
+    };
+
     $scope.setAngle = function(angle){
         if(angle >= Images.nbAngle) $scope.angle = angle - Images.nbAngle;
         else if (angle < 0) $scope.angle = angle + Images.nbAngle;
         else $scope.angle = angle;
         $scope.edited = true;
     };
+
+
 
     //Fonctions d'incrémentation de la translation
     //Appellé a l'appui d'une touche flèche du clavier
@@ -257,23 +266,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
       }
 
 
-          /*
-
-        console.log('goTo');
-
-        var t = $scope.iteration,
-            b = $scope.goingFrom,
-            c = $scope.tooltip.image - b,
-            d = Math.abs(Math.round(c / 2));
-        d = (d === 0) ? 1 : d;
-        t /= d;
-        t--;
-
-        if ($scope.iteration > d) {
-            $scope.goingFrom = null;
-            $scope.tooltipVisible = true;
-            $scope.$apply();
-        }*/
     };
 
     $scope.toggleFullscreen = function () {
@@ -339,10 +331,11 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                 $scope.tooltipVisible = false;
                 $scope.$apply();
             }
-            //$scope.draw($scope.angle + 1);
             $scope.setAngle($scope.angle + 1);
             window.setTimeout($scope.play, 40);
         }
+
+        //A REVOIR, UTILE ??
         /*
         if ($scope.goingFrom != null) {
             $scope.goTo();
@@ -510,18 +503,16 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
               let desc = descr;
               $scope.writePin(title, desc, $scope.angle, trueCoord);
 
-              let element = angular.element("<ul>" +
-                            "<li>"+ titre +"</li>" +
-                            "<li>"+ descr +"</li>" +
-                            "</ul> ");
-              //Menu.append(element)
+
+              let tooltip = {
+                title: titre,
+                image: $scope.angle, //Angle
+                x: trueCoord.x,
+                y: trueCoord.y
+              };
 
 
-
-              //ICI Il faudra creer un element (li ?) et l'append à la barre vertical
-              //Il faudra aussi creer une fonction qui va permettre de supprimer un point d'interet
-              // = dans le menu + XML + redraw
-
+              $scope.tooltips.push(tooltip);
 
               $scope.edited = true;
 
