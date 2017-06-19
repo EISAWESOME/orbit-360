@@ -29,20 +29,6 @@ orbitview a {
 orbitview a:hover {
   text-decoration: underline;
 }
-/*
-#sideBar {
-
-  position: absolute;
-  top:  0px;
-  left: 0px;
-  width: 20%;
-  height: 100%;
-  border-left: 3px solid transparent;
-  border-right: 3px solid transparent;
-  background: grey;
-
-}
-*/
 
 
 #orbit-canvas {

@@ -26,9 +26,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
           $scope.loadingReso = $scope.waitingload;
 
             $scope.draw();
-            // if($scope.waitingload){
-
-            // }
         }, 40);
 
         Images.loadLevel($scope.level);
@@ -60,7 +57,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
           let tooltip = {
             title: titre[0].textContent,
-            image: angle, //Angle
+            image: angle,
             x: coord.x,
             y: coord.y
           };
@@ -79,11 +76,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     };
 
-  //***********************************************
-
-
-
-  function detectIE() {
+    function detectIE() {
     var ua = window.navigator.userAgent;
 
     var msie = ua.indexOf('MSIE ');
@@ -107,54 +100,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     // other browser
     return false;
-  }
-
-  $scope.deletePoint = function(e, id) {
+  };
 
 
-    $scope.tooltip = $scope.tooltips[id];
-    $scope.tooltip.id = id;
 
-
-    let c = confirm('Sure de vouloir supprimé ??');
-    if(c){
-
-      //Remove dans le tooltip
-      e.target.parentNode.parentNode.remove();
-
-
-      //Remove dans le XML
-
-      let points = $scope.xml.getElementsByTagName('PointInteret');
-      for(let i =0; i < points.length; i++){
-        if(points[i].getAttribute('Angle') == $scope.tooltip.image){
-
-          if(points[i].getElementsByTagName('Titre')[0].textContent == $scope.tooltip.title){
-            let coord = points[i].getElementsByTagName('Coord')[0];
-
-            if(coord.getAttribute('x') == $scope.tooltip.x){
-
-              if(coord.getAttribute('y') == $scope.tooltip.y){
-                points[i].parentNode.removeChild(points[i]);
-                console.log($scope.xml);
-
-              }
-            }
-          }
-        }
-      }
-    }
-
-    $scope.edited = true ;
-
-
-  }
-
-
-  //************************************************
-
-
-    //Peut être exprimer autrement ?
     $scope.clickRotation = true;
     $scope.clickTranslation = false;
 
@@ -200,8 +149,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         $scope.edited = true;
         $scope.setAngle($scope.angle + 1);
     });
-
-    //A revoir
     $rootScope.$on('onCurrentComplete', function (/*event, angle*/) {
         // console.log('onCurrentComplete '+ angle);
         // $scope.angle = angle;
@@ -217,11 +164,44 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         $scope.loading = percent;
     });
 
+    //Fonction de suppression d'un point d'interet
+    $scope.deletePoint = function(e, id) {
 
+    $scope.tooltip = $scope.tooltips[id];
+    $scope.tooltip.id = id;
+
+    let c = confirm('Sure de vouloir supprimé ??');
+    if(c){
+      //Remove dans le tooltip
+      e.target.parentNode.parentNode.remove();
+
+      //Remove dans le XML
+      let points = $scope.xml.getElementsByTagName('PointInteret');
+      for(let i =0; i < points.length; i++){
+        if(points[i].getAttribute('Angle') == $scope.tooltip.image){
+
+          if(points[i].getElementsByTagName('Titre')[0].textContent == $scope.tooltip.title){
+            let coord = points[i].getElementsByTagName('Coord')[0];
+
+            if(coord.getAttribute('x') == $scope.tooltip.x){
+
+              if(coord.getAttribute('y') == $scope.tooltip.y){
+                points[i].parentNode.removeChild(points[i]);
+                console.log($scope.xml);
+
+              }
+            }
+          }
+        }
+      }
+    }
+
+    $scope.edited = true ;
+
+  };
+
+    //Fonction d'export du flux XML courant => Dumb le flux dans une nouvelle fenêtre
     $scope.exportXML = function(){
-
-      console.log($scope.xml);
-
       let content = (new XMLSerializer().serializeToString($scope.xml));
       if(content){
 
@@ -233,22 +213,11 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
           popup.document.write("<textarea style='width: 100%; height: 100%; border:none;'>" + content + "</textarea>");
         }
         else {
-
           window.open('data:text/xml,'+encodeURIComponent(content),
             "Test", "width=900,height=900,scrollbars=1,resizable=1");
-
         }
-
-
-
-
       }
-
-
-
-
     };
-
     $scope.setAngle = function(angle){
         if(angle >= Images.nbAngle) $scope.angle = angle - Images.nbAngle;
         else if (angle < 0) $scope.angle = angle + Images.nbAngle;
@@ -257,18 +226,17 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     };
 
 
-
     //Fonctions d'incrémentation de la translation
     //Appellé a l'appui d'une touche flèche du clavier
     $scope.incrTranslaX = function(translaX){
         $scope.translaX += translaX;
         $scope.edited = true;
-    }
+    };
 
     $scope.incrTranslaY = function(translaY){
         $scope.translaY += translaY;
         $scope.edited = true;
-    }
+    };
 
     //Fonctions de definition de la translation
     //Appellé lors du drag en mode translation
@@ -277,7 +245,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
       $scope.translaY = translaY ;
 
       $scope.edited = true;
-    }
+    };
 
     $scope.resetTransla = function() {
         $scope.translaY = 0;
@@ -316,8 +284,8 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         }
     };
 
+    //Fonction qui permet la rotation jusqu'a un angle donné
     $scope.goTo = function (angle) {
-
 
       //Faire pour qu'il tourne dans le sens le plus rapide en fonction du depart et de la destination ??
       if($scope.angle != angle){
@@ -326,8 +294,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         console.log($scope.angle);
         window.setTimeout($scope.goTo, 5, angle);
       }
-
-
     };
 
     $scope.toggleFullscreen = function () {
@@ -384,6 +350,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         $scope.edited = true;
     };
 
+    //Fonction qui permet la rotation automatique du modele
     $scope.play = function () {
         $scope.resetTransla();
         var n = new Date();
@@ -396,16 +363,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
             $scope.setAngle($scope.angle + 1);
             window.setTimeout($scope.play, 40);
         }
-
-        //A REVOIR, UTILE ??
-        /*
-        if ($scope.goingFrom != null) {
-            $scope.goTo();
-            $scope.iteration++;
-        } else {
-            $scope.iteration = 0;
-        }
-        */
     };
 
     //Partie a recheck pour le bug loading
@@ -422,7 +379,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
         if(zoom != $scope.zoom) $scope.edited = true;
     };
-
 
     $scope.zoomOut = function () {
         $scope.zoom -= 0.1;
@@ -450,7 +406,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
       if($scope.isEditMode == false){
         $scope.pinMode = false;
       }
-    }
+    };
 
     $scope.switchMode = function () {
 
@@ -477,6 +433,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     };
 
+    //Gestion des event de touche
     $scope.keymove = function (e) {
         console.log(e.keyCode);
 
@@ -521,9 +478,9 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     };
 
-
-
+    //Fonction qui gere la création d'un point d'interet
     $scope.pin = function (e) {
+      //Se declenche au clic si le pinmode est activé
       if ($scope.pinMode) {
 
         let lvl= $scope.level;
@@ -551,7 +508,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
             cursorY < -$scope.actualTileHeight * Images.level[lvl].rows /2)
           )
         {
-
+          //ICI
           //Trouver comment utiliser angular material et faire un joli prompt
 
           let titre = prompt('Titre ?', 'Kappa123');
@@ -565,14 +522,12 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
               let desc = descr;
               $scope.writePin(title, desc, $scope.angle, trueCoord);
 
-
               let tooltip = {
                 title: titre,
                 image: $scope.angle, //Angle
                 x: trueCoord.x,
                 y: trueCoord.y
               };
-
 
               $scope.tooltips.push(tooltip);
 
@@ -581,13 +536,11 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
             }
           }
         }
-
       }
     };
 
-  // A REVOIR !!
-
-  $scope.writePin = function (titre, desc, angle, coord){
+    //Ecris le point d'interet dans le flux XML
+    $scope.writePin = function (titre, desc, angle, coord){
 
     let elmPoint = $scope.xml.createElement('PointInteret'),
         elmTitre = $scope.xml.createElement('Titre'),
@@ -619,7 +572,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     console.log($scope.xml);
 
-  }
+  };
 
     $scope.drag = function (e) {
 
@@ -654,20 +607,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
           //$scope.setTranslaXY(e.gesture.deltaX, e.gesture.deltaY);
 
         }
-
-    };
-
-    $scope.dragEnd = function (e) {
-
-      if(!$scope.pinMode) {
-
-        $scope.oldDragX = $scope.translaX;
-        $scope.oldDragY = $scope.translaY;
-
-      }
-
-      //Creer une variable offset = a l'origine du canvas a la fin du drag
-
 
     };
 
