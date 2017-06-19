@@ -83,20 +83,72 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
 
 
+  function detectIE() {
+    var ua = window.navigator.userAgent;
+
+    var msie = ua.indexOf('MSIE ');
+    if (msie > 0) {
+      // IE 10 or older => return version number
+      return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+    }
+
+    var trident = ua.indexOf('Trident/');
+    if (trident > 0) {
+      // IE 11 => return version number
+      var rv = ua.indexOf('rv:');
+      return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+    }
+
+    var edge = ua.indexOf('Edge/');
+    if (edge > 0) {
+      // Edge (IE 12+) => return version number
+      return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
+    }
+
+    // other browser
+    return false;
+  }
+
+  $scope.deletePoint = function(e, id) {
 
 
+    $scope.tooltip = $scope.tooltips[id];
+    $scope.tooltip.id = id;
 
 
+    let c = confirm('Sure de vouloir supprimé ??');
+    if(c){
+
+      //Remove dans le tooltip
+      e.target.parentNode.parentNode.remove();
 
 
+      //Remove dans le XML
+
+      let points = $scope.xml.getElementsByTagName('PointInteret');
+      for(let i =0; i < points.length; i++){
+        if(points[i].getAttribute('Angle') == $scope.tooltip.image){
+
+          if(points[i].getElementsByTagName('Titre')[0].textContent == $scope.tooltip.title){
+            let coord = points[i].getElementsByTagName('Coord')[0];
+
+            if(coord.getAttribute('x') == $scope.tooltip.x){
+
+              if(coord.getAttribute('y') == $scope.tooltip.y){
+                points[i].parentNode.removeChild(points[i]);
+                console.log($scope.xml);
+
+              }
+            }
+          }
+        }
+      }
+    }
+
+    $scope.edited = true ;
 
 
-
-
-
-
-
-
+  }
 
 
   //************************************************
@@ -168,12 +220,28 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     $scope.exportXML = function(){
 
+      console.log($scope.xml);
 
-      let content = new XMLSerializer().serializeToString($scope.xml);
+      let content = (new XMLSerializer().serializeToString($scope.xml));
       if(content){
-        console.log(content);
-        let popup = window.open();
-        popup.document.write("<textarea style='width: 100%; height: 100%; border:none;'>" + content + "</textarea>");
+
+        let IE = detectIE()
+
+        if (IE) {
+          let popup = window.open();
+          //On wrap le content dans un textarea pour que les markups soient conservés
+          popup.document.write("<textarea style='width: 100%; height: 100%; border:none;'>" + content + "</textarea>");
+        }
+        else {
+
+          window.open('data:text/xml,'+encodeURIComponent(content),
+            "Test", "width=900,height=900,scrollbars=1,resizable=1");
+
+        }
+
+
+
+
       }
 
 
@@ -192,12 +260,12 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     //Fonctions d'incrémentation de la translation
     //Appellé a l'appui d'une touche flèche du clavier
-    $scope.incrTranslaX = function(translaX, lastX = 0){
+    $scope.incrTranslaX = function(translaX){
         $scope.translaX += translaX;
         $scope.edited = true;
     }
 
-    $scope.incrTranslaY = function(translaY, lastY = 0){
+    $scope.incrTranslaY = function(translaY){
         $scope.translaY += translaY;
         $scope.edited = true;
     }
@@ -229,12 +297,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         $scope.tooltipVisible = false;
         $scope.goingFrom = $scope.angle;
         console.log(id);
-        //Il faut selectionné le tooltip a l'index correspondant
-        //Et recuperer son angle associé
-
-        let currentTooltip = document.querySelector('#tt'+id);
-        console.log(currentTooltip)
-        console.log($scope.tooltip.image);
         $scope.goTo($scope.tooltip.image);
     };
 
@@ -658,8 +720,8 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
               // -2 pour le debug
               //Peut etre que les images sont clippé de 1px (zoom !=500)
               //Edit, clipping tres legerement visible en zoom max
-              $scope.actualTileWidth = current[i].img.naturalWidth * $scope.zoom * 1000/ILvl.value -2;
-              $scope.actualTileHeight = current[i].img.naturalHeight * $scope.zoom * 1000/ILvl.value -2;
+              $scope.actualTileWidth = current[i].img.naturalWidth * $scope.zoom * 1000/ILvl.value +1;
+              $scope.actualTileHeight = current[i].img.naturalHeight * $scope.zoom * 1000/ILvl.value +1;
 
                     $scope.renderer.drawImage(
                         current[i].img,

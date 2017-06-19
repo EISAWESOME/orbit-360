@@ -1,8 +1,9 @@
+<div id="sideBar"></div>
 <div id="orbit-loader-reso" ng-show="loadingReso"></div>
 <div id="orbit-loader" ng-show="loading" >{{loading}}%</div>
 <div id="description-button" ng-class="{active:description.visible}" ng-click="description.visible=!description.visible"><i class="fa fa-info"></i></div>
 <div id="edition-button" ng-click="editMode()"><i class="fa fa-pencil-square-o" ng-class="{'red' : isEditMode, 'white' : !isEditMode }"></i></div>
-<div id="export-button" ng-click="exportXML()"><i class="fa fa-gift"></i></div>
+<div id="export-button" ng-click="exportXML()"><i class="fa fa-gift" ng-click="text()"></i></div>
 <div id="description" ng-show="description.visible">
 	<h1>{{description.title}}</h1>
 	<p ng-bind-html="description.content"></p>
@@ -18,7 +19,7 @@
 		<li ng-click="showTooltips=!showTooltips">
 			<i class="fa fa-bars"></i>
 			<ul id="tooltips" ng-show="showTooltips">
-				<li ng-repeat="tooltip in tooltips" ng-click="selectTooltip($index)" id="tt{{tooltips.indexOf(tooltip)}}">{{tooltip.title}}<i class=" fa fa-times" style="float:right; color:red;"></i></li>
+        <li ng-repeat="tooltip in tooltips" style="display:flex"><div style="width : 80%" ng-click="selectTooltip($index)">{{tooltip.title}}</div><div style="width: 20%" ng-click="deletePoint($event, $index); $event.stopPropagation()"><i class=" fa fa-times" style="float : right; color:red;"></i></div></li>
 			</ul>
 		</li>
 
