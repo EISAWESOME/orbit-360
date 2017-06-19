@@ -1,10 +1,16 @@
 /*global angular, window, document, navigator, parseInt */
 'use strict';
 
-var ob = angular.module('Orbit', ['ngResource', 'hmGestures', 'mousewheel', 'ui.bootstrap', 'cgPrompt']);
+var ob = angular.module('Orbit', ['ngResource', 'hmGestures', 'mousewheel', 'cgPrompt', 'ui.bootstrap']);
 
-ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, $rootScope, Images, prompt) {
+ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, $rootScope, Images) {
+
+
+
+
+
     $scope.init = function () {
+
         console.log('init');
         $scope.canvas = document.getElementById('orbit-canvas');
         $scope.renderer = $scope.canvas.getContext('2d');
@@ -38,19 +44,81 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
           xml.async = "false";
           xml.loadXML(dataXML);
         }
+
+
+        let colPoints = $scope.xml.getElementsByTagName('PointInteret');
+
+        for(let i=0;  i<colPoints.length ; i++){
+
+          let titre = colPoints[i].getElementsByTagName('Titre');
+          let angle = colPoints[i].attributes[0].value;
+          let coord = {
+            x : colPoints[i].getElementsByTagName('Coord')[0].getAttribute('x'),
+            y : colPoints[i].getElementsByTagName('Coord')[0].getAttribute('y')
+          }
+
+
+          let tooltip = {
+            title: titre[0].textContent,
+            image: angle, //Angle
+            x: coord.x,
+            y: coord.y
+          };
+
+
+          $scope.tooltips.push(tooltip);
+        }
+
+
+
+        /*var tooltip = {
+          title: "test aaaa",
+          image: "999",
+          x: "0",
+          y: "0",
+          content: "abc"
+        };
+
+
+        $scope.tooltips.push(tooltip);*/
+
+
       });
+
+
     };
+
+  //***********************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //************************************************
 
 
     //Peut être exprimer autrement ?
     $scope.clickRotation = true;
     $scope.clickTranslation = false;
 
-    $scope.oldDragX = 0; //Inutilisé
-    $scope.oldDragY = 0;
+    $scope.isEditMode = false;
 
     $scope.posX = 0;
-    $scope.posX = 0;
+    $scope.posY = 0;
 
 
     $scope.pinMode = false;
@@ -60,6 +128,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     $scope.actualTileWidth = 0;
     $scope.actualTileHeight = 0;
+
 
 
     $scope.loading = '0';
@@ -140,15 +209,24 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     }
 
     $scope.selectTooltip = function (id) {
+        /*
         if ($scope.goingFrom !== null) {
             return;
         }
+        */
         $scope.autoPlay = false;
         $scope.tooltip = $scope.tooltips[id];
         $scope.tooltip.id = id;
         $scope.tooltipVisible = false;
         $scope.goingFrom = $scope.angle;
-        $scope.goTo();
+        console.log(id);
+        //Il faut selectionné le tooltip a l'index correspondant
+        //Et recuperer son angle associé
+
+        let currentTooltip = document.querySelector('#tt'+id);
+        console.log(currentTooltip)
+        console.log($scope.tooltip.image);
+        $scope.goTo($scope.tooltip.image);
     };
 
     $scope.getTooltipX = function () {
@@ -167,10 +245,22 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         }
     };
 
-    $scope.goTo = function () {
+    $scope.goTo = function (angle) {
+
+
+      //Faire pour qu'il tourne dans le sens le plus rapide en fonction du depart et de la destination ??
+      if($scope.angle != angle){
+
+        $scope.setAngle($scope.angle +1);
+        console.log($scope.angle);
+        window.setTimeout($scope.goTo, 5, angle);
+      }
+
+
+          /*
 
         console.log('goTo');
-        $scope.resetTransla();
+
         var t = $scope.iteration,
             b = $scope.goingFrom,
             c = $scope.tooltip.image - b,
@@ -178,12 +268,12 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         d = (d === 0) ? 1 : d;
         t /= d;
         t--;
-        //$scope.draw(Math.round(c * (t * t * t + 1) + b));
+
         if ($scope.iteration > d) {
             $scope.goingFrom = null;
             $scope.tooltipVisible = true;
             $scope.$apply();
-        }
+        }*/
     };
 
     $scope.toggleFullscreen = function () {
@@ -253,12 +343,14 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
             $scope.setAngle($scope.angle + 1);
             window.setTimeout($scope.play, 40);
         }
+        /*
         if ($scope.goingFrom != null) {
             $scope.goTo();
             $scope.iteration++;
         } else {
             $scope.iteration = 0;
         }
+        */
     };
 
     //Partie a recheck pour le bug loading
@@ -295,7 +387,19 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
             $scope.level--;
     };
 
+    $scope.editMode = function(){
+
+      $scope.isEditMode = !$scope.isEditMode;
+
+      //Desactive le pinmode en meme temps que la modification
+      if($scope.isEditMode == false){
+        $scope.pinMode = false;
+      }
+    }
+
     $scope.switchMode = function () {
+
+
 
       //L'execution de cette fonction le mode Rotation / Translation
       //En fonction du mode, les comportements du drag, ainsi que des touche flèches sont
@@ -385,23 +489,52 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         //Les coordonnées du point à l'echelle 1:1 de l'image d'origine scale 100%
         let trueCoord = { x: cursorX * ratioX, y: cursorY * ratioY};
 
+        //On vérifie que la curseur soit dans la zone de dessin pour crée le point d'interet
+        if( !(cursorX > $scope.actualTileWidth * Images.level[lvl].cols / 2 ||
+            cursorX < -$scope.actualTileWidth * Images.level[lvl].cols / 2 ||
+            cursorY > $scope.actualTileHeight * Images.level[lvl].rows /2 ||
+            cursorY < -$scope.actualTileHeight * Images.level[lvl].rows /2)
+          )
+        {
+
+          //Trouver comment utiliser angular material et faire un joli prompt
+
+          let titre = prompt('Titre ?', 'Kappa123');
+
+          if(titre != null){
+            let descr = prompt('Desc ?', 'memes');
+
+            if(descr !=null){
+              //console.log(pinCoord);
+              let title = titre;
+              let desc = descr;
+              $scope.writePin(title, desc, $scope.angle, trueCoord);
+
+              let element = angular.element("<ul>" +
+                            "<li>"+ titre +"</li>" +
+                            "<li>"+ descr +"</li>" +
+                            "</ul> ");
+              //Menu.append(element)
 
 
 
+              //ICI Il faudra creer un element (li ?) et l'append à la barre vertical
+              //Il faudra aussi creer une fonction qui va permettre de supprimer un point d'interet
+              // = dans le menu + XML + redraw
 
-        //console.log(pinCoord);
-        let title = 'Test titre';
-        let desc = 'Ceci est une description de test';
-        $scope.writePin(title, desc, $scope.angle, trueCoord, lvl );
 
-        $scope.edited = true;
+              $scope.edited = true;
+
+            }
+          }
+        }
 
       }
     };
 
   // A REVOIR !!
 
-  $scope.writePin = function (titre, desc, angle, coord, lvl){
+  $scope.writePin = function (titre, desc, angle, coord){
 
     let elmPoint = $scope.xml.createElement('PointInteret'),
         elmTitre = $scope.xml.createElement('Titre'),
@@ -412,7 +545,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         cdataTitre = $scope.xml.createCDATASection(titre);
 
     elmPoint.setAttribute('Angle',angle);
-    elmPoint.setAttribute('Level', lvl)
     elmCoord.setAttribute('x', coord.x);
     elmCoord.setAttribute('y', coord.y);
 
@@ -532,6 +664,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
 
               //le +1 permet de supprimé l'écart entre les 4 images sous Firefox et IE
+              // -2 pour le debug
               //Peut etre que les images sont clippé de 1px (zoom !=500)
               //Edit, clipping tres legerement visible en zoom max
               $scope.actualTileWidth = current[i].img.naturalWidth * $scope.zoom * 1000/ILvl.value -2;
@@ -539,12 +672,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
                     $scope.renderer.drawImage(
                         current[i].img,
-                        /*
-                        0,
-                        0,
-                        current[i].img.naturalWidth ,
-                        current[i].img.naturalHeight ,
-                        */
                         posX,
                         posY,
                         $scope.actualTileWidth ,
@@ -560,37 +687,22 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
               //Si il existe un ou plusieurs point d'interet sur cet angle
               if (points[j].getAttribute('Angle') == $scope.angle) {
 
-                //On recupere le level de reference du point
-                let
-                  refLevel = points[j].getAttribute('Level'),
-                  ratioX = Images.level[0].width / Images.level[lvl].width,
-                  ratioY = Images.level[0].height / Images.level[lvl].height;
-
-                //console.log(ratioX, ratioY);
-
-
-
+                //On recup les coord du point d'interet sur scale 100%
                 let
                   pinCoord = points[j].getElementsByTagName('Coord'),
                   pinX = Number(pinCoord[0].getAttribute('x')),
                   pinY = Number(pinCoord[0].getAttribute('y'));
 
+                //On applique le ratio
                 let
                   drawX = pinX * $scope.zoom,
                   drawY = pinY * $scope.zoom;
 
+                //Et on defini le centre du dessin comme l'origine
                 var centerX = ($scope.canvas.clientWidth/2 + drawX)   ;
                 var centerY = ($scope.canvas.clientHeight/2 + drawY)   ;
 
-                //console.log($scope.zoom)
-
-                console.log('PosX : ' + posX, 'PosY : ' +  posY)
-
-                console.log('drawX : ' + drawX, 'drawY : ' +  drawY)
-
-
-                console.log(centerX, centerY);
-
+                //Dessin du point
                 var radius = 5;
                 //console.log(pinX, pinY);
 
@@ -602,24 +714,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                 $scope.renderer.strokeStyle = 'red';
                 $scope.renderer.stroke();
 
-
-
-
-
-
                 //console.log(level[0]);
 
               }
             }
-
-
-
-
-
-
-
-
-
 
             $scope.edited = false;
         }

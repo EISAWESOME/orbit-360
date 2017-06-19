@@ -1,6 +1,7 @@
 <div id="orbit-loader-reso" ng-show="loadingReso"></div>
 <div id="orbit-loader" ng-show="loading" >{{loading}}%</div>
 <div id="description-button" ng-class="{active:description.visible}" ng-click="description.visible=!description.visible"><i class="fa fa-info"></i></div>
+<div id="edition-button" ng-click="editMode()"><i class="fa fa-pencil-square-o" ng-class="{'red' : isEditMode, 'white' : !isEditMode }"></i></div>
 <div id="description" ng-show="description.visible">
 	<h1>{{description.title}}</h1>
 	<p ng-bind-html="description.content"></p>
@@ -12,15 +13,18 @@
 <div id="menu-container" ng-class="{expand: showTooltips}">
 	<ul id="menu">
 		<li ng-click="autoPlay=!autoPlay; play()"><i class="fa" ng-class="{'fa-play': !autoPlay, 'fa-pause': autoPlay}"></i></li>
+
 		<li ng-click="showTooltips=!showTooltips">
 			<i class="fa fa-bars"></i>
 			<ul id="tooltips" ng-show="showTooltips">
-				<li ng-repeat="tooltip in tooltips" ng-click="selectTooltip($index)">{{tooltip.title}}</li>
+				<li ng-repeat="tooltip in tooltips" ng-click="selectTooltip($index)" id="tt{{tooltips.indexOf(tooltip)}}">{{tooltip.title}}<i class=" fa fa-times" style="float:right; color:red;"></i></li>
 			</ul>
 		</li>
+
 		<li ng-click=switchMode()><i class="fa" ng-class="{'fa-arrows': clickTranslation, 'fa-undo': clickRotation}"></i></li>
-    <li ng-click="pinMode=!pinMode"><i class = "fa fa-thumb-tack" ng-class="{'Rotate180': pinMode , 'Rotate-360' : !pinMode}"></i></li>
-		<li ng-click="isFullscreen=!isFullscreen;toggleFullscreen()"><i class="fa fa-expand" ng-class="{'fa-compress' : isFullscreen, 'fa-expand' : !isFullscreen}"></i></li>
+    <li ng-click="isFullscreen=!isFullscreen;toggleFullscreen()"><i class="fa fa-expand" ng-class="{'fa-compress' : isFullscreen, 'fa-expand' : !isFullscreen}"></i></li>
+    <li ng-click="pinMode=!pinMode" ><!--ng-class=" {'ng-hide': !isEditMode} "--><i class = "fa fa-thumb-tack" ng-class="{'Rotate180': pinMode , 'Rotate-360' : !pinMode}"></i></li>
+
 
 	</ul>
 </div>

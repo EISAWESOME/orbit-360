@@ -47,6 +47,7 @@ ob.factory('Images', ['$resource', '$rootScope', '$http', function ($resource, $
             }
             return true;
         },
+
         //load sans queue
         loadImage: function (lvl, angle, pos, fromQueue) {
             fromQueue = fromQueue || false;

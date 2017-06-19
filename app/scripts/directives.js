@@ -18,9 +18,6 @@ ob.directive('orbitview', ['Images', function (Images) {
             console.log('link');
             //console.log(Images);
 
-            //lecture du fichier xml associé à l'objet et retranscription des infos dans Images
-            // ICI
-            // Il faudra stocké les point de references dans l'objet Image
             Images.loadxml().success(function(dataXML){
                 console.log('success');
 
