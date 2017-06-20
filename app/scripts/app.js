@@ -3,7 +3,16 @@
 
 var ob = angular.module('Orbit', ['ngMaterial', 'ngResource', 'hmGestures', 'mousewheel']);
 
-ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdToast', function ($scope, $rootScope, Images, $mdDialog, $mdToast) {
+ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdToast', '$mdSidenav', function ($scope, $rootScope, Images, $mdDialog, $mdToast, $mdSidenav) {
+
+    $scope.toggleLeft = buildToggler('left');
+    $scope.toggleRight = buildToggler('right');
+
+    function buildToggler(componentId) {
+      return function () {
+        $mdSidenav(componentId).toggle();
+      };
+    }
 
 
     $scope.init = function () {
@@ -772,8 +781,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
                 //Dessin du point
                 var radius = 5;
-                //console.log(pinX, pinY);
-
                 $scope.renderer.beginPath();
                 $scope.renderer.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
                 $scope.renderer.fillStyle = 'black';
@@ -781,8 +788,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
                 $scope.renderer.lineWidth = 5;
                 $scope.renderer.strokeStyle = 'red';
                 $scope.renderer.stroke();
-
-                //console.log(level[0]);
 
               }
             }
