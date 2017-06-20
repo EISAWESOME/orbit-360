@@ -3,7 +3,7 @@
 
 var ob = angular.module('Orbit', ['ngMaterial', 'ngResource', 'hmGestures', 'mousewheel']);
 
-ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', function ($scope, $rootScope, Images, $mdDialog) {
+ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdToast', function ($scope, $rootScope, Images, $mdDialog, $mdToast) {
 
 
     $scope.init = function () {
@@ -73,9 +73,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', funct
 
     };
 
-
-
-
     function detectIE() {
     var ua = window.navigator.userAgent;
 
@@ -101,37 +98,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', funct
     // other browser
     return false;
   };
-
-
-    $scope.promptPoint = function(ev) {
-      $mdDialog.show({
-        templateUrl: 'views/tooltipPrompt.tpl.html',
-        parent: angular.element(document.body),
-        targetEvent: ev,
-        controller: 'OrbitCtrl',
-        clickOutsideToClose:true,
-        escapeToClose: true,
-      })
-        .then(function(answer) {
-          $scope.tooltipTitre = answer.Titre;
-          $scope.tooltipDesc = answer.Desc;
-
-          $scope.createTooltip();
-
-        }, function() {
-          console.log('You cancelled the dialog.');
-        });
-    };
-
-
-    $scope.envoyer = function(answer) {
-      $mdDialog.hide(answer);
-
-    };
-
-    $scope.closeDialog = function() {
-      $mdDialog.cancel();
-    };
 
     $scope.tooltipTrueCoord = {};
     $scope.tooltipTitre = "";
@@ -170,25 +136,103 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', funct
     $scope.tooltipVisible = false;
     $scope.goingFrom = null;
 
-  $scope.confirmDelete = function(ev, id) {
-    // Appending dialog to document.body to cover sidenav in docs app
-    var confirm = $mdDialog.confirm()
-      .title('Supprimer ce point d\'interet ?')
-      .textContent('Vous ne pourrez pas revenir en arrière...')
-      .ariaLabel('Suppression')
-      .targetEvent(ev)
-      .ok('Supprimer')
-      .cancel('Annuler');
+    //Prompt de saisie du titre / description d'un point d'interet
+    //*******************
+    $scope.promptPoint = function(ev) {
+      $mdDialog.show({
+        templateUrl: 'views/tooltipPrompt.tpl.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        controller: 'OrbitCtrl',
+        clickOutsideToClose:true,
+        escapeToClose: true,
+      })
+        .then(function(answer) {
+          $scope.tooltipTitre = answer.Titre;
+          $scope.tooltipDesc = answer.Desc;
 
-    $mdDialog.show(confirm).then(function(){
-      $scope.deletePoint(ev, id);
+          $scope.createTooltip();
 
-    }, function(){
+        }, function() {
+          console.log('You cancelled the dialog.');
+        });
+    };
+    $scope.envoyer = function(answer) {
+      $mdDialog.hide(answer);
 
-      console.log('annulation');
+    };
+    $scope.closeDialog = function() {
+      $mdDialog.cancel();
+    };
 
-    });
-  };
+    //*******************
+
+    //Pop up de confirmation de suppression d'un point d'interet
+    //*******************
+    $scope.confirmDelete = function(ev, id) {
+      // Appending dialog to document.body to cover sidenav in docs app
+      var confirm = $mdDialog.confirm()
+        .title('Supprimer ce point d\'interet ?')
+        .textContent('Vous ne pourrez pas revenir en arrière...')
+        .ariaLabel('Suppression')
+        .targetEvent(ev)
+        .ok('Supprimer')
+        .cancel('Annuler');
+
+      $mdDialog.show(confirm).then(function(){
+        $scope.deletePoint(ev, id);
+
+      }, function(){
+
+        console.log('annulation');
+
+      });
+    };
+    //*******************
+
+    //Notifications
+    //*******************
+
+    var last = {
+      bottom: false,
+      top: true,
+      left: false,
+      right: true
+    };
+
+    $scope.toastPosition = angular.extend({},last);
+
+    $scope.getToastPosition = function() {
+      sanitizePosition();
+
+      return Object.keys($scope.toastPosition)
+        .filter(function(pos) { return $scope.toastPosition[pos]; })
+        .join(' ');
+    };
+
+    function sanitizePosition() {
+      var current = $scope.toastPosition;
+
+      if ( current.bottom && last.top ) current.top = false;
+      if ( current.top && last.bottom ) current.bottom = false;
+      if ( current.right && last.left ) current.left = false;
+      if ( current.left && last.right ) current.right = false;
+
+      last = angular.extend({},current);
+    }
+
+    $scope.showSimpleToast = function() {
+      var pinTo = $scope.getToastPosition();
+
+      $mdToast.show(
+        $mdToast.simple()
+          .textContent('Point d\'interet supprimé !')
+          .position(pinTo )
+          .hideDelay(3000)
+      );
+    };
+
+    //*******************
 
 
 
@@ -211,36 +255,36 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', funct
     //Fonction de suppression d'un point d'interet
     $scope.deletePoint = function(e, id) {
 
-    $scope.tooltip = $scope.tooltips[id];
-    $scope.tooltip.id = id;
+      $scope.tooltip = $scope.tooltips[id];
+      $scope.tooltip.id = id;
 
-      //Remove dans le tooltip
-      e.target.parentNode.parentNode.remove();
+        //Remove dans le tooltip
+        e.target.parentNode.parentNode.remove();
 
-      //Remove dans le XML
-      let points = $scope.xml.getElementsByTagName('PointInteret');
-      for(let i =0; i < points.length; i++){
-        if(points[i].getAttribute('Angle') == $scope.tooltip.image){
+        //Remove dans le XML
+        let points = $scope.xml.getElementsByTagName('PointInteret');
+        for(let i =0; i < points.length; i++){
+          if(points[i].getAttribute('Angle') == $scope.tooltip.image){
 
-          if(points[i].getElementsByTagName('Titre')[0].textContent == $scope.tooltip.title){
-            let coord = points[i].getElementsByTagName('Coord')[0];
+            if(points[i].getElementsByTagName('Titre')[0].textContent == $scope.tooltip.title){
+              let coord = points[i].getElementsByTagName('Coord')[0];
 
-            if(coord.getAttribute('x') == $scope.tooltip.x){
+              if(coord.getAttribute('x') == $scope.tooltip.x){
 
-              if(coord.getAttribute('y') == $scope.tooltip.y){
-                points[i].parentNode.removeChild(points[i]);
-                console.log($scope.xml);
+                if(coord.getAttribute('y') == $scope.tooltip.y){
+                  points[i].parentNode.removeChild(points[i]);
+                  console.log($scope.xml);
+                  $scope.showSimpleToast();
 
+                }
               }
             }
           }
         }
-      }
 
+      $scope.edited = true ;
 
-    $scope.edited = true ;
-
-  };
+    };
 
     //Fonction d'export du flux XML courant => Dumb le flux dans une nouvelle fenêtre
     $scope.exportXML = function(){
@@ -597,18 +641,13 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', funct
     elmDesc.appendChild(cdataDesc);
 
 
-
-
     elmPoint.appendChild(elmTitre);
     elmPoint.appendChild(elmDesc);
     elmPoint.appendChild(elmCoord);
 
 
-
-
     $scope.xml.getElementsByTagName('sequence')[0].appendChild(elmPoint);
 
-    console.log($scope.xml);
 
   };
 
