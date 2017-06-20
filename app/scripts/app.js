@@ -105,7 +105,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', funct
 
     $scope.promptPoint = function(ev) {
       $mdDialog.show({
-        templateUrl: 'views/tooltipPrompt.html',
+        templateUrl: 'views/tooltipPrompt.tpl.html',
         parent: angular.element(document.body),
         targetEvent: ev,
         controller: 'OrbitCtrl',
@@ -180,7 +180,14 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', funct
       .ok('Supprimer')
       .cancel('Annuler');
 
-    $mdDialog.show(confirm).then($scope.deletePoint(ev, id));
+    $mdDialog.show(confirm).then(function(){
+      $scope.deletePoint(ev, id);
+
+    }, function(){
+
+      console.log('annulation');
+
+    });
   };
 
 
@@ -205,7 +212,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', funct
     $scope.deletePoint = function(e, id) {
 
     $scope.tooltip = $scope.tooltips[id];
-    console.log($scope.tooltip);
     $scope.tooltip.id = id;
 
       //Remove dans le tooltip
