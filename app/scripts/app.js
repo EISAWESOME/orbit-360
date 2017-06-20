@@ -5,10 +5,6 @@ var ob = angular.module('Orbit', ['ngResource', 'hmGestures', 'mousewheel', 'cgP
 
 ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, $rootScope, Images) {
 
-
-
-
-
     $scope.init = function () {
 
         console.log('init');
@@ -30,11 +26,11 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
         Images.loadLevel($scope.level);
 
-      Images.loadxml().success(function(dataXML) {
+      Images.loadxml().then(function(dataXML) {
 
         if (window.DOMParser) { // Standard
           var tmp = new DOMParser();
-          $scope.xml = tmp.parseFromString(dataXML, "text/xml");
+          $scope.xml = tmp.parseFromString(dataXML.data, "text/xml");
         }
         else { // IE
           $scope.xml = new ActiveXObject("Microsoft.XMLDOM");
@@ -102,8 +98,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     return false;
   };
 
-
-
     $scope.clickRotation = true;
     $scope.clickTranslation = false;
 
@@ -112,7 +106,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     $scope.posX = 0;
     $scope.posY = 0;
 
-
     $scope.pinMode = false;
     $scope.isFullscreen= false;
 
@@ -120,8 +113,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     $scope.actualTileWidth = 0;
     $scope.actualTileHeight = 0;
-
-
 
     $scope.loading = '0';
     $scope.loadingReso = false;
@@ -132,8 +123,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     $scope.angle = 0;         //id de l'angle de vue
     $scope.edited = true;
     $scope.waitingload = true;
-    //console.log($scope.waitingload);
-
     $scope.fps = 0;
     $scope.renderRatio = 5;
     $scope.showTooltips = false;
@@ -232,13 +221,12 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         $scope.translaX += translaX;
         $scope.edited = true;
     };
-
     $scope.incrTranslaY = function(translaY){
         $scope.translaY += translaY;
         $scope.edited = true;
     };
 
-    //Fonctions de definition de la translation
+    //Fonction de definition de la translation
     //Appellé lors du drag en mode translation
     $scope.setTranslaXY = function(translaX, translaY){
       $scope.translaX = translaX ;
@@ -253,6 +241,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         $scope.edited = true;
     }
 
+    //Fonction declenché au clic d'un point d'interet dans le menu
     $scope.selectTooltip = function (id) {
         /*
         if ($scope.goingFrom !== null) {
@@ -433,7 +422,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     };
 
-    //Gestion des event de touche
+    //Gestion des event de touche du clavier
     $scope.keymove = function (e) {
         console.log(e.keyCode);
 

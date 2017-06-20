@@ -18,17 +18,21 @@ ob.directive('orbitview', ['Images', function (Images) {
             console.log('link');
             //console.log(Images);
 
-            Images.loadxml().success(function(dataXML){
+            Images.loadxml().then(function(dataXML){
                 console.log('success');
 
                 if ( window.DOMParser ) { // Standard
-                    var tmp = new DOMParser();
-                    var xml = tmp.parseFromString( dataXML , "text/xml" );
+                    let parser = new DOMParser();
+                    var xml = parser.parseFromString( dataXML.data , "text/xml" );
+
                 } else { // IE
                     var xml = new ActiveXObject( "Microsoft.XMLDOM" );
                     xml.async = "false";
                     xml.loadXML( dataXML );
                 }
+
+
+
 
                 var imgData = xml.getElementsByTagName('img');
                 var scaleData = xml.getElementsByTagName('scale');
@@ -69,7 +73,6 @@ ob.directive('orbitview', ['Images', function (Images) {
                 }
                 Images.nbAngle = Images.level[0].resources.length;
                 console.log(Images.url);
-                //console.log($scope);
                 $scope.init();
             });
         }
