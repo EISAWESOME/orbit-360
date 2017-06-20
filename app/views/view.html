@@ -4,7 +4,9 @@
 <div id="edition-button" ng-click="editMode()"><i class="fa fa-pencil-square-o" ng-class="{'red' : isEditMode, 'white' : !isEditMode }"></i></div>
 <div id="export-button" ng-click="exportXML()"><i class="fa fa-gift"></i></div>
 
-
+<md-button class="md-primary md-raised" ng-click="showPrompt($event)"   >
+  Alert Dialog
+</md-button>
 <!--<div id="description" >
 	<h1 class="tooltip">{{description.title}}</h1>
 	<span class="tooltiptext" ng-bind-html="description.content"></span>
@@ -25,7 +27,7 @@
 		<li ng-click="showTooltips=!showTooltips">
 			<i class="fa fa-bars"></i>
 			<ul id="tooltips" ng-show="showTooltips">
-        <li ng-repeat="tooltip in tooltips" style="display:flex"><div style="width : 80%" ng-click="selectTooltip($index)">{{tooltip.title}}</div><div style="width: 20%" ng-click="deletePoint($event, $index); $event.stopPropagation()"><i class=" fa fa-times" style="float : right; color:red;"></i></div></li>
+        <li ng-repeat="tooltip in tooltips" style="display:flex"><div style="width : 80%" ng-click="selectTooltip($index)">{{tooltip.title}}</div><div style="width: 20%" ng-click="confirmDelete($event, $index); $event.stopPropagation()"><i class=" fa fa-times" style="float : right; color:red;"></i></div></li>
 			</ul>
 		</li>
 

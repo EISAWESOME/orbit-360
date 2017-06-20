@@ -1,0 +1,49 @@
+<md-dialog aria-label="Détails du point d'interet" class="medium-dialog">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2 flex="flex">Détails du point d'interet</h2>
+    </div>
+  </md-toolbar>
+
+  <md-dialog-content>
+    <form name="tooltipForm">
+      <br/>
+
+
+      <div layout="row" layout-sm="row">
+
+
+        <md-input-container flex="flex" class="layout-padding">
+          <label>Titre</label>
+          <input ng-model="tmp.Titre" required/>
+        </md-input-container>
+      </div>
+
+      <div layout="row" layout-sm="row">
+
+        <md-input-container flex="flex" class="layout-padding">
+          <label>Description</label>
+          <input ng-model="tmp.Desc" required/>
+        </md-input-container>
+
+      </div>
+
+
+
+        <md-dialog-actions layout="row" style="position: absolute; bottom: 0; right: 0;">
+
+          <md-button ng-click="closeDialog()" >
+            Annuler
+          </md-button>
+
+          <md-button style="margin-right:20px;" class="md-primary" ng-click="envoyer(tmp)" ng-disabled="tooltipForm.$invalid">
+            Confirmer
+          </md-button>
+
+        </md-dialog-actions>
+    </form>
+
+
+  </md-dialog-content>
+
+</md-dialog>

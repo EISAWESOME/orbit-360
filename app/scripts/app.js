@@ -1,9 +1,10 @@
 /*global angular, window, document, navigator, parseInt */
 'use strict';
 
-var ob = angular.module('Orbit', ['ngResource', 'hmGestures', 'mousewheel', 'cgPrompt', 'ui.bootstrap']);
+var ob = angular.module('Orbit', ['ngMaterial', 'ngResource', 'hmGestures', 'mousewheel']);
 
-ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, $rootScope, Images) {
+ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', function ($scope, $rootScope, Images, $mdDialog) {
+
 
     $scope.init = function () {
 
@@ -72,6 +73,9 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
     };
 
+
+
+
     function detectIE() {
     var ua = window.navigator.userAgent;
 
@@ -98,6 +102,40 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     return false;
   };
 
+
+    $scope.promptPoint = function(ev) {
+      $mdDialog.show({
+        templateUrl: 'views/tooltipPrompt.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        controller: 'OrbitCtrl',
+        clickOutsideToClose:true,
+        escapeToClose: true,
+      })
+        .then(function(answer) {
+          $scope.tooltipTitre = answer.Titre;
+          $scope.tooltipDesc = answer.Desc;
+
+          $scope.createTooltip();
+
+        }, function() {
+          console.log('You cancelled the dialog.');
+        });
+    };
+
+
+    $scope.envoyer = function(answer) {
+      $mdDialog.hide(answer);
+
+    };
+
+    $scope.closeDialog = function() {
+      $mdDialog.cancel();
+    };
+
+    $scope.tooltipTrueCoord = {};
+    $scope.tooltipTitre = "";
+    $scope.tooltipDesc = "";
     $scope.clickRotation = true;
     $scope.clickTranslation = false;
 
@@ -132,16 +170,26 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     $scope.tooltipVisible = false;
     $scope.goingFrom = null;
 
+  $scope.confirmDelete = function(ev, id) {
+    // Appending dialog to document.body to cover sidenav in docs app
+    var confirm = $mdDialog.confirm()
+      .title('Supprimer ce point d\'interet ?')
+      .textContent('Vous ne pourrez pas revenir en arrière...')
+      .ariaLabel('Suppression')
+      .targetEvent(ev)
+      .ok('Supprimer')
+      .cancel('Annuler');
+
+    $mdDialog.show(confirm).then($scope.deletePoint(ev, id));
+  };
+
+
+
     $rootScope.$on('onFirstComplete', function () {
         // Inutilisé
         // console.log('onFirstComplete');
         $scope.edited = true;
         $scope.setAngle($scope.angle + 1);
-    });
-    $rootScope.$on('onCurrentComplete', function (/*event, angle*/) {
-        // console.log('onCurrentComplete '+ angle);
-        // $scope.angle = angle;
-        // $scope.draw();
     });
     $rootScope.$on('onComplete', function () {
         var time = new Date();
@@ -157,10 +205,9 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     $scope.deletePoint = function(e, id) {
 
     $scope.tooltip = $scope.tooltips[id];
+    console.log($scope.tooltip);
     $scope.tooltip.id = id;
 
-    let c = confirm('Sure de vouloir supprimé ??');
-    if(c){
       //Remove dans le tooltip
       e.target.parentNode.parentNode.remove();
 
@@ -183,7 +230,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
           }
         }
       }
-    }
+
 
     $scope.edited = true ;
 
@@ -472,7 +519,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
       //Se declenche au clic si le pinmode est activé
       if ($scope.pinMode) {
 
-        let lvl= $scope.level;
+        let lvl = $scope.level;
 
         // Place l'origine de X et de Y au centre de l'image, prennant en compte la translation du canvas
         let
@@ -482,51 +529,47 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
 
         //On etablie le ratio de proportion entre l'image scale 100% et l'image affiché à l'écran
         let
-          ratioX = Images.level[0].width /  ($scope.actualTileWidth * Images.level[lvl].cols),
-          ratioY = Images.level[0].height /  ($scope.actualTileHeight * Images.level[lvl].rows);
-
-        console.log(ratioX, ratioY);
+          ratioX = Images.level[0].width / ($scope.actualTileWidth * Images.level[lvl].cols),
+          ratioY = Images.level[0].height / ($scope.actualTileHeight * Images.level[lvl].rows);
 
         //Les coordonnées du point à l'echelle 1:1 de l'image d'origine scale 100%
-        let trueCoord = { x: cursorX * ratioX, y: cursorY * ratioY};
+        $scope.tooltipTrueCoord = {x: cursorX * ratioX, y: cursorY * ratioY};
 
         //On vérifie que la curseur soit dans la zone de dessin pour crée le point d'interet
-        if( !(cursorX > $scope.actualTileWidth * Images.level[lvl].cols / 2 ||
-            cursorX < -$scope.actualTileWidth * Images.level[lvl].cols / 2 ||
-            cursorY > $scope.actualTileHeight * Images.level[lvl].rows /2 ||
-            cursorY < -$scope.actualTileHeight * Images.level[lvl].rows /2)
-          )
-        {
+        if (!(cursorX > $scope.actualTileWidth * Images.level[lvl].cols / 2 ||
+          cursorX < -$scope.actualTileWidth * Images.level[lvl].cols / 2 ||
+          cursorY > $scope.actualTileHeight * Images.level[lvl].rows / 2 ||
+          cursorY < -$scope.actualTileHeight * Images.level[lvl].rows / 2)
+        ) {
           //ICI
           //Trouver comment utiliser angular material et faire un joli prompt
+          $scope.promptPoint();
 
-          let titre = prompt('Titre ?', 'Kappa123');
-
-          if(titre != null){
-            let descr = prompt('Desc ?', 'memes');
-
-            if(descr !=null){
-              //console.log(pinCoord);
-              let title = titre;
-              let desc = descr;
-              $scope.writePin(title, desc, $scope.angle, trueCoord);
-
-              let tooltip = {
-                title: titre,
-                image: $scope.angle, //Angle
-                x: trueCoord.x,
-                y: trueCoord.y
-              };
-
-              $scope.tooltips.push(tooltip);
-
-              $scope.edited = true;
-
-            }
-          }
         }
+
       }
-    };
+      ;
+    }
+
+    $scope.createTooltip= function(){
+
+      let title = $scope.tooltipTitre;
+      let desc = $scope.tooltipDesc;
+      $scope.writePin(title, desc, $scope.angle, $scope.tooltipTrueCoord);
+
+      let tooltip = {
+        title: title,
+        image: $scope.angle, //Angle
+        x: $scope.tooltipTrueCoord.x,
+        y: $scope.tooltipTrueCoord.y
+      };
+
+      $scope.tooltips.push(tooltip);
+
+      $scope.edited = true;
+    }
+
+
 
     //Ecris le point d'interet dans le flux XML
     $scope.writePin = function (titre, desc, angle, coord){
@@ -583,7 +626,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
           }
           $scope.lastDrag = e.gesture.deltaX;
 
-          //$scope.draw($scope.angle + parseInt(ratio));
           $scope.setAngle($scope.angle + parseInt(ratio));
         }
 
@@ -600,7 +642,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     };
 
     $scope.draw = function () {
-        // console.log('draw '+$scope.angle);
+        //console.log('draw '+$scope.angle);
 
         if(($scope.waitingload && Images.resourcesLoaded($scope.level, $scope.angle)) || $scope.edited){
             $scope.waitingload = false;

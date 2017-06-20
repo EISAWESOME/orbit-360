@@ -110,9 +110,6 @@ ob.factory('Images', ['$resource', '$rootScope', '$http', function ($resource, $
                 $rootScope.$emit('onLoading', percent);
             }
         }
-
-
-
     };
 }]);
 
