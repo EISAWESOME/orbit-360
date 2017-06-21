@@ -1,20 +1,28 @@
 <div id="orbit-loader-reso" ng-show="loadingReso"></div>
 <div id="orbit-loader" ng-show="loading" >{{loading}}%</div>
 
-<div id="navbar-button" ng-click="toggleLeft()">
-  <i class="fa fa-bars"></i>
-  <md-tooltip md-direction="left">Ouvrir le menu</md-tooltip>
-</div>
-<div id="edition-button" ng-click="editMode()">
-  <md-tooltip md-direction="left">Mode édition</md-tooltip>
-  <i class="fa fa-pencil-square-o" ng-class="{'red' : isEditMode, 'white' : !isEditMode }"></i>
-</div>
-<div id="export-button" ng-click="exportXML()">
-  <i class="fa fa-gift"></i>
-  <md-tooltip md-direction="left">Export</md-tooltip>
-</div>
 
-<h1 id="titreImage"> Crane de Merycoidon</h1>
+<div style="display: flex; flex-direction:column; position:absolute; width:100%">
+  <div style="height:100px">
+    <h1 id="titreImage"> Crane de Merycoidon</h1>
+  </div>
+
+  <div style="display: flex; justify-content:center">
+    <div id="navbar-button" ng-click="toggleLeft()">
+      <i class="fa fa-bars"></i>
+      <md-tooltip md-direction="left">Ouvrir le menu</md-tooltip>
+    </div>
+    <div id="edition-button" ng-click="editMode()">
+      <md-tooltip md-direction="left">Mode édition</md-tooltip>
+      <i class="fa fa-pencil-square-o" ng-class="{'red' : isEditMode, 'white' : !isEditMode }"></i>
+    </div>
+    <div id="export-button" ng-click="exportXML()">
+      <i class="fa fa-gift"></i>
+      <md-tooltip md-direction="left">Export</md-tooltip>
+    </div>
+  </div>
+
+</div>
 
     <md-sidenav class="md-sidenav-left" md-component-id="left"
                 md-disable-backdrop md-whiteframe="4">
@@ -39,11 +47,11 @@
         </form>
 
         <table id="tooltip-table">
-          <tbody ng-repeat="tooltip in tooltips | orderBy: 'title' | filter: motCle ">
+          <tbody ng-repeat="tooltip in tooltips | filter: motCle " id="{{tooltip.id}}">
           <tr class="border_bottom">
             <td ng-click="isCollapsed = !isCollapsed; $event.stopPropagation()"><i ng-class="{'fa fa-chevron-right': isCollapsed, 'fa fa-chevron-down': !isCollapsed}"></i></td>
             <td ng-click="selectTooltip($index);" class ="ttTitre">{{tooltip.title}}</td>
-            <td ng-click="confirmDelete($event, $index); $event.stopPropagation()" class = "ttDelete"> <i class="fa fa-times" style="float : right; color:red;"></i> </td>
+            <td class = "ttDelete"> <i class="fa fa-times" style="float : right; color:red;" ng-click="confirmDelete($event, $index); $event.stopPropagation()"></i> </td>
           </tr>
           <tr class="collapse-row">
             <td colspan = 3>

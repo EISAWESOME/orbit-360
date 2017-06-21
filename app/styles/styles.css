@@ -142,9 +142,9 @@ orbitview a:hover {
 }
 
 #edition-button {
-  position: absolute;
+  /*position: absolute;
   bottom: 30px;
-  right: 30px;
+  right: 30px;*/
   z-index: 10;
   font-size: 24px;
   color: rgba(255, 255, 255, 0.7);
@@ -159,9 +159,9 @@ orbitview a:hover {
 }
 
 #navbar-button{
-  position: absolute;
+  /*position: absolute;
   top: 20px;
-  right: 30px;
+  right: 30px;*/
   z-index: 10;
   font-size: 24px;
   color: rgba(255, 255, 255, 0.7);
@@ -176,9 +176,9 @@ orbitview a:hover {
 
 }
 #export-button {
-  position: absolute;
+  /*position: absolute;
   top: 80px;
-  right: 30px;
+  right: 30px;*/
   z-index: 10;
   font-size: 24px;
   color: rgba(255, 255, 255, 0.7);

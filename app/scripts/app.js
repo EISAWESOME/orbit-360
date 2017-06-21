@@ -56,28 +56,28 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
         for(let i=0;  i<colPoints.length ; i++){
 
           let titre = colPoints[i].getElementsByTagName('Titre');
+          let desc  = colPoints[i].getElementsByTagName('Description');
           let angle = colPoints[i].attributes[0].value;
+          let id    = colPoints[i].attributes[1].value;
           let coord = {
             x : colPoints[i].getElementsByTagName('Coord')[0].getAttribute('x'),
             y : colPoints[i].getElementsByTagName('Coord')[0].getAttribute('y')
           }
 
-
           let tooltip = {
             title: titre[0].textContent,
+            desc: desc[0].textContent,
             image: angle,
             x: coord.x,
-            y: coord.y
+            y: coord.y,
+            id: id
           };
+
+          $scope.id++;
 
 
           $scope.tooltips.push(tooltip);
         }
-
-
-
-
-
 
       });
 
@@ -112,7 +112,8 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
 
 
-  $scope.tooltipTrueCoord = {};
+    $scope.id = 0;
+    $scope.tooltipTrueCoord = {};
     $scope.tooltipTitre = "";
     $scope.tooltipDesc = "";
     $scope.clickRotation = true;
@@ -269,13 +270,26 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
     });
 
     //Fonction de suppression d'un point d'interet
-    $scope.deletePoint = function(e, id) {
+    $scope.deletePoint = function(e) {
 
-      $scope.tooltip = $scope.tooltips[id];
-      $scope.tooltip.id = id;
+
+
+      var lookup = {};
+      for (var i = 0, len = $scope.tooltips.length; i < len; i++) {
+        lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
+      }
+
+
+      let ttId = e.target.parentNode.parentNode.parentNode.id;
+      console.log(ttId);
+      console.log();
+
+
+      $scope.tooltip = lookup[ttId];
+      $scope.tooltip.id = ttId;
+
 
         //Remove dans le tooltip
-
 
         let a = e.target;
         var els = [];
@@ -284,16 +298,18 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
           a = a.parentNode;
         }
 
-        /*function filtre(element){
-          if(element.nodeName == 'TBODY'){
-            return element;
-          }
-        };
-
-        let wanted = els.filter(filtre);*/
-
-        console.log(els);
         els[7].remove();
+
+        console.log($scope.tooltip);
+        let indextt = $scope.tooltips.indexOf($scope.tooltip);
+        $scope.tooltips.splice(indextt, 1);
+
+
+
+
+
+
+
 
 
         //Remove dans le XML
@@ -530,9 +546,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
     };
 
     $scope.switchMode = function () {
-
-
-
       //L'execution de cette fonction le mode Rotation / Translation
       //En fonction du mode, les comportements du drag, ainsi que des touche flèches sont
       //differentes
@@ -625,11 +638,9 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
           cursorX < -$scope.actualTileWidth * Images.level[lvl].cols / 2 ||
           cursorY > $scope.actualTileHeight * Images.level[lvl].rows / 2 ||
           cursorY < -$scope.actualTileHeight * Images.level[lvl].rows / 2)
-        ) {
-          //ICI
-          //Trouver comment utiliser angular material et faire un joli prompt
+        )
+        {
           $scope.promptPoint();
-
         }
 
       }
@@ -638,16 +649,20 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
     $scope.createTooltip= function(){
 
+      let id = $scope.id;
+      $scope.id++;
+
       let title = $scope.tooltipTitre;
       let desc = $scope.tooltipDesc;
-      $scope.writePin(title, desc, $scope.angle, $scope.tooltipTrueCoord);
+      $scope.writePin(title, desc, $scope.angle, $scope.tooltipTrueCoord, id);
 
       let tooltip = {
         title: title,
         desc : desc,
         image: $scope.angle, //Angle
         x: $scope.tooltipTrueCoord.x,
-        y: $scope.tooltipTrueCoord.y
+        y: $scope.tooltipTrueCoord.y,
+        id : id
       };
 
       $scope.tooltips.push(tooltip);
@@ -658,7 +673,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
 
     //Ecris le point d'interet dans le flux XML
-    $scope.writePin = function (titre, desc, angle, coord){
+    $scope.writePin = function (titre, desc, angle, coord, id){
 
     let elmPoint = $scope.xml.createElement('PointInteret'),
         elmTitre = $scope.xml.createElement('Titre'),
@@ -669,6 +684,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
         cdataTitre = $scope.xml.createCDATASection(titre);
 
     elmPoint.setAttribute('Angle',angle);
+    elmPoint.setAttribute('ID', id);
     elmCoord.setAttribute('x', coord.x);
     elmCoord.setAttribute('y', coord.y);
 
