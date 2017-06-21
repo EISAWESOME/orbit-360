@@ -273,7 +273,26 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
       $scope.tooltip.id = id;
 
         //Remove dans le tooltip
-        e.target.parentNode.parentNode.remove();
+
+
+        let a = e.target;
+        var els = [];
+        while (a) {
+          els.unshift(a);
+          a = a.parentNode;
+        }
+
+        /*function filtre(element){
+          if(element.nodeName == 'TBODY'){
+            return element;
+          }
+        };
+
+        let wanted = els.filter(filtre);*/
+
+        console.log(els);
+        els[7].remove();
+
 
         //Remove dans le XML
         let points = $scope.xml.getElementsByTagName('PointInteret');

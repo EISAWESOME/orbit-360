@@ -1,8 +1,21 @@
 <div id="orbit-loader-reso" ng-show="loadingReso"></div>
 <div id="orbit-loader" ng-show="loading" >{{loading}}%</div>
-<div id="navbar-button" ng-click="toggleLeft()"><i class="fa fa-bars"></i></div>
-<div id="edition-button" ng-click="editMode()"><i class="fa fa-pencil-square-o" ng-class="{'red' : isEditMode, 'white' : !isEditMode }"></i></div>
-<div id="export-button" ng-click="exportXML()"><i class="fa fa-gift"></i></div>
+
+<div id="navbar-button" ng-click="toggleLeft()">
+  <i class="fa fa-bars"></i>
+  <md-tooltip md-direction="left">Ouvrir le menu</md-tooltip>
+</div>
+<div id="edition-button" ng-click="editMode()">
+  <md-tooltip md-direction="left">Mode édition</md-tooltip>
+  <i class="fa fa-pencil-square-o" ng-class="{'red' : isEditMode, 'white' : !isEditMode }"></i>
+</div>
+<div id="export-button" ng-click="exportXML()">
+  <i class="fa fa-gift"></i>
+  <md-tooltip md-direction="left">Export</md-tooltip>
+</div>
+<h1 id="titreImage"> Crane de Merycoidon
+  <md-tooltip id="descImage">Superbe crane !</md-tooltip>
+</h1>
 
 
     <md-sidenav class="md-sidenav-left" md-component-id="left"
@@ -10,6 +23,9 @@
 
       <md-toolbar class="md-theme-indigo">
         <h1 class="md-toolbar-tools">Points d'interet</h1>
+        <md-button ng-click="toggleLeft()" class="md-accent">
+          Close
+        </md-button>
       </md-toolbar>
 
       <md-content layout-margin>
@@ -42,13 +58,8 @@
           </tr>
           </tbody>
         </table>
-
-
-
-        <md-button ng-click="toggleLeft()" class="md-accent">
-          Close this Sidenav
-        </md-button>
       </md-content>
+
 
     </md-sidenav>
 
