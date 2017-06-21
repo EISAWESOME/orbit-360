@@ -137,55 +137,6 @@ orbitview a:hover {
   border-top: 0;
 }
 
-/*
-#tooltips {
-  color: rgba(255, 255, 255, 0.8);
-  width: 100%;
-  border: solid black 1px;
-  border-bottom: 0;
-  border-top-left-radius: 3PX;
-  border-top-right-radius: 3PX;
-  position: absolute;
-  bottom: 48px;
-  font-size: 14px;
-  line-height: 14px;
-  text-align: left;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 7px 0;
-}
-#tooltips li {
-  display: block;
-  margin: 0px 7px;
-  padding: 7px 10px;
-}
-#tooltips li:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
-  color: white;
-}
-#tooltip {
-  position: absolute;
-  z-index: 10;
-  max-width: 50%;
-  width: 240px;
-  background-color: rgba(255, 255, 255, 0.7);
-  font-size: 12px;
-  padding: 10px 15px;
-}
-#tooltip:before {
-  position: absolute;
-  top: -5px;
-  left: 0px;
-  content: '';
-  width: 0;
-  height: 0;
-  border-left: 3px solid transparent;
-  border-right: 3px solid transparent;
-  border-bottom: 5px solid rgba(255, 255, 255, 0.7);
-} */
-
-
 #edition-button {
   position: absolute;
   bottom: 30px;
@@ -292,5 +243,46 @@ md-dialog.medium-dialog {
   width: 500px;
   height: 300px;
   border-radius: 0;
+}
+
+#tooltip-table{
+  width:95%;
+  table-layout: fixed;
+}
+
+#tooltip-table td {
+
+}
+
+#tooltip-table td.ttTitre {
+  width : 80%;
+  word-wrap:break-word;
+}
+
+
+#tooltip-table td.ttTitre:hover {
+  background-color: rgb(236, 236, 236);
+}
+#tooltip-table td.ttDelete:hover,
+#tooltip-table td.ttDelete i:hover
+{
+  color: blue;
+
+}
+
+
+#tooltip-table tr{
+  height: 20px;
+  font-size: 16pt;
+}
+
+#tooltip-table tr:hover {
+  cursor: pointer;
+
+
+}
+
+tr.border_bottom td {
+  border-bottom:1pt inset;
 }
 

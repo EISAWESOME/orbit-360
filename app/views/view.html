@@ -15,14 +15,34 @@
       <md-content layout-margin>
         <br/>
 
-        <md-input-container>
-          <label>Recherche...</label>
-          <input type=search>
-        </md-input-container>
+        <form>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-addon"><i class="fa fa-search"></i></div>
+              <input type="text" class="form-control" placeholder="Recherche..." style="height : 50px; font-size:16pt" ng-model="motCle">
+            </div>
+          </div>
+        </form>
 
-        <ul id="tooltips">
-          <li ng-repeat="tooltip in tooltips" style="display:flex"><div style="width : 80%" ng-click="selectTooltip($index)">{{tooltip.title}}</div><div style="width: 20%" ng-click="confirmDelete($event, $index); $event.stopPropagation()"><i class=" fa fa-times" style="float : right; color:red;"></i></div></li>
-        </ul>
+        <table id="tooltip-table">
+          <tbody ng-repeat="tooltip in tooltips | orderBy: 'title' | filter: motCle ">
+          <tr class="border_bottom">
+            <td ng-click="isCollapsed = !isCollapsed; $event.stopPropagation()"><i ng-class="{'fa fa-chevron-right': isCollapsed, 'fa fa-chevron-down': !isCollapsed}"></i></td>
+            <td ng-click="selectTooltip($index);" class ="ttTitre">{{tooltip.title}}</td>
+            <td ng-click="confirmDelete($event, $index); $event.stopPropagation()" class = "ttDelete"> <i class="fa fa-times" style="float : right; color:red;"></i> </td>
+          </tr>
+          <tr class="collapse-row">
+            <td colspan = 3>
+              <div uib-collapse="isCollapsed">
+                <div class="collapse-cell well well-lg">
+                  Description {{$index}}
+                </div>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
 
 
         <md-button ng-click="toggleLeft()" class="md-accent">
@@ -32,32 +52,10 @@
 
     </md-sidenav>
 
-
-<!--<div id="description" >
-	<h1 class="tooltip">{{description.title}}</h1>
-	<span class="tooltiptext" ng-bind-html="description.content"></span>
-</div>-->
-
-<div class="tooltip">Hover over me
-  <span class="tooltiptext">Tooltip text</span>
-</div>
-
-<div id="tooltip" ng-show="tooltipVisible" style="top:{{getTooltipY()}}px; left:{{getTooltipX()}}px;">
-	<h2>{{tooltip.title}}</h2>
-	<p ng-bind-html="tooltip.content"></p>
-</div>
 <div id="menu-container" ng-class="{expand: showTooltips}">
 	<ul id="menu">
 		<li ng-click="autoPlay=!autoPlay; play()"><i class="fa" ng-class="{'fa-play': !autoPlay, 'fa-pause': autoPlay}"></i></li>
-
-		<li ng-click="showTooltips=!showTooltips">
-			<i class="fa fa-bars"></i>
-			<ul id="tooltips3" ng-show="showTooltips">
-        <li ng-repeat="tooltip in tooltips" style="display:flex"><div style="width : 80%" ng-click="selectTooltip($index)">{{tooltip.title}}</div><div style="width: 20%" ng-click="confirmDelete($event, $index); $event.stopPropagation()"><i class=" fa fa-times" style="float : right; color:red;"></i></div></li>
-			</ul>
-		</li>
-
-		<li ng-click=switchMode()><i class="fa" ng-class="{'fa-arrows': clickTranslation, 'fa-undo': clickRotation}"></i></li>
+    <li ng-click=switchMode()><i class="fa" ng-class="{'fa-arrows': clickTranslation, 'fa-undo': clickRotation}"></i></li>
     <li ng-click="isFullscreen=!isFullscreen;toggleFullscreen()"><i class="fa fa-expand" ng-class="{'fa-compress' : isFullscreen, 'fa-expand' : !isFullscreen}"></i></li>
     <li ng-click="pinMode=!pinMode" ><!--ng-class=" {'ng-hide': !isEditMode} "--><i class = "fa fa-thumb-tack" ng-class="{'Rotate180': pinMode , 'Rotate-360' : !pinMode}"></i></li>
 

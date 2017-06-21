@@ -1,7 +1,7 @@
 /*global angular, window, document, navigator, parseInt */
 'use strict';
 
-var ob = angular.module('Orbit', ['ngMaterial', 'ngResource', 'hmGestures', 'mousewheel']);
+var ob = angular.module('Orbit', ['ngMaterial', 'ngResource', 'ngAnimate', 'hmGestures', 'mousewheel', 'ui.bootstrap']);
 
 ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdToast', '$mdSidenav', function ($scope, $rootScope, Images, $mdDialog, $mdToast, $mdSidenav) {
 
@@ -13,6 +13,8 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
         $mdSidenav(componentId).toggle();
       };
     }
+
+
 
 
     $scope.init = function () {
@@ -138,12 +140,15 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
     $scope.waitingload = true;
     $scope.fps = 0;
     $scope.renderRatio = 5;
-    $scope.showTooltips = false;
     $scope.autoPlay = false;
     $scope.tooltips = [];
     $scope.tooltip = null;
     $scope.tooltipVisible = false;
     $scope.goingFrom = null;
+
+    $scope.isNavCollapsed = true;
+    $scope.isCollapsed = true;
+
 
     //Prompt de saisie du titre / description d'un point d'interet
     //*******************
