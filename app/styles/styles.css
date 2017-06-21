@@ -6,7 +6,10 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+
 }
+
+
 orbitview {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -19,7 +22,7 @@ orbitview {
   bottom: 0;
   width: 100%;
   height: 100%;
-  background-color: green;
+  background-color: black;
   overflow: hidden;
 }
 orbitview a {
@@ -264,12 +267,14 @@ md-dialog.medium-dialog {
 #tooltip-table td.ttTitre:hover {
   background-color: rgb(236, 236, 236);
 }
+/*
 #tooltip-table td.ttDelete:hover,
 #tooltip-table td.ttDelete i:hover
 {
   color: blue;
 
 }
+*/
 
 
 #tooltip-table tr{
@@ -293,8 +298,10 @@ tr.border_bottom td {
   position: absolute;
   text-align: center;
 }
-md-tooltip{
-  height: auto;
+
+md-tooltip .md-content {
+  position: relative;
+  opacity: 1;
 }
 
 

@@ -12,7 +12,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
       return function () {
         $mdSidenav(componentId).toggle();
       };
-    }
+    };
 
 
 
@@ -110,7 +110,9 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
     return false;
   };
 
-    $scope.tooltipTrueCoord = {};
+
+
+  $scope.tooltipTrueCoord = {};
     $scope.tooltipTitre = "";
     $scope.tooltipDesc = "";
     $scope.clickRotation = true;
@@ -805,6 +807,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
                 var centerY = ($scope.canvas.clientHeight/2 + drawY)   ;
 
                 //Dessin du point
+
                 var radius = 5;
                 $scope.renderer.beginPath();
                 $scope.renderer.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
