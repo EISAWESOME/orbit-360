@@ -623,6 +623,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
       let tooltip = {
         title: title,
+        desc : desc,
         image: $scope.angle, //Angle
         x: $scope.tooltipTrueCoord.x,
         y: $scope.tooltipTrueCoord.y
