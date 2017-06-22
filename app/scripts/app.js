@@ -15,6 +15,9 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
     };
 
 
+    $scope.isDescDrawed = false;
+
+
 
 
     $scope.init = function () {
@@ -87,62 +90,104 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
         if($scope.lookupAngle[$scope.angle]){
           displayDesc();
+
         }
       });
 
 
     };
-      function displayDesc(){
-
-
-
+    function displayDesc(){
         console.log("Point(s) d'interet sur cet angle !!");
 
-        let matchedTt = $scope.tooltips.filter(matchAngle)
-
+        //Retourne un tableau contenant tout les points de l'angle courant
+        let matchedTt = $scope.tooltips.filter(matchAngle);
+        console.log(matchedTt);
         function matchAngle(element) {
           return element.image == $scope.angle;
         }
 
-
         $scope.canvas.addEventListener('mousemove', (e) =>{
 
+
           //Passer lvl, ratio X Y et cursor X Y en variable de scope ?
+          //Surement
+          let lvl = $scope.level;
+
+          let
+            aX = (e.pageX - $scope.canvas.clientWidth / 2) - $scope.translaX,
+            aY = (e.pageY - $scope.canvas.clientHeight / 2) - $scope.translaY;
+
+          let
+            ratioX = Images.level[0].width / ($scope.actualTileWidth * Images.level[lvl].cols),
+            ratioY = Images.level[0].height / ($scope.actualTileHeight * Images.level[lvl].rows);
 
 
           let
-            cursorX = ((e.pageX - $scope.canvas.clientWidth / 2) - $scope.translaX) * (Images.level[0].width / ($scope.actualTileWidth * Images.level[$scope.level].cols)),
-            cursorY = ((e.pageY - $scope.canvas.clientHeight / 2) - $scope.translaY) * (Images.level[0].height / ($scope.actualTileHeight * Images.level[$scope.level].rows));
+            cursorX = aX * ratioX,
+            cursorY = aY * ratioY;
 
 
 
-          for(let i=0; i < matchedTt.length; i++){
 
-            if(cursorX >= matchedTt[i].x -10 && cursorX <= matchedTt[i].x +10 ){
-              if(cursorY >= matchedTt[i].y -10 && cursorY <= matchedTt[i].y +10 ){
-                alert(matchedTt[i].desc);
+          let incr = 0;
+            console.log('--------------------------------------------')
+            //console.log(cursorX, cursorY);
+            for (let i = 0; i < matchedTt.length; i++) {
+
+              let
+                pointX = ((matchedTt[i].x / ratioX) + $scope.translaX) + $scope.canvas.clientWidth / 2,
+                pointY = ((matchedTt[i].y / ratioY) + $scope.translaY) + $scope.canvas.clientHeight / 2;
+
+
+              if (cursorX >= matchedTt[i].x - 30 && cursorX <= matchedTt[i].x + 30) {
+                if (cursorY >= matchedTt[i].y - 30 && cursorY <= matchedTt[i].y + 30) {
+
+                  console.log("Drawed?" + $scope.isDescDrawed)
+
+                  if (!$scope.isDescDrawed) {
+                    //console.log(matchedTt[i].desc);
+
+                    var para = document.createElement("div");
+                    let node = document.createTextNode(matchedTt[i].desc);
+                    para.appendChild(node);
+                    para.style.backgroundColor = 'white';
+                    para.style.width = '100px';
+                    para.style.height= '22px';
+                    para.style.marginLeft= pointX + "px";
+                    para.style.marginTop= pointY +"px";
+
+                    para.style.position= "absolute";
+                    para.style.zIndex= 20;
+                    para.id = "tt";
+                    let a=document.querySelector('orbitview')
+                    a.appendChild(para);
+
+
+                    $scope.isDescDrawed = true;
+                    console.log("Drawed = "+ $scope.isDescDrawed)
+                  }
+                } else { incr++ }
+              } else{ incr++ }
+
+              if (incr == matchedTt.length){
+                let a=document.querySelector('orbitview')
+                let b = a.querySelector('#tt');
+                if(b){
+                  a.removeChild(b);
+
+                }
+
+
+                $scope.isDescDrawed= false;
 
               }
-
             }
-          }
+
+
+
 
 
         });
-
-
-
-        //console.log($scope.lookupAngle[$scope.angle]);
-
-
-      //Dans la liste des tooltip ($scope.tooltips)
-      //On verifie si on en a sur l'angle courant ($scope.angle)
-      //Si oui, tant que l'angle ne change pas, on verifie toute les 200ms
-      //Si les coordonnée de la souris corresponde au coordonnée d'un des deux points
-      //Si oui, on affiche sa description
-
-
-
     }
 
     function detectIE() {
@@ -736,6 +781,11 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
       for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
         $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
+      }
+
+      //Actualise la detection pour le nouveau point
+      if($scope.lookupAngle[$scope.angle]){
+        displayDesc();
       }
 
 
