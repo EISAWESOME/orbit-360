@@ -133,7 +133,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
             if (cursorX >= matchedTt[i].x - 30 && cursorX <= matchedTt[i].x + 30) {
               if (cursorY >= matchedTt[i].y - 30 && cursorY <= matchedTt[i].y + 30) {
-                $scope.pointPop('desc', matchedTt[i].desc, pointX, pointY);
+                $scope.pointPop(matchedTt[i].desc, pointX, pointY);
               } else { incr++ }
             } else{ incr++ }
             if (incr == matchedTt.length){
@@ -149,7 +149,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
     };
 
 
-    $scope.pointPop = function(mode, popContent, pointX, pointY,){
+    $scope.pointPop = function(popContent, pointX, pointY,){
 
         if (!$scope.isPopDrawed) {
           //console.log(matchedTt[i].desc);
@@ -170,7 +170,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
 
           $scope.isPopDrawed = true;
-          console.log("Drawed = "+ $scope.isPopDrawed)
         }
     };
 
@@ -490,6 +489,18 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
         $scope.autoPlay = false;
         $scope.goingFrom = $scope.angle;
         $scope.goTo($scope.tooltip.image);
+
+
+        let
+          ratioX = Images.level[0].width / ($scope.actualTileWidth * Images.level[$scope.level].cols),
+          ratioY = Images.level[0].height / ($scope.actualTileHeight * Images.level[$scope.level].rows);
+
+
+        let
+          pointX = (($scope.tooltip.x / ratioX) + $scope.translaX) + $scope.canvas.clientWidth / 2,
+          pointY = (($scope.tooltip.y / ratioY) + $scope.translaY) + $scope.canvas.clientHeight / 2;
+
+        $scope.pointPop($scope.tooltip.title, pointX, pointY);
     };
 
     $scope.getTooltipX = function () {
