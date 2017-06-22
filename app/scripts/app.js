@@ -16,6 +16,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
 
     $scope.isPopDrawed = false;
+    $scope.finGoto = false;
 
 
 
@@ -536,9 +537,13 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
       //Faire pour qu'il tourne dans le sens le plus rapide en fonction du depart et de la destination ??
       if($scope.angle != angle){
 
+        $scope.finGoto = false;
         $scope.setAngle($scope.angle +1);
         window.setTimeout($scope.goTo, 5, angle);
+      } else{
+        $scope.finGoto = true;
       }
+
     };
 
     $scope.toggleFullscreen = function () {
