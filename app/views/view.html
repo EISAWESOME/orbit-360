@@ -4,7 +4,7 @@
 
 <div style="display: flex; flex-direction:column; position:absolute; width:100%">
   <div style="height:100px">
-    <h1 id="titreImage"> Crane de Merycoidon</h1>
+    <h1 id="titreImage"> Amonite</h1>
   </div>
 
   <div style="display: flex; justify-content:center">
@@ -79,9 +79,10 @@
 <div id="menu-container" ng-class="{expand: showTooltips}">
 	<ul id="menu">
 		<li ng-click="autoPlay=!autoPlay; play()"><i class="fa" ng-class="{'fa-play': !autoPlay, 'fa-pause': autoPlay}"></i></li>
-    <li ng-click=switchMode()><i class="fa" ng-class="{'fa-arrows': clickTranslation, 'fa-undo': clickRotation}"></i></li>
+    <li ng-click="{clickTranslation : switchMode()}"><i class="fa fa-undo" ng-class="{'red' :clickRotation}"></i></li>
+    <li ng-click="{clickRotation : switchMode()}"><i class="fa fa-arrows" ng-class="{'red' :clickTranslation }"></i></li>
     <li ng-click="isFullscreen=!isFullscreen;toggleFullscreen()"><i class="fa fa-expand" ng-class="{'fa-compress' : isFullscreen, 'fa-expand' : !isFullscreen}"></i></li>
-    <li ng-click="pinMode=!pinMode; deleteTitrePop()" ><!--ng-class=" {'ng-hide': !isEditMode} "--><i class = "fa fa-thumb-tack" ng-class="{'Rotate180': pinMode , 'Rotate-360' : !pinMode}"></i></li>
+    <li ng-click="pinMode=!pinMode; deleteTitrePop()" ng-class="{'ng-hide': !isEditMode}" >  <i class = "fa fa-thumb-tack" ng-class="{'Rotate180': pinMode , 'Rotate-360' : !pinMode}"></i></li>
 	</ul>
 </div>
 <!-- hm-press pour les mobile ? A testé... -->

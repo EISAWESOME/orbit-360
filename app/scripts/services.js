@@ -4,8 +4,8 @@ ob.factory('Images', ['$resource', '$rootScope', '$http', function ($resource, $
     return {
         //url: '../hyracotherium_pied-a-4-doigts/',
         //url: '../Axinite_prenite_epidote/',
-        url: '../merycoidon/',
-        //url: '../amonite/',
+        //url: '../merycoidon/',
+        url: '../amonite/',
 
         loadingQueue: [],
         loadSlot: 0,
