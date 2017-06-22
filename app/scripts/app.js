@@ -80,33 +80,60 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
         }
 
         $scope.lookupAngle = {};
-        $scope.lookupX = {};
-        $scope.lookupY = {};
-        $scope.lookupDesc = {};
 
-        for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-          $scope.lookupY[$scope.tooltips[i].y] = $scope.tooltips[i];
-        }
-        for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-          $scope.lookupX[$scope.tooltips[i].x] = $scope.tooltips[i];
-        }
         for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
           $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
         }
-        for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-          $scope.lookupDesc[$scope.tooltips[i].desc] = $scope.tooltips[i];
+
+        if($scope.lookupAngle[$scope.angle]){
+          displayDesc();
         }
-
-
-
-
       });
 
 
     };
       function displayDesc(){
 
-        console.log('angle changé');
+
+
+        console.log("Point(s) d'interet sur cet angle !!");
+
+        let matchedTt = $scope.tooltips.filter(matchAngle)
+
+        function matchAngle(element) {
+          return element.image == $scope.angle;
+        }
+
+
+        $scope.canvas.addEventListener('mousemove', (e) =>{
+
+          //Passer lvl, ratio X Y et cursor X Y en variable de scope ?
+
+
+          let
+            cursorX = ((e.pageX - $scope.canvas.clientWidth / 2) - $scope.translaX) * (Images.level[0].width / ($scope.actualTileWidth * Images.level[$scope.level].cols)),
+            cursorY = ((e.pageY - $scope.canvas.clientHeight / 2) - $scope.translaY) * (Images.level[0].height / ($scope.actualTileHeight * Images.level[$scope.level].rows));
+
+
+
+          for(let i=0; i < matchedTt.length; i++){
+
+            if(cursorX >= matchedTt[i].x -10 && cursorX <= matchedTt[i].x +10 ){
+              if(cursorY >= matchedTt[i].y -10 && cursorY <= matchedTt[i].y +10 ){
+                alert(matchedTt[i].desc);
+
+              }
+
+            }
+          }
+
+
+        });
+
+
+
+        //console.log($scope.lookupAngle[$scope.angle]);
+
 
       //Dans la liste des tooltip ($scope.tooltips)
       //On verifie si on en a sur l'angle courant ($scope.angle)
@@ -308,11 +335,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
         lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
       }
 
-
       let ttId = e.target.parentNode.parentNode.parentNode.id;
-      console.log(ttId);
-      console.log();
-
 
       $scope.tooltip = lookup[ttId];
       $scope.tooltip.id = ttId;
@@ -429,18 +452,22 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
     }
 
     //Fonction declenché au clic d'un point d'interet dans le menu
-    $scope.selectTooltip = function (id) {
-        /*
-        if ($scope.goingFrom !== null) {
-            return;
+    $scope.selectTooltip = function (e) {
+
+        let lookup = {};
+        for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
+          lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
         }
-        */
+
+        let ttId = e.target.parentNode.parentNode.id;
+
+        console.log(e.target.parentNode.parentNode)
+
+        $scope.tooltip = lookup[ttId];
+        console.log($scope.tooltip);
+        $scope.tooltip.id = ttId;
         $scope.autoPlay = false;
-        $scope.tooltip = $scope.tooltips[id];
-        $scope.tooltip.id = id;
-        $scope.tooltipVisible = false;
         $scope.goingFrom = $scope.angle;
-        console.log(id);
         $scope.goTo($scope.tooltip.image);
     };
 
@@ -463,11 +490,12 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
     //Fonction qui permet la rotation jusqu'a un angle donné
     $scope.goTo = function (angle) {
 
+      //console.log(angle);
+
       //Faire pour qu'il tourne dans le sens le plus rapide en fonction du depart et de la destination ??
       if($scope.angle != angle){
 
         $scope.setAngle($scope.angle +1);
-        console.log($scope.angle);
         window.setTimeout($scope.goTo, 5, angle);
       }
     };
@@ -608,8 +636,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
     //Gestion des event de touche du clavier
     $scope.keymove = function (e) {
-        console.log(e.keyCode);
-
         // Verifie l'état du déplacement : Rotation ou Translation ?
         //Si translation, save le context, presser une fleche effectue un decalage de 10(?) dans sa direction
 
@@ -707,18 +733,11 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
       $scope.tooltips.push(tooltip);
 
-      for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-        $scope.lookupY[$scope.tooltips[i].y] = $scope.tooltips[i];
-      }
-      for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-        $scope.lookupX[$scope.tooltips[i].x] = $scope.tooltips[i];
-      }
+
       for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
         $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
       }
-      for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-        $scope.lookupDesc[$scope.tooltips[i].desc] = $scope.tooltips[i];
-      }
+
 
       $scope.edited = true;
     }

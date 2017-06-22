@@ -57,7 +57,7 @@
           <tbody ng-repeat="tooltip in tooltips | orderBy : 'title'  | filter: motCle " id="{{tooltip.id}}">
           <tr class="border_bottom">
             <td ng-click="isCollapsed = !isCollapsed; $event.stopPropagation()"><i ng-class="{'fa fa-chevron-right': isCollapsed, 'fa fa-chevron-down': !isCollapsed}"></i></td>
-            <td ng-click="selectTooltip($index); toggleLeft()" class ="ttTitre">{{tooltip.title}}</td>
+            <td ng-click="selectTooltip($event); toggleLeft()" class ="ttTitre">{{tooltip.title}}</td>
             <td class = "ttDelete"> <i class="fa fa-times" style="float : right; color:red;" ng-click="confirmDelete($event, $index); $event.stopPropagation()"></i> </td>
           </tr>
           <tr class="collapse-row">
