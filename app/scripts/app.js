@@ -133,12 +133,12 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
             if (cursorX >= matchedTt[i].x - 30 && cursorX <= matchedTt[i].x + 30) {
               if (cursorY >= matchedTt[i].y - 30 && cursorY <= matchedTt[i].y + 30) {
-                $scope.pointPop(matchedTt[i].desc, pointX, pointY);
+                $scope.pointPop('desc', matchedTt[i].desc, pointX, pointY);
               } else { incr++ }
             } else{ incr++ }
             if (incr == matchedTt.length){
               let a=document.querySelector('orbitview')
-              let b = a.querySelector('.pointPop');
+              let b = a.querySelector('.descPop');
               if(b){
                 a.removeChild(b);
               }
@@ -149,7 +149,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
     };
 
 
-    $scope.pointPop = function(popContent, pointX, pointY,){
+    $scope.pointPop = function(mode, popContent, pointX, pointY,){
 
         if (!$scope.isPopDrawed) {
           //console.log(matchedTt[i].desc);
@@ -164,13 +164,22 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
           popContainer.style.marginTop= pointY +"px";
           popContainer.style.position= "absolute";
           popContainer.style.zIndex= 20;
-          popContainer.className = "pointPop";
+          popContainer.className = mode+"Pop";
           let a=document.querySelector('orbitview')
           a.appendChild(popContainer);
 
 
           $scope.isPopDrawed = true;
         }
+    };
+
+    $scope.deleteTitrePop = function(){
+      let a = document.querySelector('.titrePop');
+      let b = document.querySelector('orbitview');
+      if(a){
+        b.removeChild(a);
+      }
+
     };
 
     function detectIE() {
@@ -500,7 +509,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
           pointX = (($scope.tooltip.x / ratioX) + $scope.translaX) + $scope.canvas.clientWidth / 2,
           pointY = (($scope.tooltip.y / ratioY) + $scope.translaY) + $scope.canvas.clientHeight / 2;
 
-        $scope.pointPop($scope.tooltip.title, pointX, pointY);
+        $scope.pointPop('titre',$scope.tooltip.title, pointX, pointY);
     };
 
     $scope.getTooltipX = function () {
