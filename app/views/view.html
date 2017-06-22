@@ -10,29 +10,36 @@
   <div style="display: flex; justify-content:center">
     <div id="navbar-button" ng-click="toggleLeft()">
       <i class="fa fa-bars"></i>
-      <md-tooltip md-direction="left">Ouvrir le menu</md-tooltip>
     </div>
     <div id="edition-button" ng-click="editMode()">
       <md-tooltip md-direction="left">Mode édition</md-tooltip>
       <i class="fa fa-pencil-square-o" ng-class="{'red' : isEditMode, 'white' : !isEditMode }"></i>
     </div>
-    <div id="export-button" ng-click="exportXML()">
-      <i class="fa fa-gift"></i>
-      <md-tooltip md-direction="left">Export</md-tooltip>
-    </div>
   </div>
 
 </div>
 
+
+
     <md-sidenav class="md-sidenav-left" md-component-id="left"
                 md-disable-backdrop md-whiteframe="4">
 
-      <md-toolbar class="md-theme-indigo">
-        <h1 class="md-toolbar-tools">Points d'interet</h1>
-        <md-button ng-click="toggleLeft()" class="md-accent">
-          Close
-        </md-button>
+      <md-toolbar class="md-hue-2">
+        <div class="md-toolbar-tools">
+
+          <h1 flex md-truncate>Points d'interet</h1>
+
+          <md-button class="md-icon-button" aria-label="Export XML" ng-click="exportXML()">
+            <md-icon class="fa fa-gift fa-2x" style="color: greenyellow;"></md-icon>
+          </md-button>
+
+          <md-button class="md-icon-button" aria-label="Close Sidenav" ng-click="toggleLeft()">
+            <md-icon class="fa fa-times fa-2x" style="color: lightblue;"></md-icon>
+          </md-button>
+        </div>
       </md-toolbar>
+
+
 
       <md-content layout-margin>
         <br/>
@@ -47,10 +54,10 @@
         </form>
 
         <table id="tooltip-table">
-          <tbody ng-repeat="tooltip in tooltips | filter: motCle " id="{{tooltip.id}}">
+          <tbody ng-repeat="tooltip in tooltips | orderBy : 'title'  | filter: motCle " id="{{tooltip.id}}">
           <tr class="border_bottom">
             <td ng-click="isCollapsed = !isCollapsed; $event.stopPropagation()"><i ng-class="{'fa fa-chevron-right': isCollapsed, 'fa fa-chevron-down': !isCollapsed}"></i></td>
-            <td ng-click="selectTooltip($index);" class ="ttTitre">{{tooltip.title}}</td>
+            <td ng-click="selectTooltip($index); toggleLeft()" class ="ttTitre">{{tooltip.title}}</td>
             <td class = "ttDelete"> <i class="fa fa-times" style="float : right; color:red;" ng-click="confirmDelete($event, $index); $event.stopPropagation()"></i> </td>
           </tr>
           <tr class="collapse-row">
@@ -75,8 +82,6 @@
     <li ng-click=switchMode()><i class="fa" ng-class="{'fa-arrows': clickTranslation, 'fa-undo': clickRotation}"></i></li>
     <li ng-click="isFullscreen=!isFullscreen;toggleFullscreen()"><i class="fa fa-expand" ng-class="{'fa-compress' : isFullscreen, 'fa-expand' : !isFullscreen}"></i></li>
     <li ng-click="pinMode=!pinMode" ><!--ng-class=" {'ng-hide': !isEditMode} "--><i class = "fa fa-thumb-tack" ng-class="{'Rotate180': pinMode , 'Rotate-360' : !pinMode}"></i></li>
-
-
 	</ul>
 </div>
 <!-- hm-press pour les mobile ? A testé... -->

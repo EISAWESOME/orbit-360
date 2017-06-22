@@ -79,10 +79,44 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
           $scope.tooltips.push(tooltip);
         }
 
+        $scope.lookupAngle = {};
+        $scope.lookupX = {};
+        $scope.lookupY = {};
+        $scope.lookupDesc = {};
+
+        for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
+          $scope.lookupY[$scope.tooltips[i].y] = $scope.tooltips[i];
+        }
+        for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
+          $scope.lookupX[$scope.tooltips[i].x] = $scope.tooltips[i];
+        }
+        for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
+          $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
+        }
+        for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
+          $scope.lookupDesc[$scope.tooltips[i].desc] = $scope.tooltips[i];
+        }
+
+
+
+
       });
 
 
     };
+      function displayDesc(){
+
+        console.log('angle changé');
+
+      //Dans la liste des tooltip ($scope.tooltips)
+      //On verifie si on en a sur l'angle courant ($scope.angle)
+      //Si oui, tant que l'angle ne change pas, on verifie toute les 200ms
+      //Si les coordonnée de la souris corresponde au coordonnée d'un des deux points
+      //Si oui, on affiche sa description
+
+
+
+    }
 
     function detectIE() {
     var ua = window.navigator.userAgent;
@@ -253,12 +287,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
 
 
-    $rootScope.$on('onFirstComplete', function () {
-        // Inutilisé
-        // console.log('onFirstComplete');
-        $scope.edited = true;
-        $scope.setAngle($scope.angle + 1);
-    });
+
     $rootScope.$on('onComplete', function () {
         var time = new Date();
         console.log('onComplete time: '+ time.getSeconds() +' '+ time.getMilliseconds());
@@ -274,8 +303,8 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
 
 
-      var lookup = {};
-      for (var i = 0, len = $scope.tooltips.length; i < len; i++) {
+      let lookup = {};
+      for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
         lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
       }
 
@@ -304,11 +333,18 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
         let indextt = $scope.tooltips.indexOf($scope.tooltip);
         $scope.tooltips.splice(indextt, 1);
 
-
-
-
-
-
+        for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
+          $scope.lookupY[$scope.tooltips[i].y] = $scope.tooltips[i];
+        }
+        for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
+          $scope.lookupX[$scope.tooltips[i].x] = $scope.tooltips[i];
+        }
+        for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
+          $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
+        }
+        for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
+          $scope.lookupDesc[$scope.tooltips[i].desc] = $scope.tooltips[i];
+        }
 
 
 
@@ -359,6 +395,9 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
         if(angle >= Images.nbAngle) $scope.angle = angle - Images.nbAngle;
         else if (angle < 0) $scope.angle = angle + Images.nbAngle;
         else $scope.angle = angle;
+        if($scope.lookupAngle[$scope.angle]){
+          displayDesc();
+        }
         $scope.edited = true;
     };
 
@@ -577,6 +616,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
         if ($scope.clickRotation && !$scope.clickTranslation) {
           if (e.keyCode === 39)
             $scope.setAngle($scope.angle - 1);
+
           if (e.keyCode === 37)
             $scope.setAngle($scope.angle + 1);
         }
@@ -666,6 +706,19 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
       };
 
       $scope.tooltips.push(tooltip);
+
+      for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
+        $scope.lookupY[$scope.tooltips[i].y] = $scope.tooltips[i];
+      }
+      for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
+        $scope.lookupX[$scope.tooltips[i].x] = $scope.tooltips[i];
+      }
+      for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
+        $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
+      }
+      for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
+        $scope.lookupDesc[$scope.tooltips[i].desc] = $scope.tooltips[i];
+      }
 
       $scope.edited = true;
     }
@@ -801,9 +854,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
             }
             //Une fois que toute les cases sont dessinées, on dessine les points d'interet
             let points = $scope.xml.getElementsByTagName('PointInteret');
-            //console.log(points);
             for (let j = 0; j < points.length; j++) {
-
               //Si il existe un ou plusieurs point d'interet sur cet angle
               if (points[j].getAttribute('Angle') == $scope.angle) {
 
