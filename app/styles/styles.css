@@ -267,15 +267,6 @@ md-dialog.medium-dialog {
 #tooltip-table td.ttTitre:hover {
   background-color: rgb(236, 236, 236);
 }
-/*
-#tooltip-table td.ttDelete:hover,
-#tooltip-table td.ttDelete i:hover
-{
-  color: blue;
-
-}
-*/
-
 
 #tooltip-table tr{
   height: 20px;
@@ -302,6 +293,13 @@ tr.border_bottom td {
 md-tooltip .md-content {
   position: relative;
   opacity: 1;
+}
+
+div .pointPop {
+  background-color: white;
+  width: 100px;
+  height: 30px;
+  z-index: 20;
 }
 
 

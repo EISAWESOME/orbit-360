@@ -15,7 +15,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
     };
 
 
-    $scope.isDescDrawed = false;
+    $scope.isPopDrawed = false;
 
 
 
@@ -106,11 +106,10 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
           return element.image == $scope.angle;
         }
 
+
+
         $scope.canvas.addEventListener('mousemove', (e) =>{
 
-
-          //Passer lvl, ratio X Y et cursor X Y en variable de scope ?
-          //Surement
           let lvl = $scope.level;
 
           let
@@ -121,74 +120,59 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
             ratioX = Images.level[0].width / ($scope.actualTileWidth * Images.level[lvl].cols),
             ratioY = Images.level[0].height / ($scope.actualTileHeight * Images.level[lvl].rows);
 
-
           let
             cursorX = aX * ratioX,
             cursorY = aY * ratioY;
 
-
-
-
           let incr = 0;
-            console.log('--------------------------------------------')
-            //console.log(cursorX, cursorY);
-            for (let i = 0; i < matchedTt.length; i++) {
+          for (let i = 0; i < matchedTt.length; i++) {
 
-              let
-                pointX = ((matchedTt[i].x / ratioX) + $scope.translaX) + $scope.canvas.clientWidth / 2,
-                pointY = ((matchedTt[i].y / ratioY) + $scope.translaY) + $scope.canvas.clientHeight / 2;
+            let
+              pointX = ((matchedTt[i].x / ratioX) + $scope.translaX) + $scope.canvas.clientWidth / 2,
+              pointY = ((matchedTt[i].y / ratioY) + $scope.translaY) + $scope.canvas.clientHeight / 2;
 
-
-              if (cursorX >= matchedTt[i].x - 30 && cursorX <= matchedTt[i].x + 30) {
-                if (cursorY >= matchedTt[i].y - 30 && cursorY <= matchedTt[i].y + 30) {
-
-                  console.log("Drawed?" + $scope.isDescDrawed)
-
-                  if (!$scope.isDescDrawed) {
-                    //console.log(matchedTt[i].desc);
-
-                    var para = document.createElement("div");
-                    let node = document.createTextNode(matchedTt[i].desc);
-                    para.appendChild(node);
-                    para.style.backgroundColor = 'white';
-                    para.style.width = '100px';
-                    para.style.height= '22px';
-                    para.style.marginLeft= pointX + "px";
-                    para.style.marginTop= pointY +"px";
-
-                    para.style.position= "absolute";
-                    para.style.zIndex= 20;
-                    para.id = "tt";
-                    let a=document.querySelector('orbitview')
-                    a.appendChild(para);
-
-
-                    $scope.isDescDrawed = true;
-                    console.log("Drawed = "+ $scope.isDescDrawed)
-                  }
-                } else { incr++ }
-              } else{ incr++ }
-
-              if (incr == matchedTt.length){
-                let a=document.querySelector('orbitview')
-                let b = a.querySelector('#tt');
-                if(b){
-                  a.removeChild(b);
-
-                }
-
-
-                $scope.isDescDrawed= false;
-
+            if (cursorX >= matchedTt[i].x - 30 && cursorX <= matchedTt[i].x + 30) {
+              if (cursorY >= matchedTt[i].y - 30 && cursorY <= matchedTt[i].y + 30) {
+                $scope.pointPop('desc', matchedTt[i].desc, pointX, pointY);
+              } else { incr++ }
+            } else{ incr++ }
+            if (incr == matchedTt.length){
+              let a=document.querySelector('orbitview')
+              let b = a.querySelector('.pointPop');
+              if(b){
+                a.removeChild(b);
               }
+              $scope.isPopDrawed= false;
             }
-
-
-
-
-
+          }
         });
-    }
+    };
+
+
+    $scope.pointPop = function(mode, popContent, pointX, pointY,){
+
+        if (!$scope.isPopDrawed) {
+          //console.log(matchedTt[i].desc);
+
+          let popContainer = document.createElement("div");
+          let popText = document.createTextNode(popContent);
+          popContainer.appendChild(popText);
+          popContainer.style.backgroundColor = 'white';
+          popContainer.style.width = '100px';
+          popContainer.style.height= '22px';
+          popContainer.style.marginLeft= pointX + "px";
+          popContainer.style.marginTop= pointY +"px";
+          popContainer.style.position= "absolute";
+          popContainer.style.zIndex= 20;
+          popContainer.className = "pointPop";
+          let a=document.querySelector('orbitview')
+          a.appendChild(popContainer);
+
+
+          $scope.isPopDrawed = true;
+          console.log("Drawed = "+ $scope.isPopDrawed)
+        }
+    };
 
     function detectIE() {
     var ua = window.navigator.userAgent;
@@ -389,7 +373,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
         //Remove dans le tooltip
 
         let a = e.target;
-        var els = [];
+        let els = [];
         while (a) {
           els.unshift(a);
           a = a.parentNode;
@@ -402,17 +386,9 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
         $scope.tooltips.splice(indextt, 1);
 
         for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-          $scope.lookupY[$scope.tooltips[i].y] = $scope.tooltips[i];
-        }
-        for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-          $scope.lookupX[$scope.tooltips[i].x] = $scope.tooltips[i];
-        }
-        for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
           $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
         }
-        for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-          $scope.lookupDesc[$scope.tooltips[i].desc] = $scope.tooltips[i];
-        }
+
 
 
 
