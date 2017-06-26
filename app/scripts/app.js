@@ -104,22 +104,18 @@ ob.config(function ($mdThemingProvider) {
 
       $scope.prevDeltaX = 0;
       $scope.prevDeltaY = 0;
-
-
     };
+
     function displayDesc(){
         console.log("Point(s) d'interet sur cet angle !!");
 
         //Retourne un tableau contenant tout les points de l'angle courant
         let matchedTt = $scope.tooltips.filter(matchAngle);
-        console.log(matchedTt);
         function matchAngle(element) {
           return element.image == $scope.angle;
         }
 
-
-
-        $scope.canvas.addEventListener('mousemove', (e) =>{
+        $scope.canvas.addEventListener('mousemove', function(e) {
 
           let lvl = $scope.level;
 
@@ -136,15 +132,21 @@ ob.config(function ($mdThemingProvider) {
             cursorY = aY * ratioY;
 
           let incr = 0;
+          //On boucle dans le tableau des point interet de l'angle actuel
           for (let i = 0; i < matchedTt.length; i++) {
-
             let
               pointX = ((matchedTt[i].x / ratioX) + $scope.translaX) + $scope.canvas.clientWidth / 2,
               pointY = ((matchedTt[i].y / ratioY) + $scope.translaY) + $scope.canvas.clientHeight / 2;
 
-            if (cursorX >= matchedTt[i].x - 30 && cursorX <= matchedTt[i].x + 30) {
-              if (cursorY >= matchedTt[i].y - 30 && cursorY <= matchedTt[i].y + 30) {
-                $scope.deleteTitrePop()
+            //Les offsets entrée sont arbitraires et correspondent a la tolerence de declenchement de l'affichage du tooltip
+            //On multiplie par 1/zoom pour que la tolérence diminue plus le zoom est elevé, et inversement
+
+            //Si la position du curseur correspond a celle d'un point
+            if (cursorX >= Number(matchedTt[i].x) - (10 * 1/$scope.zoom) && cursorX <= Number(matchedTt[i].x) + (10* 1/$scope.zoom)) {
+              if (cursorY >= Number(matchedTt[i].y) - (40 * 1/$scope.zoom)&& cursorY <= Number(matchedTt[i].y) + (10* 1/$scope.zoom)) {
+                //On supprime le pop up précedent si il existe
+                $scope.deletePop()
+                //On crée le pop up du point en question
                 $scope.pointPop('desc', matchedTt[i].desc, pointX, pointY);
               } else { incr++ }
             } else{ incr++ }
@@ -178,11 +180,16 @@ ob.config(function ($mdThemingProvider) {
         }
     };
 
-    $scope.deleteTitrePop = function(){
-      let a = document.querySelector('.titrePop');
-      let b = document.querySelector('orbitview');
-      if(a){
-        b.removeChild(a);
+    $scope.deletePop = function(){
+      let a = document.querySelector('orbitview');
+      let b = document.querySelector('.titrePop');
+      let c = document.querySelector('.descPop');
+
+      if(b){
+        a.removeChild(b);
+      }
+      if(c){
+        a.removeChild(c);
       }
 
     };
@@ -258,6 +265,7 @@ ob.config(function ($mdThemingProvider) {
     //*******************
     $scope.promptPoint = function(ev) {
       $mdDialog.show({
+
         templateUrl: 'views/tooltipPrompt.tpl.html',
         parent: angular.element(document.body),
         targetEvent: ev,
@@ -288,6 +296,7 @@ ob.config(function ($mdThemingProvider) {
     $scope.confirmDelete = function(ev, id) {
       // Appending dialog to document.body to cover sidenav in docs app
       var confirm = $mdDialog.confirm()
+        .theme('grey')
         .title('Supprimer ce point d\'interet ?')
         .textContent('Vous ne pourrez pas revenir en arrière...')
         .ariaLabel('Suppression')
@@ -323,7 +332,7 @@ ob.config(function ($mdThemingProvider) {
     };
 
     function sanitizePosition() {
-      var current = $scope.toastPosition;
+      let current = $scope.toastPosition;
 
       if ( current.bottom && last.top ) current.top = false;
       if ( current.top && last.bottom ) current.bottom = false;
@@ -334,7 +343,7 @@ ob.config(function ($mdThemingProvider) {
     }
 
     $scope.showSimpleToast = function() {
-      var pinTo = $scope.getToastPosition();
+      let pinTo = $scope.getToastPosition();
 
       $mdToast.show(
         $mdToast.simple()
@@ -437,6 +446,7 @@ ob.config(function ($mdThemingProvider) {
         if($scope.lookupAngle[$scope.angle]){
           displayDesc();
         }
+
         $scope.edited = true;
     };
 
@@ -495,26 +505,6 @@ ob.config(function ($mdThemingProvider) {
         $scope.pointPop('titre',$scope.tooltip.title, pointX, pointY);
     };
 
-    /*
-    Pas utile ?
-
-    $scope.getTooltipX = function () {
-        if ($scope.tooltip === null) {
-            return 0;
-        } else {
-            return ($scope.tooltip.x * $scope.zoom) + $scope.getX() - 1;
-        }
-    };
-
-    $scope.getTooltipY = function () {
-        if ($scope.tooltip === null) {
-            return 0;
-        } else {
-            return ($scope.tooltip.y * $scope.zoom) + $scope.getY() + 5;
-        }
-    };
-
-    */
 
     //Fonction qui permet la rotation jusqu'a un angle donné
     $scope.goTo = function (angle) {
@@ -529,7 +519,8 @@ ob.config(function ($mdThemingProvider) {
         window.setTimeout($scope.goTo, 5, angle);
       } else {
         $scope.finGoto = true;
-        document.querySelector('.titrePop').style.display = 'block';
+        if(document.querySelector('.titrePop'))
+          document.querySelector('.titrePop').style.display = 'block';
       }
 
     };
@@ -659,7 +650,8 @@ ob.config(function ($mdThemingProvider) {
 
       if($scope.clickTranslation && !$scope.clickRotation)
         $scope.canvas.style.cursor = "move";
-
+      //Ici changer le cursuer pour mettre grab / grabbing
+      //Via une classe peut etre ?
 
     };
 
@@ -732,8 +724,8 @@ ob.config(function ($mdThemingProvider) {
         }
 
       }
-      ;
-    }
+
+    };
 
     $scope.createTooltip= function(){
 
@@ -767,7 +759,7 @@ ob.config(function ($mdThemingProvider) {
 
 
       $scope.edited = true;
-    }
+    };
 
 
 
@@ -860,8 +852,8 @@ ob.config(function ($mdThemingProvider) {
             $scope.renderer.save();
 
             var lvl = $scope.level;
-            //console.log(Images.level[lvl]);
             var current = Images.level[lvl].resources[$scope.angle];
+            //console.log(current);
             //var pos = 0;
             if(!Images.resourcesLoaded(lvl, $scope.angle)){
                 $scope.waitingload = true;
@@ -926,15 +918,9 @@ ob.config(function ($mdThemingProvider) {
 
                 //Dessin du point
 
-                let radius = 5;
-                $scope.renderer.beginPath();
-                $scope.renderer.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-                $scope.renderer.fillStyle = 'black';
-                $scope.renderer.fill();
-                $scope.renderer.lineWidth = 5;
-                $scope.renderer.strokeStyle = 'red';
-                $scope.renderer.stroke();
-
+                let img = new Image();
+                img.src = '../app/images/pinIcon-32x32.png';
+                $scope.renderer.drawImage(img, centerX -16, centerY -32);
               }
             }
 
