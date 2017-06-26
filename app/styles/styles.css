@@ -295,11 +295,28 @@ md-tooltip .md-content {
   opacity: 1;
 }
 
-div .pointPop {
-  background-color: white;
-  width: 100px;
-  height: 30px;
+
+div.titrePop,
+div.descPop {
+  position : absolute;
+  color: white;
+  font-weight: bold;
+  background-color: #9E9E9E;
+  padding: 5px 5px 5px 15px;
+  min-width: 100px;
+  max-width: 20%;
+  min-height: 22px;
   z-index: 20;
+  opacity: 0.8;
+  border: 1px solid black;
+  border-radius: 5px;
+
+  /*cursor : pointer;*/
+
+}
+
+div.titrePop{
+  display: none;
 }
 
 

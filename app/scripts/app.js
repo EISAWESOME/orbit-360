@@ -15,7 +15,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
     };
 
 
-    $scope.isPopDrawed = false;
+    $scope.isPopDrawn = false;
     $scope.finGoto = false;
 
 
@@ -134,6 +134,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
             if (cursorX >= matchedTt[i].x - 30 && cursorX <= matchedTt[i].x + 30) {
               if (cursorY >= matchedTt[i].y - 30 && cursorY <= matchedTt[i].y + 30) {
+                $scope.deleteTitrePop()
                 $scope.pointPop('desc', matchedTt[i].desc, pointX, pointY);
               } else { incr++ }
             } else{ incr++ }
@@ -143,7 +144,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
               if(b){
                 a.removeChild(b);
               }
-              $scope.isPopDrawed= false;
+              $scope.isPopDrawn= false;
             }
           }
         });
@@ -152,25 +153,18 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
     $scope.pointPop = function(mode, popContent, pointX, pointY,){
 
-        if (!$scope.isPopDrawed) {
+        if (!$scope.isPopDrawn) {
           //console.log(matchedTt[i].desc);
 
           let popContainer = document.createElement("div");
           let popText = document.createTextNode(popContent);
+          let a=document.querySelector('orbitview');
           popContainer.appendChild(popText);
-          popContainer.style.backgroundColor = 'white';
-          popContainer.style.width = '100px';
-          popContainer.style.height= '22px';
           popContainer.style.marginLeft= pointX + "px";
           popContainer.style.marginTop= pointY +"px";
-          popContainer.style.position= "absolute";
-          popContainer.style.zIndex= 20;
           popContainer.className = mode+"Pop";
-          let a=document.querySelector('orbitview')
           a.appendChild(popContainer);
-
-
-          $scope.isPopDrawed = true;
+          $scope.isPopDrawn = true;
         }
     };
 
@@ -513,6 +507,9 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
         $scope.pointPop('titre',$scope.tooltip.title, pointX, pointY);
     };
 
+    /*
+    Pas utile ?
+
     $scope.getTooltipX = function () {
         if ($scope.tooltip === null) {
             return 0;
@@ -529,6 +526,8 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
         }
     };
 
+    */
+
     //Fonction qui permet la rotation jusqu'a un angle donné
     $scope.goTo = function (angle) {
 
@@ -540,8 +539,9 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
         $scope.finGoto = false;
         $scope.setAngle($scope.angle +1);
         window.setTimeout($scope.goTo, 5, angle);
-      } else{
+      } else {
         $scope.finGoto = true;
+        document.querySelector('.titrePop').style.display = 'block';
       }
 
     };
