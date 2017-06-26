@@ -104,6 +104,7 @@ ob.config(function ($mdThemingProvider) {
 
       $scope.prevDeltaX = 0;
       $scope.prevDeltaY = 0;
+
     };
 
     function displayDesc(){
@@ -142,14 +143,15 @@ ob.config(function ($mdThemingProvider) {
             //On multiplie par 1/zoom pour que la tolérence diminue plus le zoom est elevé, et inversement
 
             //Si la position du curseur correspond a celle d'un point
-            if (cursorX >= Number(matchedTt[i].x) - (10 * 1/$scope.zoom) && cursorX <= Number(matchedTt[i].x) + (10* 1/$scope.zoom)) {
-              if (cursorY >= Number(matchedTt[i].y) - (40 * 1/$scope.zoom)&& cursorY <= Number(matchedTt[i].y) + (10* 1/$scope.zoom)) {
+            if (cursorX >= Number(matchedTt[i].x) - (10 / $scope.zoom) && cursorX <= Number(matchedTt[i].x) + (10 / $scope.zoom)) {
+              if (cursorY >= Number(matchedTt[i].y) - (40 / $scope.zoom)&& cursorY <= Number(matchedTt[i].y) + (10 / $scope.zoom)) {
                 //On supprime le pop up précedent si il existe
-                $scope.deletePop()
+                $scope.deleteTitrePop()
                 //On crée le pop up du point en question
                 $scope.pointPop('desc', matchedTt[i].desc, pointX, pointY);
               } else { incr++ }
             } else{ incr++ }
+            //On detruit le tooltip seulement si le surseur est sortit des zone de tolérance de X ET de Y
             if (incr === matchedTt.length){
               let a=document.querySelector('orbitview');
               let b = a.querySelector('.descPop');
@@ -192,6 +194,16 @@ ob.config(function ($mdThemingProvider) {
         a.removeChild(c);
       }
 
+    };
+
+    $scope.deleteTitrePop = function(){
+      let a = document.querySelector('orbitview');
+      let b = document.querySelector('.titrePop');
+
+
+      if(b){
+        a.removeChild(b);
+      }
     };
 
     function detectIE() {

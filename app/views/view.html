@@ -62,6 +62,7 @@
         </form>
 
         <table id="tooltip-table">
+          <br/>
           <tbody ng-repeat="tooltip in tooltips | orderBy : 'title'  | filter: motCle " id="{{tooltip.id}}">
           <tr class="border_bottom">
             <td class = "nofocus" ng-click="isCollapsed = !isCollapsed; $event.stopPropagation()"><i ng-class="{'fa fa-chevron-right': isCollapsed, 'fa fa-chevron-down': !isCollapsed}"></i></td>
@@ -95,6 +96,6 @@
 </div>
 
 <div id="container">
-<canvas id="orbit-canvas" hm-press="pin($event); deletePop()" hm-tap="autoPlay=false; pin($event); deletePop()" hm-drag="drag($event); deletePop()" hm-dragstart="autoPlay=false; lastDrag=0;" hm-dragend="dragEnd()" msd-wheel="onWheel($event); deletePop()" hm-pinch-in="zoomOut(); deletePop()" hm-pinch-out="zoomIn(); deletePop()"></canvas>
+<canvas id="orbit-canvas" hm-press="pin($event); deletePop()" hm-tap="autoPlay=false; pin($event); deletePop()" hm-drag="drag($event); deletePop();" hm-dragstart="autoPlay=false; lastDrag=0;" hm-dragend="dragEnd()" msd-wheel="onWheel($event); deletePop()" hm-pinch-in="zoomOut(); deletePop()" hm-pinch-out="zoomIn(); deletePop()"></canvas>
 </div>
 <div ng-transclude></div>
