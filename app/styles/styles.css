@@ -203,6 +203,17 @@ orbitview a:hover {
   border: solid transparent 3px;
 }
 
+#button-container {
+
+  left : 100%;
+  margin-left : -50px;
+
+  top:100%;
+  margin-top: -200px;
+  position : absolute;
+
+}
+
 
 tooltip {
   display: none;
@@ -319,8 +330,9 @@ div.titrePop{
   display: none;
 }
 
-div#descImage{
-  display
+.nofocus:focus {
+  outline:none;
 }
+
 
 

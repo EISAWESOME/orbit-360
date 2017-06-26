@@ -2,28 +2,29 @@
 <div id="orbit-loader" ng-show="loading" >{{loading}}%</div>
 
 
-<div style="display: flex; flex-direction:column; position:absolute; width:100%">
-  <div style="height:100px" ng-click="isCollapsed = !isCollapsed" >
+<div  style="position:absolute; width:100%">
+  <div class="nofocus" style="height:100px" ng-click="isTitreCollapsed = !isTitreCollapsed" >
     <h1 id="titreImage"> Amonite</h1>
   </div>
 
-  <div uib-collapse="isCollapsed">
+  <div uib-collapse="isTitreCollapsed">
     <div class="well well-lg"> Description de l'amonite : Chase imaginary bugs. Chase after silly colored fish toys around the house small kitty warm kitty little balls of fur. Fall over dead (not really but gets sypathy). Missing until dinner time. Behind the couch my slave human didn't give me any food so i pooped on the floor and the dog smells bad ask to go outside and ask to come inside and ask to go outside and ask to come inside, so hide when guests come over. Swat at dog rub face on owner. Ignore the squirrels, you'll never catch them anyway make meme, make cute face, for i could pee on this if i had the energy hunt anything that moves, for throwup on your pillow, and lick the curtain just to be annoying hide at bottom of staircase to trip human. Meow to be let in lick yarn hanging out of own butt </div>
   </div>
+</div>
 
-  <div style="display: flex; justify-content:center">
-    <div id="navbar-button" ng-click="toggleLeft(); deleteTitrePop()">
-      <i class="fa fa-bars"></i>
-    </div>
-    <div id="edition-button" ng-click="editMode()">
-      <md-tooltip md-direction="right">Mode édition</md-tooltip>
-      <i class="fa fa-pencil-square-o" ng-class="{'red' : isEditMode, 'white' : !isEditMode }"></i>
-    </div>
+<div id="button-container">
+  <div class="nofocus" id="navbar-button" ng-click="toggleLeft(); deleteTitrePop()">
+    <md-tooltip md-direction="left">Ouvrir/Fermer le menu</md-tooltip>
+    <i class="fa fa-bars"></i>
+  </div>
+  <div class="nofocus" id="edition-button" ng-click="editMode()">
+    <md-tooltip md-direction="left">Mode édition</md-tooltip>
+    <i class="fa fa-pencil-square-o" ng-class="{'red' : isEditMode, 'white' : !isEditMode }"></i>
   </div>
 </div>
 
 
-    <md-sidenav class="md-sidenav-left" md-component-id="left"
+    <md-sidenav md-theme="{{theme}}" class="md-sidenav-left" md-component-id="left"
                 md-disable-backdrop md-whiteframe="4">
 
       <md-toolbar class="md-hue-2">
@@ -58,9 +59,9 @@
         <table id="tooltip-table">
           <tbody ng-repeat="tooltip in tooltips | orderBy : 'title'  | filter: motCle " id="{{tooltip.id}}">
           <tr class="border_bottom">
-            <td ng-click="isCollapsed = !isCollapsed; $event.stopPropagation()"><i ng-class="{'fa fa-chevron-right': isCollapsed, 'fa fa-chevron-down': !isCollapsed}"></i></td>
+            <td class = "nofocus" ng-click="isCollapsed = !isCollapsed; $event.stopPropagation()"><i ng-class="{'fa fa-chevron-right': isCollapsed, 'fa fa-chevron-down': !isCollapsed}"></i></td>
             <td ng-click="selectTooltip($event); toggleLeft()" class ="ttTitre">{{tooltip.title}}</td>
-            <td class = "ttDelete"> <i class="fa fa-times" style="float : right; color:red;" ng-click="confirmDelete($event, $index); $event.stopPropagation()"></i> </td>
+            <td class = "nofocus ttDelete" ng-show="isEditMode"> <i class="fa fa-times" style="float : right; color:red;" ng-click="confirmDelete($event, $index); $event.stopPropagation()"></i> </td>
           </tr>
           <tr class="collapse-row">
             <td colspan = 3>
@@ -79,15 +80,15 @@
     </md-sidenav>
 
 <div id="menu-container" ng-class="{expand: showTooltips}">
-	<ul id="menu">
-		<li ng-click="autoPlay=!autoPlay; play()"><i class="fa" ng-class="{'fa-play': !autoPlay, 'fa-pause': autoPlay}"></i></li>
-    <li ng-click="{clickTranslation : switchMode()}"><i class="fa fa-undo" ng-class="{'red' :clickRotation}"></i></li>
-    <li ng-click="{clickRotation : switchMode()}"><i class="fa fa-arrows" ng-class="{'red' :clickTranslation }"></i></li>
-    <li ng-click="isFullscreen=!isFullscreen;toggleFullscreen()"><i class="fa fa-expand" ng-class="{'fa-compress' : isFullscreen, 'fa-expand' : !isFullscreen}"></i></li>
-    <li ng-click="pinMode=!pinMode; deleteTitrePop()" ng-class="{'ng-hide': !isEditMode}" >  <i class = "fa fa-thumb-tack" ng-class="{'Rotate180': pinMode , 'Rotate-360' : !pinMode}"></i></li>
+	<ul id="menu" >
+		<li class = "nofocus" ng-click="autoPlay=!autoPlay; play()"><i class="fa" ng-class="{'fa-play': !autoPlay, 'fa-pause': autoPlay}"></i></li>
+    <li class = "nofocus" ng-click="{clickTranslation : switchMode()}"><i class="fa fa-undo" ng-class="{'red' :clickRotation}"></i></li>
+    <li class = "nofocus" ng-click="{clickRotation : switchMode()}"><i class="fa fa-arrows" ng-class="{'red' :clickTranslation }"></i></li>
+    <li class = "nofocus" ng-click="isFullscreen=!isFullscreen;toggleFullscreen()"><i class="fa fa-expand" ng-class="{'fa-compress' : isFullscreen, 'fa-expand' : !isFullscreen}"></i></li>
+    <li class = "nofocus" ng-click="pinMode=!pinMode; deleteTitrePop()" ng-class="{'ng-hide': !isEditMode}" >  <i class = "fa fa-thumb-tack" ng-class="{'Rotate180': pinMode , 'Rotate-360' : !pinMode}"></i></li>
 	</ul>
 </div>
-<!-- hm-press pour les mobile ? A testé... -->
+
 <div id="container">
 <canvas id="orbit-canvas" hm-press="pin($event); deleteTitrePop()" hm-tap="autoPlay=false; pin($event); deleteTitrePop()" hm-drag="drag($event); deleteTitrePop()" hm-dragstart="autoPlay=false; lastDrag=0;" hm-dragend="dragEnd()" msd-wheel="onWheel($event); deleteTitrePop()" hm-pinch-in="zoomOut(); deleteTitrePop()" hm-pinch-out="zoomIn(); deleteTitrePop()"></canvas>
 </div>
