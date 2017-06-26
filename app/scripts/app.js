@@ -94,6 +94,11 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
         }
       });
+      $scope.translaY = 0;
+      $scope.translaX = 0;
+
+      $scope.prevDeltaX = 0;
+      $scope.prevDeltaY = 0;
 
 
     };
@@ -138,8 +143,8 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
                 $scope.pointPop('desc', matchedTt[i].desc, pointX, pointY);
               } else { incr++ }
             } else{ incr++ }
-            if (incr == matchedTt.length){
-              let a=document.querySelector('orbitview')
+            if (incr === matchedTt.length){
+              let a=document.querySelector('orbitview');
               let b = a.querySelector('.descPop');
               if(b){
                 a.removeChild(b);
@@ -151,13 +156,13 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
     };
 
 
-    $scope.pointPop = function(mode, popContent, pointX, pointY,){
+    $scope.pointPop = function(mode, popContent, pointX, pointY){
 
         if (!$scope.isPopDrawn) {
-          //console.log(matchedTt[i].desc);
+          let
+            popContainer = document.createElement("div"),
+            popText = document.createTextNode(popContent);
 
-          let popContainer = document.createElement("div");
-          let popText = document.createTextNode(popContent);
           let a=document.querySelector('orbitview');
           popContainer.appendChild(popText);
           popContainer.style.marginLeft= pointX + "px";
@@ -220,8 +225,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
     $scope.pinMode = false;
     $scope.isFullscreen= false;
 
-    $scope.interestPoint = {};
-
     $scope.actualTileWidth = 0;
     $scope.actualTileHeight = 0;
 
@@ -234,7 +237,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
     $scope.angle = 0;         //id de l'angle de vue
     $scope.edited = true;
     $scope.waitingload = true;
-    $scope.fps = 0;
     $scope.renderRatio = 5;
     $scope.autoPlay = false;
     $scope.tooltips = [];
@@ -263,8 +265,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
           $scope.createTooltip();
 
-        }, function() {
-          console.log('You cancelled the dialog.');
         });
     };
     $scope.envoyer = function(answer) {
@@ -291,10 +291,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
       $mdDialog.show(confirm).then(function(){
         $scope.deletePoint(ev, id);
-
-      }, function(){
-
-        console.log('annulation');
 
       });
     };
@@ -392,26 +388,16 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
           $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
         }
 
-
-
-
         //Remove dans le XML
         let points = $scope.xml.getElementsByTagName('PointInteret');
         for(let i =0; i < points.length; i++){
-          if(points[i].getAttribute('Angle') == $scope.tooltip.image){
+          if (points[i].getAttribute('Angle') == $scope.tooltip.image && points[i].getElementsByTagName('Titre')[0].textContent == $scope.tooltip.title) {
+            let coord = points[i].getElementsByTagName('Coord')[0];
 
-            if(points[i].getElementsByTagName('Titre')[0].textContent == $scope.tooltip.title){
-              let coord = points[i].getElementsByTagName('Coord')[0];
+            if (coord.getAttribute('x') == $scope.tooltip.x && coord.getAttribute('y') == $scope.tooltip.y) {
+              points[i].parentNode.removeChild(points[i]);
+              $scope.showSimpleToast();
 
-              if(coord.getAttribute('x') == $scope.tooltip.x){
-
-                if(coord.getAttribute('y') == $scope.tooltip.y){
-                  points[i].parentNode.removeChild(points[i]);
-                  console.log($scope.xml);
-                  $scope.showSimpleToast();
-
-                }
-              }
             }
           }
         }
@@ -453,11 +439,11 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
     //Appellé a l'appui d'une touche flèche du clavier
     $scope.incrTranslaX = function(translaX){
         $scope.translaX += translaX;
-        $scope.edited = true;
+
     };
     $scope.incrTranslaY = function(translaY){
         $scope.translaY += translaY;
-        $scope.edited = true;
+
     };
 
     //Fonction de definition de la translation
@@ -473,7 +459,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
         $scope.translaY = 0;
         $scope.translaX = 0;
         $scope.edited = true;
-    }
+    };
 
     //Fonction declenché au clic d'un point d'interet dans le menu
     $scope.selectTooltip = function (e) {
@@ -484,11 +470,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
         }
 
         let ttId = e.target.parentNode.parentNode.id;
-
-        console.log(e.target.parentNode.parentNode)
-
         $scope.tooltip = lookup[ttId];
-        console.log($scope.tooltip);
         $scope.tooltip.id = ttId;
         $scope.autoPlay = false;
         $scope.goingFrom = $scope.angle;
@@ -602,9 +584,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
     //Fonction qui permet la rotation automatique du modele
     $scope.play = function () {
-        $scope.resetTransla();
-        var n = new Date();
-        // console.log('play '+ n.getMilliseconds());
+       // $scope.resetTransla();
         if ($scope.autoPlay) {
             if ($scope.tooltipVisible === true) {
                 $scope.tooltipVisible = false;
@@ -617,7 +597,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
     //Partie a recheck pour le bug loading
     $scope.onWheel = function (e) {
-        $scope.resetTransla();
         $scope.renderer.restore();
 
         var zoom = $scope.zoom;
@@ -653,7 +632,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
       $scope.isEditMode = !$scope.isEditMode;
 
       //Desactive le pinmode en meme temps que la modification
-      if($scope.isEditMode == false){
+      if($scope.isEditMode === false){
         $scope.pinMode = false;
       }
     };
@@ -664,9 +643,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
       //differentes
 
       $scope.clickRotation = !$scope.clickRotation;
-      console.log('Rotation : ' + $scope.clickRotation );
       $scope.clickTranslation = !$scope.clickTranslation;
-      console.log('Translation : ' + $scope.clickTranslation );
 
 
 
@@ -699,25 +676,18 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
           if (e.keyCode === 37) {// Gauche
             $scope.incrTranslaX(-10);
-            console.log('Gauche, transla x :' + $scope.translaX);
-
-
           }
           if (e.keyCode === 38) {// Haut
             $scope.incrTranslaY(-10);
-            console.log('Haut, transla y :' + $scope.translaY);
-
           }
           if (e.keyCode === 39) {// Droite
             $scope.incrTranslaX(10);
-            console.log('Droite, transla x :' + $scope.translaX);
-
           }
           if (e.keyCode === 40) {// Bas
             $scope.incrTranslaY(10);
-            console.log('Bas, transla Y :' + $scope.translaY);
-
           }
+
+          $scope.edited = true;
 
         }
 
@@ -828,9 +798,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
     $scope.drag = function (e) {
 
-        //console.log('drag');
         if ($scope.clickRotation && !$scope.clickTranslation) {
-
           //$scope.resetTransla();
 
           $scope.tooltipVisible = false;
@@ -851,29 +819,39 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
 
         if ($scope.clickTranslation && !$scope.clickRotation) {
 
+          let
+            currentDeltaX = e.gesture.deltaX,
+            currentDeltaY = e.gesture.deltaY,
+            deplacementX = currentDeltaX - $scope.prevDeltaX,
+            deplacementY = currentDeltaY - $scope.prevDeltaY;
 
-          // Meilleur alternative avant de trouver comment bien faire, près de 5h passer dessus sans resultat, je dois avancer
-          // Presque parfait !! Manque que l'offset
-          $scope.setTranslaXY(e.gesture.center.pageX - $scope.canvas.width / 2, e.gesture.center.pageY - $scope.canvas.height / 2);
-          //$scope.setTranslaXY(e.gesture.deltaX, e.gesture.deltaY);
+          $scope.incrTranslaX(deplacementX);
+          $scope.incrTranslaY(deplacementY);
 
+          $scope.prevDeltaX = currentDeltaX;
+          $scope.prevDeltaY = currentDeltaY;
+          $scope.edited = true;
         }
+    };
+
+    $scope.dragEnd = function(){
+
+      $scope.prevDeltaX = 0;
+      $scope.prevDeltaY = 0;
 
     };
 
+    //Fonction de dessin du canvas
     $scope.draw = function () {
-        //console.log('draw '+$scope.angle);
 
         if(($scope.waitingload && Images.resourcesLoaded($scope.level, $scope.angle)) || $scope.edited){
             $scope.waitingload = false;
-            // console.log('draw '+ lvl +' '+ $scope.angle +' zoom: '+ $scope.zoom);
+
             //Permet de reinitialisé le canvas
             $scope.canvas.width = $scope.canvas.width;
 
             $scope.renderer.translate($scope.translaX,$scope.translaY);
-            //console.log("Draw : Transla X = "+ $scope.translaX + " ; Transla Y = " + $scope.translaY);
-
-
+            $scope.renderer.save();
 
             var lvl = $scope.level;
             //console.log(Images.level[lvl]);
@@ -888,9 +866,6 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
                 }
                 current = Images.level[lvl].resources[$scope.angle];
                 //Image(s) courante, de 1 à 12 (index 0 à 11 ...)
-
-
-                // console.log('draw lvl: '+ lvl);
             }
             var ILvl = Images.level[lvl],
                 posOriX = $scope.getX(),
@@ -940,12 +915,12 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdT
                   drawY = pinY * $scope.zoom;
 
                 //Et on defini le centre du dessin comme l'origine
-                var centerX = ($scope.canvas.clientWidth/2 + drawX)   ;
-                var centerY = ($scope.canvas.clientHeight/2 + drawY)   ;
+                let centerX = ($scope.canvas.clientWidth/2 + drawX)   ;
+                let centerY = ($scope.canvas.clientHeight/2 + drawY)   ;
 
                 //Dessin du point
 
-                var radius = 5;
+                let radius = 5;
                 $scope.renderer.beginPath();
                 $scope.renderer.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
                 $scope.renderer.fillStyle = 'black';

@@ -3,8 +3,12 @@
 
 
 <div style="display: flex; flex-direction:column; position:absolute; width:100%">
-  <div style="height:100px">
+  <div style="height:100px" ng-click="isCollapsed = !isCollapsed" >
     <h1 id="titreImage"> Amonite</h1>
+  </div>
+
+  <div uib-collapse="isCollapsed">
+    <div class="well well-lg"> Description de l'amonite : Chase imaginary bugs. Chase after silly colored fish toys around the house small kitty warm kitty little balls of fur. Fall over dead (not really but gets sypathy). Missing until dinner time. Behind the couch my slave human didn't give me any food so i pooped on the floor and the dog smells bad ask to go outside and ask to come inside and ask to go outside and ask to come inside, so hide when guests come over. Swat at dog rub face on owner. Ignore the squirrels, you'll never catch them anyway make meme, make cute face, for i could pee on this if i had the energy hunt anything that moves, for throwup on your pillow, and lick the curtain just to be annoying hide at bottom of staircase to trip human. Meow to be let in lick yarn hanging out of own butt </div>
   </div>
 
   <div style="display: flex; justify-content:center">
@@ -12,13 +16,11 @@
       <i class="fa fa-bars"></i>
     </div>
     <div id="edition-button" ng-click="editMode()">
-      <md-tooltip md-direction="left">Mode édition</md-tooltip>
+      <md-tooltip md-direction="right">Mode édition</md-tooltip>
       <i class="fa fa-pencil-square-o" ng-class="{'red' : isEditMode, 'white' : !isEditMode }"></i>
     </div>
   </div>
-
 </div>
-
 
 
     <md-sidenav class="md-sidenav-left" md-component-id="left"
@@ -87,6 +89,6 @@
 </div>
 <!-- hm-press pour les mobile ? A testé... -->
 <div id="container">
-<canvas id="orbit-canvas" hm-press="pin($event); deleteTitrePop()" hm-tap="autoPlay=false; pin($event); deleteTitrePop()" hm-drag="drag($event); deleteTitrePop()" hm-dragstart="autoPlay=false; lastDrag=0;" hm-dragend="dragEnd($event)" msd-wheel="onWheel($event); deleteTitrePop()" hm-pinch-in="zoomOut(); deleteTitrePop()" hm-pinch-out="zoomIn(); deleteTitrePop()"></canvas>
+<canvas id="orbit-canvas" hm-press="pin($event); deleteTitrePop()" hm-tap="autoPlay=false; pin($event); deleteTitrePop()" hm-drag="drag($event); deleteTitrePop()" hm-dragstart="autoPlay=false; lastDrag=0;" hm-dragend="dragEnd()" msd-wheel="onWheel($event); deleteTitrePop()" hm-pinch-in="zoomOut(); deleteTitrePop()" hm-pinch-out="zoomIn(); deleteTitrePop()"></canvas>
 </div>
 <div ng-transclude></div>
