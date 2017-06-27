@@ -12,20 +12,8 @@ ob.factory('Images', ['$resource', '$location','$rootScope', '$http', function (
 
           }
           //Sinon on charge l'amonite par défaut
-          else return '../amonite/'
+          else return '../merycoidon/'
         },
-
-        // Titre du modèle
-        alias: function() {
-          if($location.search().titre){
-            return $location.search().titre
-
-          }
-
-          else return ''
-        },
-
-
         loadingQueue: [],
         loadSlot: 0,
         loaded: 0,
@@ -34,6 +22,11 @@ ob.factory('Images', ['$resource', '$location','$rootScope', '$http', function (
         loadxml: function(){
 
             return $http.get(this.url() +'content.xml');
+        },
+
+        loadDetails: function(){
+
+          return $http.get(this.url() +'content2.xml');
         },
         loadLevel: function (lvl) {
             let time = new Date();

@@ -165,18 +165,51 @@ ob.config(function ($mdThemingProvider) {
 
           $scope.tooltips.push(tooltip);
         }
+      });
 
-        $scope.lookupAngle = {};
+      $scope.lookupAngle = {};
 
-        for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-          $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
+      for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
+        $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
+      }
+
+      if($scope.lookupAngle[$scope.angle]){
+        displayDesc();
+
+      }
+
+      Images.loadDetails().then(function(dataXML) {
+
+        if (window.DOMParser) { // Standard
+          let tmp = new DOMParser();
+          $scope.details = tmp.parseFromString(dataXML.data, "text/xml");
+        }
+        else { // IE
+          $scope.details = new ActiveXObject("Microsoft.XMLDOM");
+          details.async = "false";
+          details.loadXML(dataXML);
         }
 
-        if($scope.lookupAngle[$scope.angle]){
-          displayDesc();
+        let colProperties = $scope.details.getElementsByTagName('property');
 
+        for(let i=0;  i<colProperties.length ; i++){
+
+          if( colProperties[i].getAttribute('name') === 'titre'){
+
+
+            $scope.titre = colProperties[i].textContent;
+
+          }
+
+          if( colProperties[i].getAttribute('name') === 'description'){
+
+            $scope.description = colProperties[i].textContent;
+
+          }
         }
       });
+
+
       $scope.translaY = 0;
       $scope.translaX = 0;
 
@@ -230,7 +263,6 @@ ob.config(function ($mdThemingProvider) {
       }
     };
 
-    $scope.titre = Images.alias;
     $scope.theme = 'grey';
     $scope.isPopDrawn = false;
     $scope.finGoto = false;
