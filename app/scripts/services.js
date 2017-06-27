@@ -36,12 +36,12 @@ ob.factory('Images', ['$resource', '$location','$rootScope', '$http', function (
             return $http.get(this.url() +'content.xml');
         },
         loadLevel: function (lvl) {
-            var time = new Date();
+            let time = new Date();
             console.log('loadLevel  '+ lvl +' time: '+ time.getSeconds() +' '+ time.getMilliseconds());
 
-            var scope = this.level[lvl];
-            var f = false;
-            for (var i = 0; i < scope.resources.length; i++) {
+            let scope = this.level[lvl];
+            let f = false;
+            for (let i = 0; i < scope.resources.length; i++) {
                 this.loadResources(lvl, i, f);
             }
         },
@@ -50,19 +50,19 @@ ob.factory('Images', ['$resource', '$location','$rootScope', '$http', function (
             priority = (typeof priority !== "undefined")? priority : true;
             // console.log('prio '+ priority);
             if(priority){
-                for (var i = 0; i < this.level[lvl].resources[angle].length; i++)
+                for (let i = 0; i < this.level[lvl].resources[angle].length; i++)
                     this.loadingQueue.unshift([lvl, angle, i]);
             }
             else{
-                for (var i = 0; i < this.level[lvl].resources[angle].length; i++)
+                for (let i = 0; i < this.level[lvl].resources[angle].length; i++)
                     this.loadingQueue.push([lvl, angle, i]);
             }
             this.loadQueuedImages();
         },
         //renvoie vrai si toutes les images inclus dans resources sont chargées
         resourcesLoaded: function (lvl, agl) {
-            var angle = this.level[lvl].resources[agl];
-            for (var i = 0; i < angle.length; i++) {
+            let angle = this.level[lvl].resources[agl];
+            for (let i = 0; i < angle.length; i++) {
                 if(!angle[i].loaded) return false;
             }
             return true;
@@ -71,16 +71,16 @@ ob.factory('Images', ['$resource', '$location','$rootScope', '$http', function (
         //load sans queue
         loadImage: function (lvl, angle, pos, fromQueue) {
             fromQueue = fromQueue || false;
-            var self = this.level[lvl].resources[angle][pos];
-            var source = this.level[lvl].resources[angle][pos].img;//necessaire car cette info se perd si loadImage est executé plusieurs fois en parallèle
+            let self = this.level[lvl].resources[angle][pos];
+            let source = this.level[lvl].resources[angle][pos].img;//necessaire car cette info se perd si loadImage est executé plusieurs fois en parallèle
             // console.log('type: '+ (typeof source !== 'string'));
             if(typeof source !== 'string'){
                 if(fromQueue) this.loadQueuedImages();
                 return true;
             }
             else{
-                var scope = this;
-                var img = new Image();
+                let scope = this;
+                let img = new Image();
 
                 img.src = source;
                 //console.log(img);
@@ -109,7 +109,7 @@ ob.factory('Images', ['$resource', '$location','$rootScope', '$http', function (
         //load avec queue à plusieurs slots
         loadQueuedImages: function () {
             if(this.loadSlot < 3 && this.loadingQueue.length > 0){
-                var current = this.loadingQueue.shift();
+                let current = this.loadingQueue.shift();
                 if(this.loadImage(current[0], current[1], current[2], true)){
                      //console.log('deja chargé ' + current[0] +' '+ current[1] +' '+ current[2]);
                 }
@@ -119,7 +119,7 @@ ob.factory('Images', ['$resource', '$location','$rootScope', '$http', function (
         //loading queue avec slot et sans slot
         loading: function (current, max) {
             // this.loaded += 1;
-            var percent = current*100 / max;
+            let percent = current*100 / max;
             percent = percent.toFixed(1);
 
             //A analyser pour comprendre pourquoi l'image n'est pas directement disponible au déclenchement de 'onFirstComplete'

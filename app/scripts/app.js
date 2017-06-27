@@ -78,22 +78,22 @@ ob.config(function ($mdThemingProvider) {
     };
 
     function detectIE() {
-      var ua = window.navigator.userAgent;
+      let ua = window.navigator.userAgent;
 
-      var msie = ua.indexOf('MSIE ');
+      let msie = ua.indexOf('MSIE ');
       if (msie > 0) {
         // IE 10 or older => return version number
         return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
       }
 
-      var trident = ua.indexOf('Trident/');
+      let trident = ua.indexOf('Trident/');
       if (trident > 0) {
         // IE 11 => return version number
-        var rv = ua.indexOf('rv:');
+        let rv = ua.indexOf('rv:');
         return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
       }
 
-      var edge = ua.indexOf('Edge/');
+      let edge = ua.indexOf('Edge/');
       if (edge > 0) {
         // Edge (IE 12+) => return version number
         return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
@@ -128,7 +128,7 @@ ob.config(function ($mdThemingProvider) {
       Images.loadxml().then(function(dataXML) {
 
         if (window.DOMParser) { // Standard
-          var tmp = new DOMParser();
+          let tmp = new DOMParser();
           $scope.xml = tmp.parseFromString(dataXML.data, "text/xml");
         }
         else { // IE
@@ -604,7 +604,7 @@ ob.config(function ($mdThemingProvider) {
     $scope.onWheel = function (e) {
         $scope.renderer.restore();
 
-        var zoom = $scope.zoom;
+        let zoom = $scope.zoom;
         if (e.deltaY > 0) {
             $scope.zoomOut();
         } else {
@@ -810,7 +810,7 @@ ob.config(function ($mdThemingProvider) {
           //$scope.resetTransla();
 
           $scope.tooltipVisible = false;
-          var dst = $scope.lastDrag - e.gesture.deltaX,
+          let dst = $scope.lastDrag - e.gesture.deltaX,
             ratio;
           dst *= 1;
           ratio = dst / 10;

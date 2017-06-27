@@ -34,13 +34,13 @@ ob.directive('orbitview', ['Images', function (Images) {
 
 
 
-                var imgData = xml.getElementsByTagName('img');
-                var scaleData = xml.getElementsByTagName('scale');
+                let imgData = xml.getElementsByTagName('img');
+                let scaleData = xml.getElementsByTagName('scale');
 
                 Images.level = [];                              //niveaux de résolution
                 Images.ext = imgData[0].getAttribute('ext');    //extension des fichiers images
                 //pour chaque level(niveau de resolution)
-                for (var i = 0; i < scaleData.length; i++) {
+                for (let i = 0; i < scaleData.length; i++) {
                     if(Number(scaleData[i].getAttribute('width')) > 200){
                         Images.level.push({
                             value: Number(scaleData[i].getAttribute('value').replace('.', '')),
@@ -54,12 +54,12 @@ ob.directive('orbitview', ['Images', function (Images) {
                             resources: []
                         });
                         //pour chaque resources(angle de vue)
-                        for (var j = 0; j < imgData.length; j++) {
+                        for (let j = 0; j < imgData.length; j++) {
                             Images.level[i].resources.push([]);
 
                             //pour chaque position(images découpées de l'angle de vue)
-                            for (var k = 0; k < Images.level[i].cols * Images.level[i].rows; k++) {
-                                var name = Images.url()
+                            for (let k = 0; k < Images.level[i].cols * Images.level[i].rows; k++) {
+                                let name = Images.url()
                                     +'images/'+ imgData[j].getAttribute('name')
                                     +'_'+ Images.level[i].value
                                     +'_'+ Math.floor(k / Images.level[i].rows)
@@ -84,7 +84,7 @@ ob.directive('tooltip', ['$sce', function ($sce) {
         restrict: 'E',
         require: '^orbitview',
         link: function ($scope, $elem, $attr, ov) {
-            var tooltip = {
+            let tooltip = {
                 title: $attr.titre,
                 image: $attr.image,
                 x: parseInt($attr.x),
@@ -106,7 +106,7 @@ ob.directive('description', ['$sce', function ($sce) {
         restrict: 'E',
         require: '^orbitview',
         link: function ($scope, $elem, $attr, ov) {
-            var description = {
+            let description = {
                 visible: false,
                 title: $attr.titre,
                 content: $sce.trustAsHtml($elem.html())
