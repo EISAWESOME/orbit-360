@@ -102,7 +102,7 @@ ob.factory('Images', ['$resource', '$rootScope', '$http', function ($resource, $
             var percent = current*100 / max;
             percent = percent.toFixed(1);
 
-                //A analyser pour comprendre pourquoi l'image n'est pas directement disponible au déclenchement de 'onFirstComplete'
+            //A analyser pour comprendre pourquoi l'image n'est pas directement disponible au déclenchement de 'onFirstComplete'
             // if (this.loaded == 1) /*setTimeout(function(){*/$rootScope.$emit('onFirstComplete');/*}, 1000);*/
             if (percent >= 100) {
                 $rootScope.$emit('onComplete');

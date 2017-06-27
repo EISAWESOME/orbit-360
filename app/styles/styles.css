@@ -72,8 +72,8 @@ orbitview a:hover {
 #orbit-loader:before, #orbit-loader-reso:before,
 #orbit-loader:after , #orbit-loader-reso:after{
   position: absolute;
-  top: 15px;
-  left: 15px;
+  top: 25px;
+  left: 25px;
   display: block;
   width: 50px;
   height: 50px;
@@ -141,13 +141,14 @@ orbitview a:hover {
   border-top: 0;
 }
 
-#edition-button {
+.canvasButton {
   z-index: 10;
   font-size: 24px;
   color: rgba(255, 255, 255, 0.7);
   width: 50px;
   height: 50px;
   line-height: 50px;
+  margin:10px 0 10px 0;
   background-color: rgba(0, 0, 0, 0.6);
   border: solid rgba(255, 255, 255, 0.6) 3px;
   border-radius: 50px;
@@ -155,52 +156,22 @@ orbitview a:hover {
   cursor: pointer;
 }
 
-#navbar-button{
-  z-index: 10;
-  font-size: 24px;
-  color: rgba(255, 255, 255, 0.7);
-  width: 50px;
-  height: 50px;
-  line-height: 50px;
-  background-color: rgba(0, 0, 0, 0.6);
-  border: solid rgba(255, 255, 255, 0.6) 3px;
-  border-radius: 50px;
-  text-align: center;
-  cursor: pointer;
 
-}
-#export-button {
-  z-index: 10;
-  font-size: 24px;
-  color: rgba(255, 255, 255, 0.7);
-  width: 50px;
-  height: 50px;
-  line-height: 50px;
-  background-color: rgba(0, 0, 0, 0.6);
-  border: solid rgba(255, 255, 255, 0.6) 3px;
-  border-radius: 50px;
-  text-align: center;
-  cursor: pointer;
-}
-
-#navbar-button:hover,
-#edition-button:hover,
-#navbar-button:active,
-#edition-button.active {
+.canvasButton:hover,
+.canvasButton:active {
   color: white;
 }
-#navbar-button.active,
-#edition-button.active {
+.canvasButton.active {
   border: solid transparent 3px;
 }
 
 #button-container {
 
+  height: 100%;
+
   left : 100%;
   margin-left : -50px;
 
-  top:100%;
-  margin-top: -200px;
   position : absolute;
 
 }
@@ -243,7 +214,7 @@ md-dialog.medium-dialog {
   max-width: 50%;
   max-height: 50%;
   width: 500px;
-  height: 330px;
+  height: 350px;
   border-radius: 0;
 }
 
@@ -259,6 +230,8 @@ md-dialog.medium-dialog {
 #tooltip-table td.ttTitre {
   width : 80%;
   word-wrap:break-word;
+
+
 }
 
 
@@ -282,7 +255,11 @@ tr.border_bottom td {
 }
 
 #titreImage{
-  color:white;
+
+  cursor: help;
+  color: #00b0ff;
+  text-decoration: underline;
+  font-weight: bold;
   width: 100%;
   position: absolute;
   text-align: center;

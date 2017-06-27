@@ -9,6 +9,65 @@ ob.config(function ($mdThemingProvider) {
 })
   .controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', '$mdDialog', '$mdToast', '$mdSidenav', function ($scope, $rootScope, Images, $mdDialog, $mdToast, $mdSidenav) {
 
+
+
+    function displayDesc(){
+      console.log("Point(s) d'interet sur cet angle !!");
+
+      //Retourne un tableau contenant tout les points de l'angle courant
+      let matchedTt = $scope.tooltips.filter(matchAngle);
+      function matchAngle(element) {
+        return element.image == $scope.angle;
+      }
+
+      $scope.canvas.addEventListener('mousemove', function(e) {
+
+        let lvl = $scope.level;
+
+        let
+          aX = (e.pageX - $scope.canvas.clientWidth / 2) - $scope.translaX,
+          aY = (e.pageY - $scope.canvas.clientHeight / 2) - $scope.translaY;
+
+        let
+          ratioX = Images.level[0].width / ($scope.actualTileWidth * Images.level[lvl].cols),
+          ratioY = Images.level[0].height / ($scope.actualTileHeight * Images.level[lvl].rows);
+
+        let
+          cursorX = aX * ratioX,
+          cursorY = aY * ratioY;
+
+        let incr = 0;
+        //On boucle dans le tableau des point interet de l'angle actuel
+        for (let i = 0; i < matchedTt.length; i++) {
+          let
+            pointX = ((matchedTt[i].x / ratioX) + $scope.translaX) + $scope.canvas.clientWidth / 2,
+            pointY = ((matchedTt[i].y / ratioY) + $scope.translaY) + $scope.canvas.clientHeight / 2;
+
+          //Les offsets entrée sont arbitraires et correspondent a la tolerence de declenchement de l'affichage du tooltip
+          //On multiplie par 1/zoom pour que la tolérence diminue plus le zoom est elevé, et inversement
+
+          //Si la position du curseur correspond a celle d'un point
+          if (cursorX >= Number(matchedTt[i].x) - (10 / $scope.zoom) && cursorX <= Number(matchedTt[i].x) + (10 / $scope.zoom)) {
+            if (cursorY >= Number(matchedTt[i].y) - (40 / $scope.zoom)&& cursorY <= Number(matchedTt[i].y) + (10 / $scope.zoom)) {
+              //On supprime le pop up précedent si il existe
+              $scope.deleteTitrePop()
+              //On crée le pop up du point en question
+              $scope.pointPop('desc', matchedTt[i].desc, pointX, pointY);
+            } else { incr++ }
+          } else{ incr++ }
+          //On detruit le tooltip seulement si le surseur est sortit des zone de tolérance de X ET de Y
+          if (incr === matchedTt.length){
+            let a=document.querySelector('orbitview');
+            let b = a.querySelector('.descPop');
+            if(b){
+              a.removeChild(b);
+            }
+            $scope.isPopDrawn= false;
+          }
+        }
+      });
+    };
+
     $scope.toggleLeft = buildToggler('left');
     $scope.toggleRight = buildToggler('right');
 
@@ -18,12 +77,31 @@ ob.config(function ($mdThemingProvider) {
       };
     };
 
+    function detectIE() {
+      var ua = window.navigator.userAgent;
 
-    $scope.isPopDrawn = false;
-    $scope.finGoto = false;
-    $scope.theme = 'grey';
-    $scope.pinIcon = new Image();
-    $scope.pinIcon.src = '../app/images/pinIcon-32x32.png';
+      var msie = ua.indexOf('MSIE ');
+      if (msie > 0) {
+        // IE 10 or older => return version number
+        return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+      }
+
+      var trident = ua.indexOf('Trident/');
+      if (trident > 0) {
+        // IE 11 => return version number
+        var rv = ua.indexOf('rv:');
+        return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+      }
+
+      var edge = ua.indexOf('Edge/');
+      if (edge > 0) {
+        // Edge (IE 12+) => return version number
+        return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
+      }
+
+      // other browser
+      return false;
+    };
 
 
     $scope.init = function () {
@@ -105,65 +183,10 @@ ob.config(function ($mdThemingProvider) {
       $scope.prevDeltaX = 0;
       $scope.prevDeltaY = 0;
 
+      $scope.pinIcon = new Image();
+      $scope.pinIcon.src = '../app/images/pinIcon-32x32.png';
+
     };
-
-    function displayDesc(){
-        console.log("Point(s) d'interet sur cet angle !!");
-
-        //Retourne un tableau contenant tout les points de l'angle courant
-        let matchedTt = $scope.tooltips.filter(matchAngle);
-        function matchAngle(element) {
-          return element.image == $scope.angle;
-        }
-
-        $scope.canvas.addEventListener('mousemove', function(e) {
-
-          let lvl = $scope.level;
-
-          let
-            aX = (e.pageX - $scope.canvas.clientWidth / 2) - $scope.translaX,
-            aY = (e.pageY - $scope.canvas.clientHeight / 2) - $scope.translaY;
-
-          let
-            ratioX = Images.level[0].width / ($scope.actualTileWidth * Images.level[lvl].cols),
-            ratioY = Images.level[0].height / ($scope.actualTileHeight * Images.level[lvl].rows);
-
-          let
-            cursorX = aX * ratioX,
-            cursorY = aY * ratioY;
-
-          let incr = 0;
-          //On boucle dans le tableau des point interet de l'angle actuel
-          for (let i = 0; i < matchedTt.length; i++) {
-            let
-              pointX = ((matchedTt[i].x / ratioX) + $scope.translaX) + $scope.canvas.clientWidth / 2,
-              pointY = ((matchedTt[i].y / ratioY) + $scope.translaY) + $scope.canvas.clientHeight / 2;
-
-            //Les offsets entrée sont arbitraires et correspondent a la tolerence de declenchement de l'affichage du tooltip
-            //On multiplie par 1/zoom pour que la tolérence diminue plus le zoom est elevé, et inversement
-
-            //Si la position du curseur correspond a celle d'un point
-            if (cursorX >= Number(matchedTt[i].x) - (10 / $scope.zoom) && cursorX <= Number(matchedTt[i].x) + (10 / $scope.zoom)) {
-              if (cursorY >= Number(matchedTt[i].y) - (40 / $scope.zoom)&& cursorY <= Number(matchedTt[i].y) + (10 / $scope.zoom)) {
-                //On supprime le pop up précedent si il existe
-                $scope.deleteTitrePop()
-                //On crée le pop up du point en question
-                $scope.pointPop('desc', matchedTt[i].desc, pointX, pointY);
-              } else { incr++ }
-            } else{ incr++ }
-            //On detruit le tooltip seulement si le surseur est sortit des zone de tolérance de X ET de Y
-            if (incr === matchedTt.length){
-              let a=document.querySelector('orbitview');
-              let b = a.querySelector('.descPop');
-              if(b){
-                a.removeChild(b);
-              }
-              $scope.isPopDrawn= false;
-            }
-          }
-        });
-    };
-
 
     $scope.pointPop = function(mode, popContent, pointX, pointY){
 
@@ -182,7 +205,7 @@ ob.config(function ($mdThemingProvider) {
         }
     };
 
-    $scope.deletePop = function(){
+    $scope.deleteAllPop = function(){
       let a = document.querySelector('orbitview');
       let b = document.querySelector('.titrePop');
       let c = document.querySelector('.descPop');
@@ -206,33 +229,9 @@ ob.config(function ($mdThemingProvider) {
       }
     };
 
-    function detectIE() {
-    var ua = window.navigator.userAgent;
-
-    var msie = ua.indexOf('MSIE ');
-    if (msie > 0) {
-      // IE 10 or older => return version number
-      return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
-    }
-
-    var trident = ua.indexOf('Trident/');
-    if (trident > 0) {
-      // IE 11 => return version number
-      var rv = ua.indexOf('rv:');
-      return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
-    }
-
-    var edge = ua.indexOf('Edge/');
-    if (edge > 0) {
-      // Edge (IE 12+) => return version number
-      return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
-    }
-
-    // other browser
-    return false;
-  };
-
-
+    $scope.theme = 'grey';
+    $scope.isPopDrawn = false;
+    $scope.finGoto = false;
 
     $scope.id = 0;
     $scope.tooltipTrueCoord = {};
@@ -354,6 +353,7 @@ ob.config(function ($mdThemingProvider) {
 
     $scope.showSimpleToast = function() {
       let pinTo = $scope.getToastPosition();
+      console.log(pinTo);
 
       $mdToast.show(
         $mdToast.simple()
@@ -620,6 +620,7 @@ ob.config(function ($mdThemingProvider) {
         }
         if($scope.level < Images.level.length-1 && $scope.zoom*1000 <= Images.level[$scope.level+1].value)
             $scope.level++;
+        $scope.edited = true;
     };
 
     $scope.zoomIn = function () {
@@ -629,6 +630,7 @@ ob.config(function ($mdThemingProvider) {
         }
         if($scope.level > 0 && $scope.zoom*1000 > Images.level[$scope.level].value)
             $scope.level--;
+        $scope.edited = true;
     };
 
     $scope.editMode = function(){
@@ -849,7 +851,7 @@ ob.config(function ($mdThemingProvider) {
     //Fonction de dessin du canvas
     $scope.draw = function () {
 
-        if(($scope.waitingload && Images.resourcesLoaded($scope.level, $scope.angle)) || ($scope.edited && Images.resourcesLoaded($scope.level, $scope.angle))){
+        if(($scope.waitingload && Images.resourcesLoaded($scope.level, $scope.angle)) || $scope.edited){
             $scope.waitingload = false;
 
             //Permet de reinitialisé le canvas
@@ -926,11 +928,8 @@ ob.config(function ($mdThemingProvider) {
                 //Dessin du point
 
                 //On attend que l'image soit chargé, puis on la dessine
-                if($scope.pinIcon.complete){
-                  $scope.renderer.drawImage($scope.pinIcon, centerX -16, centerY -32);
-                } else {
-                  img.onload = $scope.renderer.drawImage($scope.pinIcon, centerX -16, centerY -32);
-                }
+
+                $scope.renderer.drawImage($scope.pinIcon, centerX -16, centerY -32);
 
               }
             }

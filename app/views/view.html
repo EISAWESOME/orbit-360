@@ -17,14 +17,34 @@
 </div>
 
 <div id="button-container">
-  <div class="nofocus" id="navbar-button" ng-click="toggleLeft(); deletePop()" style="margin:10px 0px 10px 0px">
-    <md-tooltip md-direction="left">Ouvrir/Fermer le menu</md-tooltip>
-    <i class="fa fa-bars"></i>
+
+
+  <div style="top:40%; position:absolute">
+
+    <div class="nofocus canvasButton" ng-click="zoomIn(); deleteAllPop()">
+      <i class="fa fa-search-plus"></i>
+    </div>
+
+    <div class="nofocus canvasButton"  ng-click="zoomOut(); deleteAllPop()">
+      <i class="fa fa-search-minus"></i>
+    </div>
+
   </div>
-  <div class="nofocus" id="edition-button" ng-click="editMode()" style="margin:10px 5px 10px 0px">
-    <md-tooltip md-direction="left">Mode édition</md-tooltip>
-    <i class="fa fa-pencil-square-o" ng-class="{'red' : isEditMode, 'white' : !isEditMode }"></i>
+
+  <div style="top:85%; position:absolute">
+
+    <div class="nofocus canvasButton" ng-click="toggleLeft(); deleteAllPop()">
+      <md-tooltip md-direction="left">Ouvrir/Fermer le menu</md-tooltip>
+      <i class="fa fa-bars"></i>
+    </div>
+
+    <div class="nofocus canvasButton" ng-click="editMode()">
+      <md-tooltip md-direction="left">Mode édition</md-tooltip>
+      <i class="fa fa-pencil-square-o" ng-class="{'red' : isEditMode, 'white' : !isEditMode }"></i>
+    </div>
+
   </div>
+
 </div>
 
 
@@ -91,7 +111,7 @@
     <li class = "nofocus" ng-click="{clickTranslation : switchMode()}"><i class="fa fa-undo" ng-class="{'red' :clickRotation}"></i></li>
     <li class = "nofocus" ng-click="{clickRotation : switchMode()}"><i class="fa fa-arrows" ng-class="{'red' :clickTranslation }"></i></li>
     <li class = "nofocus" ng-click="isFullscreen=!isFullscreen;toggleFullscreen()"><i class="fa fa-expand" ng-class="{'fa-compress' : isFullscreen, 'fa-expand' : !isFullscreen}"></i></li>
-    <li class = "nofocus" ng-click="pinMode=!pinMode; deletePop()" ng-class="{'ng-hide': !isEditMode}" >  <i class = "fa fa-thumb-tack" ng-class="{'Rotate180': pinMode , 'Rotate-360' : !pinMode}"></i></li>
+    <li class = "nofocus" ng-click="pinMode=!pinMode; deleteAllPop()" ng-class="{'ng-hide': !isEditMode}" >  <i class = "fa fa-thumb-tack" ng-class="{'Rotate180': pinMode , 'Rotate-360' : !pinMode}"></i></li>
 	</ul>
 </div>
 
