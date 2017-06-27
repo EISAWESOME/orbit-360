@@ -31,7 +31,7 @@
 
   </div>
 
-  <div style="top:85%; position:absolute">
+  <div style="bottom: 85px; position:absolute">
 
     <div class="nofocus canvasButton" ng-click="toggleLeft(); deleteAllPop()">
       <md-tooltip md-direction="left">Ouvrir/Fermer le menu</md-tooltip>
@@ -116,6 +116,6 @@
 </div>
 
 <div id="container">
-<canvas id="orbit-canvas" hm-press="pin($event); deletePop()" hm-tap="autoPlay=false; pin($event); deletePop()" hm-drag="drag($event); deletePop();" hm-dragstart="autoPlay=false; lastDrag=0;" hm-dragend="dragEnd()" msd-wheel="onWheel($event); deletePop()" hm-pinch-in="zoomOut(); deletePop()" hm-pinch-out="zoomIn(); deletePop()"></canvas>
+<canvas id="orbit-canvas" hm-press="pin($event); deleteAllPop()" hm-tap="autoPlay=false; pin($event); deleteAllPop()" hm-drag="drag($event); deleteAllPop();" hm-dragstart="autoPlay=false; lastDrag=0;" hm-dragend="dragEnd()" msd-wheel="onWheel($event); deleteAllPop()" hm-pinch-in="zoomOut(); deleteAllPop()" hm-pinch-out="zoomIn(); deleteAllPop()"></canvas>
 </div>
 <div ng-transclude></div>
