@@ -10,4 +10,9 @@ prise à 360°, à different niveau de résolution.
 -Points d'interet :
   Permet d'ajouter et de gerer des points d'interets sur le modèle
   
-Compatiblle mobile
+  
+  
+# Compatible mobile
+
+L'application à été developper en gardant en tête le fonctionnement avec un appareil tactile
+
