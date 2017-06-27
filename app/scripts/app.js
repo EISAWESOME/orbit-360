@@ -137,6 +137,60 @@ ob.config(function ($mdThemingProvider) {
           xml.loadXML(dataXML);
         }
 
+        if($scope.xml.getElementsByTagName('property').length > 0){
+          console.log($scope.xml.getElementsByTagName('property'));
+
+            let colProperties = $scope.xml.getElementsByTagName('property');
+
+            for(let i=0;  i<colProperties.length ; i++){
+
+              if( colProperties[i].getAttribute('name') === 'titre'){
+
+                $scope.titre = colProperties[i].textContent;
+
+              }
+
+              if( colProperties[i].getAttribute('name') === 'description'){
+
+                $scope.description = colProperties[i].textContent;
+
+              }
+            }
+        } else {
+          console.log('else');
+
+          Images.loadDetails().then(function(dataXML) {
+
+            if (window.DOMParser) { // Standard
+              let tmp = new DOMParser();
+              $scope.details = tmp.parseFromString(dataXML.data, "text/xml");
+            }
+            else { // IE
+              $scope.details = new ActiveXObject("Microsoft.XMLDOM");
+              details.async = "false";
+              details.loadXML(dataXML);
+            }
+
+            let colProperties = $scope.details.getElementsByTagName('property');
+
+            for(let i=0;  i<colProperties.length ; i++){
+
+              if( colProperties[i].getAttribute('name') === 'titre' && !$scope.titre){
+
+
+                $scope.titre = colProperties[i].textContent;
+
+              }
+
+              if( colProperties[i].getAttribute('name') === 'description' && !$scope.description){
+
+                $scope.description = colProperties[i].textContent;
+
+              }
+            }
+          });
+        }
+
 
         let colPoints = $scope.xml.getElementsByTagName('PointInteret');
 
@@ -177,38 +231,6 @@ ob.config(function ($mdThemingProvider) {
         displayDesc();
 
       }
-
-      Images.loadDetails().then(function(dataXML) {
-
-        if (window.DOMParser) { // Standard
-          let tmp = new DOMParser();
-          $scope.details = tmp.parseFromString(dataXML.data, "text/xml");
-        }
-        else { // IE
-          $scope.details = new ActiveXObject("Microsoft.XMLDOM");
-          details.async = "false";
-          details.loadXML(dataXML);
-        }
-
-        let colProperties = $scope.details.getElementsByTagName('property');
-
-        for(let i=0;  i<colProperties.length ; i++){
-
-          if( colProperties[i].getAttribute('name') === 'titre'){
-
-
-            $scope.titre = colProperties[i].textContent;
-
-          }
-
-          if( colProperties[i].getAttribute('name') === 'description'){
-
-            $scope.description = colProperties[i].textContent;
-
-          }
-        }
-      });
-
 
       $scope.translaY = 0;
       $scope.translaX = 0;
