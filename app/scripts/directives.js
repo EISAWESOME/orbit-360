@@ -50,7 +50,6 @@ ob.directive('orbitview', ['Images', function (Images) {
                             rows: Number(scaleData[i].getAttribute('rows')),
                             tileHeight: Number(scaleData[i].getAttribute('tile_height')),
                             tileWidth: Number(scaleData[i].getAttribute('tile_width')),
-
                             resources: []
                         });
                         //pour chaque resources(angle de vue)

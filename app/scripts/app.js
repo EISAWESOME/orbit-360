@@ -492,7 +492,6 @@ ob.config(function ($mdThemingProvider) {
           propDesc = propTitre.cloneNode(true);
       propTitre.setAttribute('name', 'titre');
       propDesc.setAttribute('name', 'description');
-
       let htmldataTitre = document.querySelector('#titreImage').innerHTML,
           htmldataDesc = document.querySelector('#descImage').innerHTML;
 

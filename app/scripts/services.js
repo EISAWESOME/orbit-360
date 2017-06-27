@@ -20,7 +20,6 @@ ob.factory('Images', ['$resource', '$location','$rootScope', '$http', function (
         firstLevelLoaded: 0,
         //charge un xml, contenu recuperable dans le .then
         loadxml: function(){
-
             return $http.get(this.url() +'content.xml');
         },
 
