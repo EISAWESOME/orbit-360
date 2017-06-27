@@ -3,7 +3,7 @@
 
 <div  style="position:absolute; width:100%">
   <div class="nofocus" style="height:100px" ng-click="isTitreCollapsed = !isTitreCollapsed" >
-    <h1 id="titreImage"> {{titre()}}</h1>
+    <h1 id="titreImage" contenteditable={{isEditMode}}> {{titre()}} aaaaaaa</h1>
   </div>
 
   <div uib-collapse="isTitreCollapsed">
@@ -81,8 +81,8 @@
           <br/>
           <tbody ng-repeat="tooltip in tooltips | orderBy : 'title'  | filter: motCle " id="{{tooltip.id}}">
           <tr class="border_bottom">
-            <td class = "nofocus" ng-click="isCollapsed = !isCollapsed; $event.stopPropagation()"><i ng-class="{'fa fa-chevron-right': isCollapsed, 'fa fa-chevron-down': !isCollapsed}"></i></td>
-            <td ng-click="selectTooltip($event); toggleLeft()" class ="ttTitre">{{tooltip.title}}</td>
+            <td class = "nofocus" ng-click="isCollapsed = !isCollapsed; $event.stopPropagation();"><i ng-class="{'fa fa-chevron-right': isCollapsed, 'fa fa-chevron-down': !isCollapsed}"></i></td>
+            <td ng-click="selectTooltip($event);" ng-mouseover="hoverTooltip($event);" class ="ttTitre">{{tooltip.title}}</td>
             <td class = "nofocus ttDelete" ng-show="isEditMode"> <i class="fa fa-times" style="float : right; color:red;" ng-click="confirmDelete($event, $index); $event.stopPropagation()"></i> </td>
           </tr>
           <tr class="collapse-row">

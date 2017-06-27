@@ -206,10 +206,10 @@ ob.config(function ($mdThemingProvider) {
     };
 
     $scope.deleteAllPop = function(){
+
       let a = document.querySelector('orbitview');
       let b = document.querySelector('.titrePop');
       let c = document.querySelector('.descPop');
-
       if(b){
         a.removeChild(b);
       }
@@ -217,6 +217,7 @@ ob.config(function ($mdThemingProvider) {
         a.removeChild(c);
       }
 
+      $scope.isPopDrawn = false;
     };
 
     $scope.deleteTitrePop = function(){
@@ -488,17 +489,55 @@ ob.config(function ($mdThemingProvider) {
     //Fonction declenché au clic d'un point d'interet dans le menu
     $scope.selectTooltip = function (e) {
 
+      $scope.deleteAllPop();
+
+          let lookup = {};
+          for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
+            lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
+          }
+
+          let ttId = e.target.parentNode.parentNode.id;
+          $scope.tooltip = lookup[ttId];
+          $scope.tooltip.id = ttId;
+          $scope.autoPlay = false;
+          $scope.goingFrom = $scope.angle;
+
+
+
+          let
+            ratioX = Images.level[0].width / ($scope.actualTileWidth * Images.level[$scope.level].cols),
+            ratioY = Images.level[0].height / ($scope.actualTileHeight * Images.level[$scope.level].rows);
+
+
+          let
+            pointX = (($scope.tooltip.x / ratioX) + $scope.translaX) + $scope.canvas.clientWidth / 2,
+            pointY = (($scope.tooltip.y / ratioY) + $scope.translaY) + $scope.canvas.clientHeight / 2;
+
+
+          $scope.pointPop('titre',$scope.tooltip.title, pointX, pointY);
+          $scope.goTo($scope.tooltip.image);
+    };
+
+    $scope.hoverTooltip = function (e) {
+
+
+
+
+
         let lookup = {};
         for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
           lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
         }
+
 
         let ttId = e.target.parentNode.parentNode.id;
         $scope.tooltip = lookup[ttId];
         $scope.tooltip.id = ttId;
         $scope.autoPlay = false;
         $scope.goingFrom = $scope.angle;
-        $scope.goTo($scope.tooltip.image);
+
+      if($scope.tooltip.image == $scope.angle) {
+        $scope.deleteAllPop();
 
 
         let
@@ -510,23 +549,28 @@ ob.config(function ($mdThemingProvider) {
           pointX = (($scope.tooltip.x / ratioX) + $scope.translaX) + $scope.canvas.clientWidth / 2,
           pointY = (($scope.tooltip.y / ratioY) + $scope.translaY) + $scope.canvas.clientHeight / 2;
 
+
         $scope.pointPop('titre',$scope.tooltip.title, pointX, pointY);
+        if(document.querySelector('.titrePop'))
+          document.querySelector('.titrePop').style.display = 'block';
+
+
+      }
+
     };
 
 
     //Fonction qui permet la rotation jusqu'a un angle donné
     $scope.goTo = function (angle) {
 
-      //console.log(angle);
-
       //Faire pour qu'il tourne dans le sens le plus rapide en fonction du depart et de la destination ??
       if($scope.angle != angle){
-
         $scope.finGoto = false;
         $scope.setAngle($scope.angle +1);
         window.setTimeout($scope.goTo, 5, angle);
       } else {
         $scope.finGoto = true;
+        console.log(document.querySelector('.titrePop'));
         if(document.querySelector('.titrePop'))
           document.querySelector('.titrePop').style.display = 'block';
       }
