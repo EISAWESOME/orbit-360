@@ -59,7 +59,7 @@ ob.directive('orbitview', ['Images', function (Images) {
 
                             //pour chaque position(images découpées de l'angle de vue)
                             for (var k = 0; k < Images.level[i].cols * Images.level[i].rows; k++) {
-                                var name = Images.url
+                                var name = Images.url()
                                     +'images/'+ imgData[j].getAttribute('name')
                                     +'_'+ Images.level[i].value
                                     +'_'+ Math.floor(k / Images.level[i].rows)
@@ -72,7 +72,7 @@ ob.directive('orbitview', ['Images', function (Images) {
                     }
                 }
                 Images.nbAngle = Images.level[0].resources.length;
-                console.log(Images.url);
+                console.log(Images.url());
                 $scope.init();
             });
         }

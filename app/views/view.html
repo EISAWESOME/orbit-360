@@ -3,11 +3,11 @@
 
 <div  style="position:absolute; width:100%">
   <div class="nofocus" style="height:100px" ng-click="isTitreCollapsed = !isTitreCollapsed" >
-    <h1 id="titreImage"> {{titre}}</h1>
+    <h1 id="titreImage"> {{titre()}}</h1>
   </div>
 
   <div uib-collapse="isTitreCollapsed">
-    <div class="well well-lg" contenteditable="true">
+    <div class="well well-lg" contenteditable={{isEditMode}}>
     </div>
   </div>
 </div>

@@ -5,9 +5,23 @@ ob.factory('Images', ['$resource', '$location','$rootScope', '$http', function (
 
         //url: '../hyracotherium_pied-a-4-doigts/',
         //url: '../Axinite_prenite_epidote/',
-        url: '../' + $location.search().url + '/',
+        url: function() {
+          if($location.search().url){
+            return '../' + $location.search().url + '/'
 
-        alias: $location.search().titre ,
+          }
+
+          else return '../amonite/'
+        },
+
+        alias: function() {
+          if($location.search().titre){
+            return $location.search().titre
+
+          }
+
+          else return ''
+        },
 
 
         loadingQueue: [],
@@ -17,7 +31,7 @@ ob.factory('Images', ['$resource', '$location','$rootScope', '$http', function (
         //charge un xml, contenu recuperable avec .success
         loadxml: function(){
 
-            return $http.get(this.url +'content.xml');
+            return $http.get(this.url() +'content.xml');
         },
         loadLevel: function (lvl) {
             var time = new Date();
