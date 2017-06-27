@@ -7,6 +7,8 @@ ob.factory('Images', ['$resource', '$location','$rootScope', '$http', function (
         //url: '../Axinite_prenite_epidote/',
         url: '../' + $location.search().url + '/',
 
+        alias: $location.search().titre ,
+
 
         loadingQueue: [],
         loadSlot: 0,

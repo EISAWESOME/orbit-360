@@ -3,15 +3,11 @@
 
 <div  style="position:absolute; width:100%">
   <div class="nofocus" style="height:100px" ng-click="isTitreCollapsed = !isTitreCollapsed" >
-    <h1 id="titreImage"> Amonite</h1>
+    <h1 id="titreImage"> {{titre}}</h1>
   </div>
 
   <div uib-collapse="isTitreCollapsed">
-    <div class="well well-lg">
-      Les ammonites au sens large (Ammonoidea) forment une sous-classe éteinte des mollusques céphalopodes.
-      Elles apparaissent dans le registre fossile durant le Dévonien et disparaissent peu après la crise Crétacé-Paléocène.
-      Elles se caractérisaient par une coquille univalve plus ou moins enroulée dont seule la dernière loge était occupée par l'animal, les autres loges servent à contrôler sa flottaison.
-      Leurs fossiles sont considérés comme d'excellents marqueurs chronologiques. Leur taille va de quelques millimètres à plus de 2 mètres de diamètre.
+    <div class="well well-lg" contenteditable="true">
     </div>
   </div>
 </div>

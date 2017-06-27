@@ -229,6 +229,7 @@ ob.config(function ($mdThemingProvider) {
       }
     };
 
+    $scope.titre = Images.alias;
     $scope.theme = 'grey';
     $scope.isPopDrawn = false;
     $scope.finGoto = false;
