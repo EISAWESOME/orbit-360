@@ -486,6 +486,27 @@ ob.config(function ($mdThemingProvider) {
 
     //Fonction d'export du flux XML courant => Dumb le flux dans une nouvelle fenêtre
     $scope.exportXML = function(){
+
+      let properties = $scope.xml.createElement('properties'),
+          propTitre = $scope.xml.createElement('property'),
+          propDesc = propTitre.cloneNode(true);
+      propTitre.setAttribute('name', 'titre');
+      propDesc.setAttribute('name', 'description');
+
+      let htmldataTitre = document.querySelector('#titreImage').innerHTML,
+          htmldataDesc = document.querySelector('#descImage').innerHTML;
+
+      let cdataTitre = $scope.xml.createCDATASection(htmldataTitre),
+          cdataDesc = $scope.xml.createCDATASection(htmldataDesc);
+
+      propTitre.appendChild(cdataTitre);
+      propDesc.appendChild(cdataDesc);
+
+      properties.appendChild(propTitre);
+      properties.appendChild(propDesc);
+      $scope.xml.getElementsByTagName('sequence')[0].appendChild(properties);
+
+
       let content = (new XMLSerializer().serializeToString($scope.xml));
       if(content){
 
