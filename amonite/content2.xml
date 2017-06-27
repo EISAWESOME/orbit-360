@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<orbitvu>
+  <sequence3d hangles="90" name="a_" vangles="1">
+    <scales>
+      <scale width="3718" cols="4" tile_width="930" tile_height="903" height="2708" rows="3" value="100.0"/>
+      <scale width="1859" cols="2" tile_width="930" tile_height="677" height="1354" rows="2" value="50.0"/>
+      <scale width="1023" cols="1" tile_width="1023" tile_height="745" height="745" rows="1" value="27.5"/>
+      <scale width="768" cols="1" tile_width="768" tile_height="559" height="559" rows="1" value="20.7"/>
+      <scale width="511" cols="1" tile_width="511" tile_height="372" height="372" rows="1" value="13.8"/>
+      <scale width="255" cols="1" tile_width="255" tile_height="186" height="186" rows="1" value="6.9"/>
+    </scales>
+    <images maxHeight="2708" maxWidth="3718" ext="jpg" name="a_"/>
+  </sequence3d>
+  <images/>
+  <properties>
+    <property type="text" name="name">amonite</property>
+    <property type="text" name="author">Nadine Beysseriat</property>
+    <property type="text" name="category1">Collections Lyon 1</property>
+    <property type="text" name="category2">Collections Géologie - Emmanuel Robert</property>
+  </properties>
+</orbitvu>

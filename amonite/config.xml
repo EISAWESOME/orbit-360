@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-config>
+  <viewer-params>
+    <xml_url>content.xml</xml_url>
+    <image_folder>images/</image_folder>
+    <frame_rate>12</frame_rate>
+    <background_color>0xffffff</background_color>
+    <border_color>0xffffff</border_color>
+    <id>ORBITVU</id>
+    <auto_rotate>no</auto_rotate>
+    <preload>yes</preload>
+    <teaser>zoomin</teaser>
+    <style>0</style>
+    <gui_background>0x414141c8</gui_background>
+    <gui_foreground>0xffffffc8</gui_foreground>
+    <gui_foreground_active>0xffffffc8</gui_foreground_active>
+    <lang>fr</lang>
+    <auto_rotate_dir>left</auto_rotate_dir>
+    <rotate_dir>right</rotate_dir>
+    <vmove>yes</vmove>
+    <ovskin>no</ovskin>
+    <border>no</border>
+  </viewer-params>
+  <swf-params>
+    <width>1024</width>
+    <height>800</height>
+  </swf-params>
+</sequence-config>
