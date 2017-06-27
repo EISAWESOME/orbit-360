@@ -273,6 +273,7 @@ md-tooltip .md-content {
 
 div.titrePop,
 div.descPop {
+  word-wrap: break-word;
   position : absolute;
   color: white;
   font-weight: bold;

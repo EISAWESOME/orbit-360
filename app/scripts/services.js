@@ -1,11 +1,12 @@
 /*global ob */
 'use strict';
-ob.factory('Images', ['$resource', '$rootScope', '$http', function ($resource, $rootScope, $http) {
+ob.factory('Images', ['$resource', '$location','$rootScope', '$http', function ($resource, $location, $rootScope, $http) {
     return {
+
         //url: '../hyracotherium_pied-a-4-doigts/',
         //url: '../Axinite_prenite_epidote/',
-        //url: '../merycoidon/',
-        url: '../amonite/',
+        url: '../' + $location.search().url + '/',
+
 
         loadingQueue: [],
         loadSlot: 0,
@@ -13,6 +14,7 @@ ob.factory('Images', ['$resource', '$rootScope', '$http', function ($resource, $
         firstLevelLoaded: 0,
         //charge un xml, contenu recuperable avec .success
         loadxml: function(){
+
             return $http.get(this.url +'content.xml');
         },
         loadLevel: function (lvl) {
