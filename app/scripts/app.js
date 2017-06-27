@@ -22,8 +22,8 @@ ob.config(function ($mdThemingProvider) {
     $scope.isPopDrawn = false;
     $scope.finGoto = false;
     $scope.theme = 'grey';
-
-
+    $scope.pinIcon = new Image();
+    $scope.pinIcon.src = '../app/images/pinIcon-32x32.png';
 
 
     $scope.init = function () {
@@ -302,12 +302,11 @@ ob.config(function ($mdThemingProvider) {
     };
 
     //*******************
-
     //Pop up de confirmation de suppression d'un point d'interet
     //*******************
     $scope.confirmDelete = function(ev, id) {
       // Appending dialog to document.body to cover sidenav in docs app
-      var confirm = $mdDialog.confirm()
+      let confirm = $mdDialog.confirm()
         .theme('grey')
         .title('Supprimer ce point d\'interet ?')
         .textContent('Vous ne pourrez pas revenir en arrière...')
@@ -322,11 +321,10 @@ ob.config(function ($mdThemingProvider) {
       });
     };
     //*******************
-
     //Notifications
     //*******************
 
-    var last = {
+    let last = {
       bottom: false,
       top: true,
       left: false,
@@ -371,7 +369,7 @@ ob.config(function ($mdThemingProvider) {
 
 
     $rootScope.$on('onComplete', function () {
-        var time = new Date();
+        let time = new Date();
         console.log('onComplete time: '+ time.getSeconds() +' '+ time.getMilliseconds());
         $scope.loading = false;
     });
@@ -383,8 +381,6 @@ ob.config(function ($mdThemingProvider) {
     //Fonction de suppression d'un point d'interet
     $scope.deletePoint = function(e) {
 
-
-
       let lookup = {};
       for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
         lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
@@ -394,7 +390,6 @@ ob.config(function ($mdThemingProvider) {
 
       $scope.tooltip = lookup[ttId];
       $scope.tooltip.id = ttId;
-
 
         //Remove dans le tooltip
 
@@ -854,7 +849,7 @@ ob.config(function ($mdThemingProvider) {
     //Fonction de dessin du canvas
     $scope.draw = function () {
 
-        if(($scope.waitingload && Images.resourcesLoaded($scope.level, $scope.angle)) || $scope.edited){
+        if(($scope.waitingload && Images.resourcesLoaded($scope.level, $scope.angle)) || ($scope.edited && Images.resourcesLoaded($scope.level, $scope.angle))){
             $scope.waitingload = false;
 
             //Permet de reinitialisé le canvas
@@ -863,8 +858,8 @@ ob.config(function ($mdThemingProvider) {
             $scope.renderer.translate($scope.translaX,$scope.translaY);
             $scope.renderer.save();
 
-            var lvl = $scope.level;
-            var current = Images.level[lvl].resources[$scope.angle];
+            let lvl = $scope.level;
+            let current = Images.level[lvl].resources[$scope.angle];
             //console.log(current);
             //var pos = 0;
             if(!Images.resourcesLoaded(lvl, $scope.angle)){
@@ -877,15 +872,15 @@ ob.config(function ($mdThemingProvider) {
                 current = Images.level[lvl].resources[$scope.angle];
                 //Image(s) courante, de 1 à 12 (index 0 à 11 ...)
             }
-            var ILvl = Images.level[lvl],
+            let ILvl = Images.level[lvl],
                 posOriX = $scope.getX(),
                 posOriY = $scope.getY(),
                 lapX = Math.floor(Images.level[0].width/ILvl.cols) * $scope.zoom,
                 lapY = Math.floor(Images.level[0].height/ILvl.rows) * $scope.zoom;
 
-            for (var i = 0; i < current.length; i++) {
+            for (let i = 0; i < current.length; i++) {
                 // console.log(Images.loadImage(lvl, $scope.angle, i));
-                var posX = posOriX + lapX * Math.floor(i / ILvl.rows),
+                let posX = posOriX + lapX * Math.floor(i / ILvl.rows),
                     posY = posOriY + lapY * Math.floor(i % ILvl.rows);
                 $scope.posX = posX;
                 $scope.posY = posY;
@@ -930,9 +925,13 @@ ob.config(function ($mdThemingProvider) {
 
                 //Dessin du point
 
-                let img = new Image();
-                img.src = '../app/images/pinIcon-32x32.png';
-                $scope.renderer.drawImage(img, centerX -16, centerY -32);
+                //On attend que l'image soit chargé, puis on la dessine
+                if($scope.pinIcon.complete){
+                  $scope.renderer.drawImage($scope.pinIcon, centerX -16, centerY -32);
+                } else {
+                  img.onload = $scope.renderer.drawImage($scope.pinIcon, centerX -16, centerY -32);
+                }
+
               }
             }
 
