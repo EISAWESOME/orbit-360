@@ -6,14 +6,16 @@ ob.factory('Images', ['$resource', '$location','$rootScope', '$http', function (
         //url: '../hyracotherium_pied-a-4-doigts/',
         //url: '../Axinite_prenite_epidote/',
         url: function() {
+          //Si la paremetre url est renseigné
           if($location.search().url){
             return '../' + $location.search().url + '/'
 
           }
-
+          //Sinon on charge l'amonite par défaut
           else return '../amonite/'
         },
 
+        // Titre du modèle
         alias: function() {
           if($location.search().titre){
             return $location.search().titre
@@ -28,7 +30,7 @@ ob.factory('Images', ['$resource', '$location','$rootScope', '$http', function (
         loadSlot: 0,
         loaded: 0,
         firstLevelLoaded: 0,
-        //charge un xml, contenu recuperable avec .success
+        //charge un xml, contenu recuperable dans le .then
         loadxml: function(){
 
             return $http.get(this.url() +'content.xml');
