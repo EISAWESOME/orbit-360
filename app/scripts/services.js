@@ -29,7 +29,7 @@ ob.factory('Images', ['$resource', '$location','$rootScope', '$http', function (
         },
         loadLevel: function (lvl) {
             let time = new Date();
-            console.log('loadLevel  '+ lvl +' time: '+ time.getSeconds() +' '+ time.getMilliseconds());
+            //console.log('loadLevel  '+ lvl +' time: '+ time.getSeconds() +' '+ time.getMilliseconds());
 
             let scope = this.level[lvl];
             let f = false;

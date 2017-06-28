@@ -15,11 +15,11 @@ ob.directive('orbitview', ['Images', function (Images) {
             };
         },
         link: function ($scope, $elem, $attr) {
-            console.log('link');
+            //console.log('link');
             //console.log(Images);
 
             Images.loadxml().then(function(dataXML){
-                console.log('success');
+                //console.log('success');
 
                 if ( window.DOMParser ) { // Standard
                     let parser = new DOMParser();
@@ -30,9 +30,6 @@ ob.directive('orbitview', ['Images', function (Images) {
                     xml.async = "false";
                     xml.loadXML( dataXML );
                 }
-
-
-
 
                 let imgData = xml.getElementsByTagName('img');
                 let scaleData = xml.getElementsByTagName('scale');
@@ -71,7 +68,7 @@ ob.directive('orbitview', ['Images', function (Images) {
                     }
                 }
                 Images.nbAngle = Images.level[0].resources.length;
-                console.log(Images.url());
+                //console.log(Images.url());
                 $scope.init();
             });
         }

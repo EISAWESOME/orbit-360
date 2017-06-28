@@ -15,7 +15,7 @@
 		<li ng-click="showTooltips=!showTooltips">
 			<i class="fa fa-bars"></i>
 			<ul id="tooltips" ng-show="showTooltips">
-				<li ng-repeat="tooltip in tooltips" ng-click="selectTooltip($index)">{{tooltip.title}}</li>
+				<li ng-repeat="tooltip in tooltips" ng-click="clickTooltip($index)">{{tooltip.title}}</li>
 			</ul>
 		</li>
 		<li><i class="fa fa-undo"></i></li>

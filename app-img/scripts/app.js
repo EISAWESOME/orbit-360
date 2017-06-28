@@ -56,7 +56,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
     $rootScope.$on('onComplete', function () {
         var time = new Date();
         console.log('onComplete time: '+ time.getSeconds() +' '+ time.getMilliseconds());
-        $scope.loading = false;        
+        $scope.loading = false;
         $scope.visible = true;
         setInterval(function(){
             $scope.draw();
@@ -79,7 +79,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
         $scope.edited = true;
     };
 
-    $scope.selectTooltip = function (id) {
+    $scope.clickTooltip = function (id) {
         if ($scope.goingFrom !== null) {
             return;
         }
@@ -242,7 +242,7 @@ ob.controller('OrbitCtrl', ['$scope', '$rootScope', 'Images', function ($scope, 
                 current = Images.level[lvl].resources[$scope.angle];
                 // console.log('draw lvl: '+ lvl);
             }
-                $scope.levelShow = lvl; 
+                $scope.levelShow = lvl;
 
             var prop = $scope.zoom*1000/Images.level[lvl].value;
             var viewer = $scope._viewer;

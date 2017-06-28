@@ -9,7 +9,6 @@
 
 }
 
-
 orbitview {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -244,8 +243,6 @@ md-dialog.medium-dialog {
 
 #tooltip-table tr:hover {
   cursor: pointer;
-
-
 }
 
 tr.border_bottom td {
@@ -284,8 +281,6 @@ div.descPop {
   opacity: 0.8;
   border: 1px solid black;
   border-radius: 0px 10px 10px 10px;
-
-  /*cursor : pointer;*/
 
 }
 
