@@ -191,7 +191,6 @@
       $scope.draw = function () {
         if (($scope.waitingload && Images.resourcesLoaded($scope.level, $scope.angle)) || $scope.edited) {
           $scope.waitingload = false;
-
           //Permet de reinitialisé le canvas
           $scope.canvas.width = $scope.canvas.width;
 
@@ -332,6 +331,11 @@
         }
       };
 
+      $scope.dragEnd = function () {
+        $scope.prevDeltaX = 0;
+        $scope.prevDeltaY = 0;
+      };
+
       //Fonction qui permet la rotation jusqu'a un angle donné
       $scope.goTo = function (angle) {
         if ($scope.angle != angle) {
@@ -344,10 +348,7 @@
         }
       };
       //A la fin du drag, on reset les valeurs
-      $scope.dragEnd = function () {
-        $scope.prevDeltaX = 0;
-        $scope.prevDeltaY = 0;
-      };
+
 
       //Gestion des event de touche du clavier
       $scope.keymove = function (e) {
@@ -395,11 +396,11 @@
         if ($scope.lookupAngle[$scope.angle]) {
           displayDesc();
         }
-
         $scope.edited = true;
       };
 
       //Fonction de definition de la translation du canvas
+      //A suppr
       $scope.setTranslaXY = function (translaX, translaY) {
         $scope.translaX = translaX;
         $scope.translaY = translaY;

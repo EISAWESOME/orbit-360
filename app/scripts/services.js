@@ -2,7 +2,6 @@
 'use strict';
 ob.factory('Images', ['$resource', '$location','$rootScope', '$http', function ($resource, $location, $rootScope, $http) {
     return {
-
         //url: '../hyracotherium_pied-a-4-doigts/',
         //url: '../Axinite_prenite_epidote/',
         url: function() {
