@@ -203,7 +203,7 @@ ob.config(function ($mdThemingProvider) {
           let coord = {
             x : colPoints[i].getElementsByTagName('Coord')[0].getAttribute('x'),
             y : colPoints[i].getElementsByTagName('Coord')[0].getAttribute('y')
-          }
+          };
 
           let tooltip = {
             title: titre[0].textContent,
@@ -215,31 +215,32 @@ ob.config(function ($mdThemingProvider) {
           };
 
           $scope.id++;
+          $scope.lookupAngle = {};
+
+          for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
+            $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
+          }
+
+          if($scope.lookupAngle[$scope.angle]){
+            displayDesc();
+
+          }
+
+          $scope.translaY = 0;
+          $scope.translaX = 0;
+
+          $scope.prevDeltaX = 0;
+          $scope.prevDeltaY = 0;
+
+          $scope.pinIcon = new Image();
+          $scope.pinIcon.src = '../app/images/pinIcon-32x32.png';
 
 
           $scope.tooltips.push(tooltip);
         }
       });
 
-      $scope.lookupAngle = {};
 
-      for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-        $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
-      }
-
-      if($scope.lookupAngle[$scope.angle]){
-        displayDesc();
-
-      }
-
-      $scope.translaY = 0;
-      $scope.translaX = 0;
-
-      $scope.prevDeltaX = 0;
-      $scope.prevDeltaY = 0;
-
-      $scope.pinIcon = new Image();
-      $scope.pinIcon.src = '../app/images/pinIcon-32x32.png';
 
     };
 
