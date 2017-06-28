@@ -1,4 +1,4 @@
-    'use strict';
+'use strict';
 
   var ob = angular.module('Orbit', ['ngMaterial', 'ngResource', 'ngAnimate', 'hmGestures', 'mousewheel', 'ui.bootstrap']);
 
