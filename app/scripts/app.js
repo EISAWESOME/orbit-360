@@ -139,8 +139,9 @@
               console.log(e.target);
 
               let regex = /(&nbsp;|<([^>]+)>)/ig;
+              let body = document.querySelector('#descImage')
 
-              document.querySelector('#descImage').innerHTML = document.querySelector('#descImage').innerHTML.replace(regex, "")
+              body.innerHTML = body.innerHTML.replace(regex, "")
 
             }, 0);
 

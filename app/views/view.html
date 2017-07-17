@@ -104,11 +104,11 @@
 
 <div id="menu-container" ng-class="{expand: showTooltips}">
 	<ul id="menu" >
-		<li class = "nofocus" ng-click="autoPlay=!autoPlay; play()"><i class="fa" ng-class="{'fa-play': !autoPlay, 'fa-pause': autoPlay}"></i></li>
-    <li class = "nofocus" ng-click="{clickTranslation : switchMode()}"><i class="fa fa-undo" ng-class="{'red' :clickRotation}"></i></li>
-    <li class = "nofocus" ng-click="{clickRotation : switchMode()}"><i class="fa fa-arrows" ng-class="{'red' :clickTranslation }"></i></li>
+		<li class = "nofocus" ng-click="autoPlay=!autoPlay; play()"><img src="/orbit/app/images/icon_turndemo.png" ng-class="{'red' :autoPlay}"></li>
+    <li class = "nofocus" ng-click="{clickTranslation : switchMode()}"><img src="/orbit/app/images/icon_turn.png" ng-class="{'red' :clickRotation}"></li>
+    <li class = "nofocus" ng-click="{clickRotation : switchMode()}"><img src="/orbit/app/images/icon_slide.png" ng-class="{'red' :clickTranslation }"></li>
     <li class = "nofocus" ng-click="isFullscreen=!isFullscreen;toggleFullscreen()"><i class="fa fa-expand" ng-class="{'fa-compress' : isFullscreen, 'fa-expand' : !isFullscreen}"></i></li>
-    <li class = "nofocus" ng-click="pinMode=!pinMode; deleteAllPop()" ng-class="{'ng-hide': !isEditMode}" >  <i class = "fa fa-thumb-tack" ng-class="{'Rotate180': pinMode , 'Rotate-360' : !pinMode}"></i></li>
+    <li class = "nofocus" ng-click="pinMode=!pinMode; deleteAllPop()" ng-class="{'ng-hide': !isEditMode}" > <img src="/orbit/app/images/icon_interest.png" ng-class="{'red' :pinMode }"></li>
 	</ul>
 </div>
 
