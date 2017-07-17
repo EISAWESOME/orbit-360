@@ -396,11 +396,11 @@
         if ($scope.lookupAngle[$scope.angle]) {
           displayDesc();
         }
+
         $scope.edited = true;
       };
 
       //Fonction de definition de la translation du canvas
-      //A suppr
       $scope.setTranslaXY = function (translaX, translaY) {
         $scope.translaX = translaX;
         $scope.translaY = translaY;
@@ -783,25 +783,28 @@
             //On divise par le zoom pour que la tolérence diminue plus le zoom est elevé, et inversement
 
             //Si la position du curseur correspond a celle d'un point
-            if (cursorX >= Number(matchedTt[i].x) - (10 / $scope.zoom) && cursorX <= Number(matchedTt[i].x) + (10 / $scope.zoom)) {
-              if (cursorY >= Number(matchedTt[i].y) - (40 / $scope.zoom) && cursorY <= Number(matchedTt[i].y) + (10 / $scope.zoom)) {
-                //On supprime le pop up précedent si il existe
-                $scope.deleteTitrePop()
-                //On crée le pop up du point en question
-                $scope.pointPop('desc', matchedTt[i].desc, pointX, pointY);
+            if(matchedTt[i].image == $scope.angle)
+            {
+              if (cursorX >= Number(matchedTt[i].x) - (10 / $scope.zoom) && cursorX <= Number(matchedTt[i].x) + (10 / $scope.zoom)){
+                if (cursorY >= Number(matchedTt[i].y) - (40 / $scope.zoom) && cursorY <= Number(matchedTt[i].y) + (10 / $scope.zoom)) {
+                  //On supprime le pop up précedent si il existe
+                  $scope.deleteTitrePop()
+                  //On crée le pop up du point en question
+                  $scope.pointPop('desc', matchedTt[i].desc, pointX, pointY);
+                } else {
+                  incr++
+                }
               } else {
                 incr++
               }
-            } else {
-              incr++
-            }
-            if (incr === matchedTt.length) {
-              let a = document.querySelector('orbitview');
-              let b = a.querySelector('.descPop');
-              if (b) {
-                a.removeChild(b);
+              if (incr === matchedTt.length) {
+                let a = document.querySelector('orbitview');
+                let b = a.querySelector('.descPop');
+                if (b) {
+                  a.removeChild(b);
+                }
+                $scope.isPopDrawn = false;
               }
-              $scope.isPopDrawn = false;
             }
           }
         });
