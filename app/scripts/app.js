@@ -116,10 +116,7 @@
               $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
             }
 
-            if ($scope.lookupAngle[$scope.angle]) {
-              displayDesc();
 
-            }
 
             $scope.translaY = 0;
             $scope.translaX = 0;
@@ -132,6 +129,9 @@
 
 
             $scope.tooltips.push(tooltip);
+          }
+          if ($scope.lookupAngle[$scope.angle]) {
+            displayDesc();
           }
         });
       };
