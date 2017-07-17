@@ -130,6 +130,21 @@
           if ($scope.lookupAngle[$scope.angle]) {
             displayDesc();
           }
+          document.querySelector("#descImage").addEventListener("paste", function(e){
+
+            setTimeout(function()
+            {
+              console.log('tatata');
+
+              console.log(e.target);
+
+              let regex = /(&nbsp;|<([^>]+)>)/ig;
+
+              document.querySelector('#descImage').innerHTML = document.querySelector('#descImage').innerHTML.replace(regex, "")
+
+            }, 0);
+
+          })
         });
       };
 

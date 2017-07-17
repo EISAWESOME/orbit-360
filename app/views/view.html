@@ -6,9 +6,11 @@
     <h1 id="titreImage" contenteditable={{isEditMode}}> {{titre}} </h1>
   </div>
   <div uib-collapse="isTitreCollapsed">
-    <div id="descImage" class="well well-lg" contenteditable={{isEditMode}}>
-      {{description}}
+
+    <div id="descImage" class="well well-lg" contenteditable={{isEditMode}} spellcheck=false ng-cloak>
+        {{description}}
     </div>
+
   </div>
 </div>
 
