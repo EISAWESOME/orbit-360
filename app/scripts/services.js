@@ -6,8 +6,8 @@ ob.factory('Images', ['$resource', '$location','$rootScope', '$http', function (
         //url: '../Axinite_prenite_epidote/',
         url: function() {
           //Si la paremetre url est renseigné
-          if($location.search().url){
-            return '../' + $location.search().url + '/'
+          if($location.search().model){
+            return '../' + $location.search().model + '/'
 
           }
           //Sinon on charge l'amonite par défaut

@@ -116,8 +116,6 @@
               $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
             }
 
-
-
             $scope.translaY = 0;
             $scope.translaX = 0;
 
@@ -126,7 +124,6 @@
 
             $scope.pinIcon = new Image();
             $scope.pinIcon.src = '../app/images/pinIcon-32x32.png';
-
 
             $scope.tooltips.push(tooltip);
           }
