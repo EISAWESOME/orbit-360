@@ -82,7 +82,7 @@
           <br/>
           <tbody ng-repeat="tooltip in tooltips | orderBy : 'title'  | filter: motCle " id="{{tooltip.id}}">
           <tr class="border_bottom">
-            <td class = "nofocus" ng-click="isCollapsed = !isCollapsed; $event.stopPropagation();"><i ng-class="{'fa fa-chevron-right': isCollapsed, 'fa fa-chevron-right rotato': !isCollapsed}"></i></td>
+            <td class = "nofocus" ng-click="isCollapsed = !isCollapsed; $event.stopPropagation();" style="min-width:20px"><i ng-class="{'fa fa-chevron-right': isCollapsed, 'fa fa-chevron-right rotato': !isCollapsed}"></i></td>
             <td ng-click="clickTooltip($event);" ng-mouseover="hoverTooltip($event);" ng-mouseleave="deleteAllPop()" class ="ttTitre">{{tooltip.title}}</td>
             <td class = "nofocus ttDelete" ng-show="isEditMode"> <i class="fa fa-times" style="float : right; color:red;" ng-click="confirmDelete($event, $index); $event.stopPropagation(); deleteAllPop()"></i> </td>
           </tr>

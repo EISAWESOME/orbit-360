@@ -313,7 +313,7 @@
         if($scope.canvas.style.cursor == "-webkit-grab" || $scope.canvas.style.cursor == "-moz-grab" || $scope.canvas.style.cursor == "grab"  ){
           $scope.canvas.style.cursor = "-webkit-grabbing";
           $scope.canvas.style.cursor = "-moz-grabbing";
-          $scope.canvas.style.cursor = "grab";
+          $scope.canvas.style.cursor = "grabbing";
         } else {
           $scope.canvas.style.cursor = "-webkit-grab";
           $scope.canvas.style.cursor = "-moz-grab";
@@ -530,6 +530,7 @@
         if ($scope.clickRotation && !$scope.clickTranslation) {
           $scope.canvas.style.cursor = "-webkit-grab";
           $scope.canvas.style.cursor = "-moz-grab";
+          $scope.canvas.style.cursor = "grab";
         }
 
         if ($scope.clickTranslation && !$scope.clickRotation)
