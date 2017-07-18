@@ -751,7 +751,6 @@
 
       $scope.toggleEditTooltip = function(e){
 
-
         let lookup = {};
         for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
           lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
@@ -765,26 +764,41 @@
         //Rend le titre du tooltip editable ou pas
         let ligneTitre = e.target.parentNode.parentNode.parentNode.childNodes[1];
         let tdTitre = ligneTitre.childNodes[3];
+        let ligneDesc = e.target.parentNode.parentNode.parentNode.childNodes[3];
+        let divDesc = ligneDesc.childNodes[1].childNodes[1].childNodes[1];
 
         if(tdTitre.contentEditable  == "true"){
           tdTitre.setAttribute("contenteditable", "false" ) ;
         } else tdTitre.setAttribute("contenteditable", "true" ) ;
 
         //Rend la description du tooltip editable ou pas
-        let ligneDesc = e.target.parentNode.parentNode.parentNode.childNodes[3];
-        let divDesc = ligneDesc.childNodes[1].childNodes[1].childNodes[1];
-
         if(divDesc.contentEditable  == "true"){
           divDesc.setAttribute("contenteditable", "false" ) ;
         } else divDesc.setAttribute("contenteditable", "true" ) ;
 
-        //Ajouter un event listener sur les deux element editable
-        //on keyup, copier le inner HTML dans l'objet tooltip correspondant
 
-
+        divDesc.addEventListener('keyup', updateTooltip(ttId, "desc", divDesc.textContent) );
+        tdTitre.addEventListener('keyup', updateTooltip(ttId, "titre", tdTitre.textContent) );
 
 
       };
+
+      function updateTooltip(id, champ, valeur){
+        //Fonction appellé par les deux listener
+        //En fonction de la variable 'champ' et 'valeur'
+        //On va update dans le XML, le point d'interet d'id 'id'
+        if(champ == "desc"){
+          $scope.tooltip.desc = divDesc.textContent
+
+
+        }
+
+        if(champ == "titre"){
+          $scope.tooltip.title = tdTitre.textContent
+
+        }
+
+      }
 
       /***************************************************************************/
 
