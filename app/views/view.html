@@ -3,7 +3,7 @@
 
 <div  style="position:absolute; width:100%">
   <div class="nofocus" style="height:100px" ng-click="isTitreCollapsed = !isTitreCollapsed" >
-    <h1 id="titreImage" class="nofocus contenteditable={{isEditMode}} spellcheck=false> {{titre}} </h1>
+    <h1 id="titreImage" class="nofocus" contenteditable={{isEditMode}} spellcheck=false> {{titre}}</h1>
     <img id="info" src="/orbit/app/images/icon_info.png">
   </div>
   <div uib-collapse="isTitreCollapsed">
