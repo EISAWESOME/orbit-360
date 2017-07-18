@@ -169,10 +169,14 @@ orbitview a:hover {
   height: 100%;
 
   left : 100%;
-  margin-left : -50px;
+  margin-left : -55px;
 
   position : absolute;
 
+}
+
+#separateur{
+  border-bottom:1px solid grey;
 }
 
 
@@ -180,9 +184,24 @@ tooltip {
   display: none;
 }
 
+.player-icon{
+  filter: brightness(40%)
+}
 
-.red{
-  filter: sepia(50%) saturate(10000%) /*hue-rotate(40deg)*/;
+
+.player-icon-selected{
+
+}
+
+
+.canvas-icon{
+
+}
+
+.canvas-icon-selected{
+
+  color: red;
+
 }
 
 md-dialog.medium-dialog {
@@ -223,6 +242,12 @@ md-dialog.medium-dialog {
 
 tr.border_bottom td {
   border-bottom:1pt inset;
+}
+
+#info{
+  margin-top: 15px;
+  margin-left : 15px;
+
 }
 
 #titreImage{

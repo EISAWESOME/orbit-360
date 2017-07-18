@@ -3,7 +3,8 @@
 
 <div  style="position:absolute; width:100%">
   <div class="nofocus" style="height:100px" ng-click="isTitreCollapsed = !isTitreCollapsed" >
-    <h1 id="titreImage" contenteditable={{isEditMode}}> {{titre}} </h1>
+    <h1 id="titreImage" class="nofocus contenteditable={{isEditMode}} spellcheck=false> {{titre}} </h1>
+    <img id="info" src="/orbit/app/images/icon_info.png">
   </div>
   <div uib-collapse="isTitreCollapsed">
 
@@ -17,7 +18,7 @@
 <div id="button-container">
 
 
-  <div style="top:85px; position:absolute">
+  <div style="top:35%; position:absolute">
 
     <div class="nofocus canvasButton" ng-click="zoomIn(); deleteAllPop()">
       <i class="fa fa-search-plus"></i>
@@ -27,9 +28,8 @@
       <i class="fa fa-search-minus"></i>
     </div>
 
-  </div>
+    <div id="separateur"></div>
 
-  <div style="bottom: 85px; position:absolute">
 
     <div class="nofocus canvasButton" ng-click="toggleLeft(); deleteAllPop()">
       <md-tooltip md-direction="left">Ouvrir/Fermer le menu</md-tooltip>
@@ -38,7 +38,7 @@
 
     <div class="nofocus canvasButton" ng-click="editMode()">
       <md-tooltip md-direction="left">Mode édition</md-tooltip>
-      <i class="fa fa-pencil-square-o" ng-class="{'red' : isEditMode, 'white' : !isEditMode }"></i>
+      <i class="fa fa-pencil-square-o" ng-class="{'canvas-icon-selected' : isEditMode, 'canvas-icon' : !isEditMode }"></i>
     </div>
 
   </div>
@@ -104,11 +104,11 @@
 
 <div id="menu-container" ng-class="{expand: showTooltips}">
 	<ul id="menu" >
-		<li class = "nofocus" ng-click="autoPlay=!autoPlay; play()"><img src="/orbit/app/images/icon_turndemo.png" ng-class="{'red' :autoPlay}"></li>
-    <li class = "nofocus" ng-click="{clickTranslation : switchMode()}"><img src="/orbit/app/images/icon_turn.png" ng-class="{'red' :clickRotation}"></li>
-    <li class = "nofocus" ng-click="{clickRotation : switchMode()}"><img src="/orbit/app/images/icon_slide.png" ng-class="{'red' :clickTranslation }"></li>
-    <li class = "nofocus" ng-click="isFullscreen=!isFullscreen;toggleFullscreen()"><i class="fa fa-expand" ng-class="{'fa-compress' : isFullscreen, 'fa-expand' : !isFullscreen}"></i></li>
-    <li class = "nofocus" ng-click="pinMode=!pinMode; deleteAllPop()" ng-class="{'ng-hide': !isEditMode}" > <img src="/orbit/app/images/icon_interest.png" ng-class="{'red' :pinMode }"></li>
+		<li class = "nofocus" ng-click="autoPlay=!autoPlay; play()"><img src="/orbit/app/images/icon_turndemo.png" ng-class="{'player-icon-selected' :autoPlay, 'player-icon': !autoPlay}"></li>
+    <li class = "nofocus" ng-click="{clickTranslation : switchMode()}"><img src="/orbit/app/images/icon_turn.png" ng-class="{'player-icon-selected' :clickRotation, 'player-icon': !clickRotation}"></li>
+    <li class = "nofocus" ng-click="{clickRotation : switchMode()}"><img src="/orbit/app/images/icon_slide.png" ng-class="{'player-icon-selected' :clickTranslation, 'player-icon':!clickTranslation }"></li>
+    <li class = "nofocus" ng-click="isFullscreen=!isFullscreen;toggleFullscreen()"><img src="{{fsSrc}}"></i></li>
+    <li class = "nofocus" ng-click="pinMode=!pinMode; deleteAllPop()" ng-class="{'ng-hide': !isEditMode}" > <img src="/orbit/app/images/icon_interest.png" ng-class="{'player-icon-selected' :pinMode, 'player-icon':!pinMode }"></li>
 	</ul>
 </div>
 

@@ -134,15 +134,10 @@
 
             setTimeout(function()
             {
-              console.log('tatata');
-
-              console.log(e.target);
-
               let regex = /(&nbsp;|<([^>]+)>)/ig;
               let body = document.querySelector('#descImage')
 
               body.innerHTML = body.innerHTML.replace(regex, "")
-
 
             }, 0);
           })
@@ -166,6 +161,7 @@
       $scope.autoPlay = false;
       $scope.isEditMode = false;
       $scope.isFullscreen = false;
+      $scope.fsSrc = "/orbit/app/images/icon_fullscreen.png";
       //
 
       //Variables lié au tooltips
@@ -312,22 +308,21 @@
       /*************************************************************************/
 
       /*******************Fonctions de deplacement*******************************/
+      //Fonction de changement grab/grabbing
       $scope.toggleGrab =function (){
-        console.log('Etat initial : ' + $scope.canvas.style.cursor);
         if($scope.canvas.style.cursor == "-webkit-grab" || $scope.canvas.style.cursor == "-moz-grab" || $scope.canvas.style.cursor == "grab"  ){
           $scope.canvas.style.cursor = "-webkit-grabbing";
           $scope.canvas.style.cursor = "-moz-grabbing";
+          $scope.canvas.style.cursor = "grab";
         } else {
           $scope.canvas.style.cursor = "-webkit-grab";
           $scope.canvas.style.cursor = "-moz-grab";
+          $scope.canvas.style.cursor = "grab";
         }
-        console.log('Etat final : ' + $scope.canvas.style.cursor);
       };
 
       $scope.dragStart = function(){
-
         if ($scope.clickRotation && !$scope.clickTranslation) {
-          console.log('Grabbing');
           $scope.toggleGrab();
         }
       };
@@ -336,7 +331,6 @@
       $scope.drag = function (e) {
         //Si on est en mode Rotation
         if ($scope.clickRotation && !$scope.clickTranslation) {
-          console.log('curseur : ' + $scope.canvas.style.cursor);
           let dst = $scope.lastDrag - e.gesture.deltaX,
             ratio;
           dst *= 1;
@@ -368,7 +362,6 @@
 
       $scope.dragEnd = function () {
         if ($scope.clickRotation && !$scope.clickTranslation) {
-          console.log('Grab');
           $scope.toggleGrab();
         }
         $scope.prevDeltaX = 0;
@@ -391,6 +384,7 @@
 
       //Gestion des event de touche du clavier
       $scope.keymove = function (e) {
+
         //Mode Rotation
         if ($scope.clickRotation && !$scope.clickTranslation) {
           if (e.keyCode === 39)
@@ -466,6 +460,7 @@
       $scope.toggleFullscreen = function () {
         let elem = document.querySelector("html");
         if ($scope.isFullscreen) {
+          $scope.fsSrc = "/orbit/app/images/icon_fullscreen_back.png";
           if (elem.requestFullscreen) {
             elem.requestFullscreen();
           } else if (elem.msRequestFullscreen) {
@@ -477,6 +472,7 @@
           }
         }
         else {
+          $scope.fsSrc = "/orbit/app/images/icon_fullscreen.png";
           if (document.exitFullscreen) {
             document.exitFullscreen();
           } else if (document.webkitExitFullscreen) {
