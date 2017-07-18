@@ -250,6 +250,18 @@ tr.border_bottom td {
 
 }
 
+.rotato{
+  transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+
+
+  transition: all 0.2s ease;
+  -moz-transition: all 0.2s ease;
+  -webkit-transition: all 0.2s ease;
+}
+
+
 #titreImage{
 
   cursor: help;
