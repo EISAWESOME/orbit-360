@@ -195,6 +195,7 @@
       $scope.isCollapsed = true;
       $scope.isTitreCollapsed = true;
 
+
       /****************************************************************************/
 
       /****************************Dessin de l'objet**************************/
@@ -374,7 +375,6 @@
           $scope.setAngle($scope.angle + 1);
           window.setTimeout($scope.goTo, 5, angle);
         } else {
-          console.log(document.querySelector('.titrePop'));
           if (document.querySelector('.titrePop'))
             document.querySelector('.titrePop').style.display = 'block';
         }
@@ -748,6 +748,44 @@
         $scope.edited = true;
 
       };
+
+      $scope.toggleEditTooltip = function(e){
+
+
+        let lookup = {};
+        for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
+          lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
+        }
+
+        let ttId = e.target.parentNode.parentNode.parentNode.id;
+
+        $scope.tooltip = lookup[ttId];
+        $scope.tooltip.id = ttId;
+
+        //Rend le titre du tooltip editable ou pas
+        let ligneTitre = e.target.parentNode.parentNode.parentNode.childNodes[1];
+        let tdTitre = ligneTitre.childNodes[3];
+
+        if(tdTitre.contentEditable  == "true"){
+          tdTitre.setAttribute("contenteditable", "false" ) ;
+        } else tdTitre.setAttribute("contenteditable", "true" ) ;
+
+        //Rend la description du tooltip editable ou pas
+        let ligneDesc = e.target.parentNode.parentNode.parentNode.childNodes[3];
+        let divDesc = ligneDesc.childNodes[1].childNodes[1].childNodes[1];
+
+        if(divDesc.contentEditable  == "true"){
+          divDesc.setAttribute("contenteditable", "false" ) ;
+        } else divDesc.setAttribute("contenteditable", "true" ) ;
+
+        //Ajouter un event listener sur les deux element editable
+        //on keyup, copier le inner HTML dans l'objet tooltip correspondant
+
+
+
+
+      };
+
       /***************************************************************************/
 
       /************************ Fonctions d'affichage des pop *******************/

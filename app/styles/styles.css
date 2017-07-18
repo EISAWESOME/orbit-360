@@ -240,6 +240,14 @@ md-dialog.medium-dialog {
   cursor: pointer;
 }
 
+.editable{
+  color: deepskyblue;
+}
+
+.not-editable{
+  color:grey;
+}
+
 tr.border_bottom td {
   border-bottom:1pt inset;
 }
