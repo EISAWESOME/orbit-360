@@ -115,14 +115,14 @@ orbitview a:hover {
 #menu-container {
   position: absolute;
   z-index: 10;
-  width: 500px;
+  width: 400px;
   font-size: 24px;
   background-color: rgba(0, 0, 0, 0.7);
   border: solid black 1px;
   bottom: 20px;
   border-radius: 3px;
   left: 50%;
-  margin-left: -250px;
+  margin-left: -200px;
   text-align: center;
 }
 #menu-container #menu > li {
@@ -181,32 +181,8 @@ tooltip {
 }
 
 
-
-.Rotate180{
-  -moz-transition: transform 0.5s;
-  -webkit-transition: transform 0.5s;
-  transition: transform 0.5s;
-  transform: rotate(180deg);
-  -moz-transform: rotate(180deg);
-  -webkit-transform: rotate(180deg);
-  color : red;
-  /*
-  Ici mettre le curseur custom pour creer un point d'interet
-  */
-}
-
-.Rotate-360{
-  -moz-transition: transform 0.5s;
-  -webkit-transition: transform 0.5s;
-  transition: transform 0.5s;
-  transform: rotate(-360deg);
-  -moz-transform: rotate(-360deg);
-  -webkit-transform: rotate(-360deg);
-
-}
-
 .red{
-  color : red;
+  filter: sepia(50%) saturate(10000%) /*hue-rotate(40deg)*/;
 }
 
 md-dialog.medium-dialog {

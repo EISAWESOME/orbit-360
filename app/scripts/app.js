@@ -143,10 +143,11 @@
 
               body.innerHTML = body.innerHTML.replace(regex, "")
 
-            }, 0);
 
+            }, 0);
           })
         });
+        modeCursor();
       };
 
       /**************Declaration et initialisation des variable du scope**************/
@@ -311,10 +312,31 @@
       /*************************************************************************/
 
       /*******************Fonctions de deplacement*******************************/
+      $scope.toggleGrab =function (){
+        console.log('Etat initial : ' + $scope.canvas.style.cursor);
+        if($scope.canvas.style.cursor == "-webkit-grab" || $scope.canvas.style.cursor == "-moz-grab" || $scope.canvas.style.cursor == "grab"  ){
+          $scope.canvas.style.cursor = "-webkit-grabbing";
+          $scope.canvas.style.cursor = "-moz-grabbing";
+        } else {
+          $scope.canvas.style.cursor = "-webkit-grab";
+          $scope.canvas.style.cursor = "-moz-grab";
+        }
+        console.log('Etat final : ' + $scope.canvas.style.cursor);
+      };
+
+      $scope.dragStart = function(){
+
+        if ($scope.clickRotation && !$scope.clickTranslation) {
+          console.log('Grabbing');
+          $scope.toggleGrab();
+        }
+      };
+
       //Gestion du drag
       $scope.drag = function (e) {
         //Si on est en mode Rotation
         if ($scope.clickRotation && !$scope.clickTranslation) {
+          console.log('curseur : ' + $scope.canvas.style.cursor);
           let dst = $scope.lastDrag - e.gesture.deltaX,
             ratio;
           dst *= 1;
@@ -345,6 +367,10 @@
       };
 
       $scope.dragEnd = function () {
+        if ($scope.clickRotation && !$scope.clickTranslation) {
+          console.log('Grab');
+          $scope.toggleGrab();
+        }
         $scope.prevDeltaX = 0;
         $scope.prevDeltaY = 0;
       };
@@ -504,15 +530,21 @@
       };
 
       //Passe de rotation à translation
+      function modeCursor(){
+        if ($scope.clickRotation && !$scope.clickTranslation) {
+          $scope.canvas.style.cursor = "-webkit-grab";
+          $scope.canvas.style.cursor = "-moz-grab";
+        }
+
+        if ($scope.clickTranslation && !$scope.clickRotation)
+          $scope.canvas.style.cursor = "move";
+      }
       $scope.switchMode = function () {
         $scope.clickRotation = !$scope.clickRotation;
         $scope.clickTranslation = !$scope.clickTranslation;
 
-        if ($scope.clickRotation && !$scope.clickTranslation)
-          $scope.canvas.style.cursor = "default";
+        modeCursor();
 
-        if ($scope.clickTranslation && !$scope.clickRotation)
-          $scope.canvas.style.cursor = "move";
       };
 
       function detectIE() {
