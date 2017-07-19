@@ -777,25 +777,54 @@
         } else divDesc.setAttribute("contenteditable", "true" ) ;
 
 
-        divDesc.addEventListener('keyup', updateTooltip(ttId, "desc", divDesc.textContent) );
-        tdTitre.addEventListener('keyup', updateTooltip(ttId, "titre", tdTitre.textContent) );
+        console.log(divDesc, tdTitre);
+
+
+        divDesc.addEventListener('keypress', updateTooltip(ttId, "desc", divDesc.textContent, "") );
+        tdTitre.addEventListener('keypress', updateTooltip(ttId, "titre", "", tdTitre.textContent) );
 
 
       };
+      function getPIByID(colPI, id){
+        for(let i=0; i< colPI.length; i++){
+          if(colPI[i].getAttribute('ID') == id){
+            return i;
+          }
+        }
+      }
 
-      function updateTooltip(id, champ, valeur){
+      function updateTooltip(id, champ, valeurDesc, valeurTitre){
         //Fonction appellé par les deux listener
         //En fonction de la variable 'champ' et 'valeur'
         //On va update dans le XML, le point d'interet d'id 'id'
+
+        let colPI = $scope.xml.getElementsByTagName("PointInteret");
+        let id2 = getPIByID(colPI, id)
+        let currentTooltip = colPI[id2];
+        let titreNode = currentTooltip.getElementsByTagName("Titre");
+        let descNode = currentTooltip.getElementsByTagName("Description");
+
+
         if(champ == "desc"){
-          $scope.tooltip.desc = divDesc.textContent
+          $scope.tooltip.desc = valeurDesc;
+          currentTooltip.removeChild(descNode[0]);
+          let newDesc = $scope.xml.createElement('Description');
+          let cdataDesc = $scope.xml.createCDATASection(valeurDesc);
 
-
+          newDesc.appendChild(cdataDesc);
+          $scope.xml.getElementsByTagName("PointInteret")[id2].appendChild(newDesc);
+          console.log($scope.xml.getElementsByTagName("PointInteret")[id2]);
         }
 
         if(champ == "titre"){
-          $scope.tooltip.title = tdTitre.textContent
+          $scope.tooltip.title = valeurTitre;
+          currentTooltip.removeChild(titreNode[0]);
+          let newTitre = $scope.xml.createElement('Titre');
+          let cdataTitre = $scope.xml.createCDATASection(valeurTitre);
 
+          newTitre.appendChild(cdataTitre);
+          $scope.xml.getElementsByTagName("PointInteret")[id2].appendChild(newTitre);
+          console.log($scope.xml.getElementsByTagName("PointInteret")[id2]);
         }
 
       }
