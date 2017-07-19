@@ -372,7 +372,10 @@
       //Fonction qui permet la rotation jusqu'a un angle donné
       $scope.goTo = function (angle) {
         if ($scope.angle != angle) {
-          $scope.setAngle($scope.angle + 1);
+          if($scope.origAngle - angle < 0) {
+            $scope.setAngle($scope.angle - 1);
+          } else $scope.setAngle($scope.angle + 1);
+
           window.setTimeout($scope.goTo, 5, angle);
         } else {
           if (document.querySelector('.titrePop'))
@@ -954,6 +957,7 @@
           pointY = (($scope.tooltip.y / ratioY) + $scope.translaY) + $scope.canvas.clientHeight / 2;
 
         $scope.pointPop('titre', $scope.tooltip.title, pointX, pointY);
+        $scope.origAngle = $scope.angle;
         $scope.goTo($scope.tooltip.image);
       };
 
