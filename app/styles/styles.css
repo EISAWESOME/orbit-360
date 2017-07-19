@@ -273,8 +273,7 @@ tr.border_bottom td {
 #titreImage{
 
   cursor: help;
-  color: #00b0ff;
-  text-decoration: underline;
+  color: #ffffff;
   font-weight: bold;
   width: 100%;
   position: absolute;
@@ -291,7 +290,7 @@ div.titrePop,
 div.descPop {
   word-wrap: break-word;
   position : absolute;
-  color: white;
+  color: #303030;
   font-weight: bold;
   background-color: #9E9E9E;
   padding: 5px 5px 5px 15px;
@@ -299,9 +298,9 @@ div.descPop {
   max-width: 20%;
   min-height: 22px;
   z-index: 20;
-  opacity: 0.8;
-  border: 1px solid black;
-  border-radius: 0px 10px 10px 10px;
+  opacity: 0.9;
+  border: 1px solid #868686;
+  border-radius: 0px 5px 5px 5px;
 
 }
 

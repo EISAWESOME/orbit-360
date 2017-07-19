@@ -1,3 +1,4 @@
+/* Sources dispo https://github.com/EISAWESOME/orbit */
 'use strict';
 
   var ob = angular.module('Orbit', ['ngMaterial', 'ngResource', 'ngAnimate', 'hmGestures', 'mousewheel', 'ui.bootstrap']);
@@ -918,7 +919,7 @@
                   $scope.deleteTitrePop()
                   //On crée le pop up du point en question
                   $scope.pointPop('desc', matchedTt[i].desc, pointX, pointY);
-                  $scope.canvas.style.cursor = 'help';
+                  $scope.canvas.style.cursor = 'default';
                 } else {
                   incr++
                 }
