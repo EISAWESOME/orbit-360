@@ -776,8 +776,8 @@
           divDesc.setAttribute("contenteditable", "false" ) ;
         } else divDesc.setAttribute("contenteditable", "true" ) ;
 
-        divDesc.addEventListener('keypress', function(){updateTooltip(ttId, "desc", divDesc.textContent, "")}, false );
-        tdTitre.addEventListener('keypress', function(){updateTooltip(ttId, "titre", "", tdTitre.textContent)}, false );
+        divDesc.addEventListener('keyup', function(){updateTooltip(ttId, "desc", divDesc.innerHTML, "")} );
+        tdTitre.addEventListener('keyup', function(){updateTooltip(ttId, "titre", "", tdTitre.innerHTML)} );
 
 
       };
@@ -795,6 +795,8 @@
         //En fonction de la variable 'champ' et 'valeur'
         //On va update dans le XML, le point d'interet d'id 'id'
 
+
+
         let colPI = $scope.xml.getElementsByTagName("PointInteret");
         let id2 = getPIByID(colPI, id)
         let currentTooltip = colPI[id2];
@@ -802,8 +804,11 @@
         let descNode = currentTooltip.getElementsByTagName("Description");
 
 
+
         if(champ == "desc"){
-          $scope.tooltip.desc = valeurDesc;
+          //$scope.tooltip.desc = valeurDesc;
+          // ICI comme le texte dans le html est generer a partir de l'objet tooltip, en changeant l'objet, on change aussi le texte dans le html
+          //On change donc le texte deux fois, d'ou le reset du curseur
           currentTooltip.removeChild(descNode[0]);
           let newDesc = $scope.xml.createElement('Description');
           let cdataDesc = $scope.xml.createCDATASection(valeurDesc);
@@ -813,8 +818,9 @@
           console.log($scope.xml.getElementsByTagName("PointInteret")[id2]);
         }
 
+
         if(champ == "titre"){
-          $scope.tooltip.title = valeurTitre;
+          //$scope.tooltip.title = valeurTitre;
           currentTooltip.removeChild(titreNode[0]);
           let newTitre = $scope.xml.createElement('Titre');
           let cdataTitre = $scope.xml.createCDATASection(valeurTitre);
