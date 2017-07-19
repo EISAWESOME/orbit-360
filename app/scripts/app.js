@@ -162,6 +162,7 @@
       $scope.isEditMode = false;
       $scope.isFullscreen = false;
       $scope.fsSrc = "/orbit/app/images/icon_fullscreen.png";
+      $scope.currentCursor = 'default';
       //
 
       //Variables lié au tooltips
@@ -536,10 +537,12 @@
           $scope.canvas.style.cursor = "-webkit-grab";
           $scope.canvas.style.cursor = "-moz-grab";
           $scope.canvas.style.cursor = "grab";
+          $scope.currentCursor = "grab";
         }
 
         if ($scope.clickTranslation && !$scope.clickRotation)
           $scope.canvas.style.cursor = "move";
+          $scope.currentCursor = "move";
       }
       $scope.switchMode = function () {
         $scope.clickRotation = !$scope.clickRotation;
@@ -915,6 +918,7 @@
                   $scope.deleteTitrePop()
                   //On crée le pop up du point en question
                   $scope.pointPop('desc', matchedTt[i].desc, pointX, pointY);
+                  $scope.canvas.style.cursor = 'help';
                 } else {
                   incr++
                 }
@@ -926,6 +930,7 @@
                 let b = a.querySelector('.descPop');
                 if (b) {
                   a.removeChild(b);
+                  $scope.canvas.style.cursor = $scope.currentCursor;
                 }
                 $scope.isPopDrawn = false;
               }

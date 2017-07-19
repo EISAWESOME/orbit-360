@@ -227,7 +227,7 @@ md-dialog.medium-dialog {
 }
 
 
-#tooltip-table td.ttTitre:hover {
+#tooltip-table tr.ttTitre:hover {
   background-color: rgb(236, 236, 236);
 }
 
@@ -236,8 +236,9 @@ md-dialog.medium-dialog {
   font-size: 16pt;
 }
 
-#tooltip-table tr:hover {
+#tooltip-table tr.titre:hover {
   cursor: pointer;
+  background-color: rgb(236, 236, 236);
 }
 
 .editable{
