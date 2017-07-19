@@ -384,33 +384,35 @@
 
       //Gestion des event de touche du clavier
       $scope.keymove = function (e) {
+        //Les controle avec les fleches ne sont active que quant le menu est fermé
+        if($scope.isNavCollapsed) {
+          //Mode Rotation
+          if ($scope.clickRotation && !$scope.clickTranslation) {
+            if (e.keyCode === 39)
+              $scope.setAngle($scope.angle - 1);
 
-        //Mode Rotation
-        if ($scope.clickRotation && !$scope.clickTranslation) {
-          if (e.keyCode === 39)
-            $scope.setAngle($scope.angle - 1);
+            if (e.keyCode === 37)
+              $scope.setAngle($scope.angle + 1);
+          }
+          //Mode Translation
+          if ($scope.clickTranslation && !$scope.clickRotation) {
+            $scope.renderer.restore();
+            $scope.renderer.save();
 
-          if (e.keyCode === 37)
-            $scope.setAngle($scope.angle + 1);
-        }
-        //Mode Translation
-        if ($scope.clickTranslation && !$scope.clickRotation) {
-          $scope.renderer.restore();
-          $scope.renderer.save();
+            if (e.keyCode === 37) // Gauche
+              $scope.incrTranslaX(-10);
 
-          if (e.keyCode === 37) // Gauche
-            $scope.incrTranslaX(-10);
+            if (e.keyCode === 38) // Haut
+              $scope.incrTranslaY(-10);
 
-          if (e.keyCode === 38) // Haut
-            $scope.incrTranslaY(-10);
+            if (e.keyCode === 39) // Droite
+              $scope.incrTranslaX(10);
 
-          if (e.keyCode === 39) // Droite
-            $scope.incrTranslaX(10);
+            if (e.keyCode === 40) // Bas
+              $scope.incrTranslaY(10);
 
-          if (e.keyCode === 40) // Bas
-            $scope.incrTranslaY(10);
-
-          $scope.edited = true;
+            $scope.edited = true;
+          }
         }
       };
 
@@ -609,6 +611,8 @@
       //Création d'un point d'interet au clic
       $scope.pin = function (e) {
         if ($scope.pinMode) {
+          if(!$scope.isNavCollapsed)
+            $scope.toggleLeft();
           let lvl = $scope.level;
           // Place l'origine de X et de Y au centre de l'image, prennant en compte la translation du canvas
           let
@@ -769,22 +773,14 @@
 
         if(tdTitre.contentEditable  == "true"){
           tdTitre.setAttribute("contenteditable", "false" ) ;
-          updateTooltip(ttId, "titre", "", tdTitre.innerHTML)
+          updateTooltip(ttId, "titre", "", tdTitre.textContent)
         } else tdTitre.setAttribute("contenteditable", "true" ) ;
 
         //Rend la description du tooltip editable ou pas
         if(divDesc.contentEditable  == "true"){
           divDesc.setAttribute("contenteditable", "false" ) ;
-          updateTooltip(ttId, "desc", divDesc.innerHTML, "")
+          updateTooltip(ttId, "desc", divDesc.textContent, "")
         } else divDesc.setAttribute("contenteditable", "true" ) ;
-
-        /*
-
-        divDesc.addEventListener('keyup', function(){updateTooltip(ttId, "desc", divDesc.innerHTML, "")} );
-        tdTitre.addEventListener('keyup', function(){updateTooltip(ttId, "titre", "", tdTitre.innerHTML)} );
-
-        */
-
 
       };
 
@@ -797,18 +793,11 @@
       }
 
       function updateTooltip(id, champ, valeurDesc, valeurTitre){
-        //Fonction appellé par les deux listener
-        //En fonction de la variable 'champ' et 'valeur'
-        //On va update dans le XML, le point d'interet d'id 'id'
-
-
-
         let colPI = $scope.xml.getElementsByTagName("PointInteret");
         let id2 = getPIByID(colPI, id)
         let currentTooltip = colPI[id2];
         let titreNode = currentTooltip.getElementsByTagName("Titre");
         let descNode = currentTooltip.getElementsByTagName("Description");
-
 
 
         if(champ == "desc"){
@@ -1006,6 +995,7 @@
       function buildToggler(componentId) {
         return function () {
           $mdSidenav(componentId).toggle();
+          $scope.isNavCollapsed = !$scope.isNavCollapsed;
         };
       }
       /**************************************************************************/
