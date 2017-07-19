@@ -769,15 +769,21 @@
 
         if(tdTitre.contentEditable  == "true"){
           tdTitre.setAttribute("contenteditable", "false" ) ;
+          updateTooltip(ttId, "titre", "", tdTitre.innerHTML)
         } else tdTitre.setAttribute("contenteditable", "true" ) ;
 
         //Rend la description du tooltip editable ou pas
         if(divDesc.contentEditable  == "true"){
           divDesc.setAttribute("contenteditable", "false" ) ;
+          updateTooltip(ttId, "desc", divDesc.innerHTML, "")
         } else divDesc.setAttribute("contenteditable", "true" ) ;
+
+        /*
 
         divDesc.addEventListener('keyup', function(){updateTooltip(ttId, "desc", divDesc.innerHTML, "")} );
         tdTitre.addEventListener('keyup', function(){updateTooltip(ttId, "titre", "", tdTitre.innerHTML)} );
+
+        */
 
 
       };
@@ -806,7 +812,7 @@
 
 
         if(champ == "desc"){
-          //$scope.tooltip.desc = valeurDesc;
+          $scope.tooltip.desc = valeurDesc;
           // ICI comme le texte dans le html est generer a partir de l'objet tooltip, en changeant l'objet, on change aussi le texte dans le html
           //On change donc le texte deux fois, d'ou le reset du curseur
           currentTooltip.removeChild(descNode[0]);
@@ -820,7 +826,7 @@
 
 
         if(champ == "titre"){
-          //$scope.tooltip.title = valeurTitre;
+          $scope.tooltip.title = valeurTitre;
           currentTooltip.removeChild(titreNode[0]);
           let newTitre = $scope.xml.createElement('Titre');
           let cdataTitre = $scope.xml.createCDATASection(valeurTitre);

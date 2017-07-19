@@ -90,7 +90,7 @@
             <td ng-click="clickTooltip($event);" ng-mouseover="hoverTooltip($event);" ng-mouseleave="deleteAllPop()" class ="ttTitre" contenteditable=false spellcheck=false>{{tooltip.title}}</td>
 
             <td class = "nofocus ttEdit" ng-show="isEditMode">
-              <i class="nofocus fa fa-pencil" style="float : right;" ng-click="toggleEditTooltip($event); isEditable = !isEditable; $event.stopPropagation()" ng-class="{'editable': isEditable, 'not-editable': !isEditable}"></i>
+              <i class="nofocus fa " style="float : right;" ng-click="toggleEditTooltip($event); isEditable = !isEditable; $event.stopPropagation()" ng-class="{'editable fa-check': isEditable, 'not-editable fa-pencil': !isEditable}"></i>
             </td>
 
             <td class = "nofocus ttDelete" ng-show="isEditMode">
