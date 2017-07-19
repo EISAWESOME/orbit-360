@@ -87,7 +87,7 @@
               <i ng-class="{'fa fa-chevron-right': isCollapsed, 'fa fa-chevron-right rotato': !isCollapsed}"></i>
             </td>
 
-            <td ng-click="clickTooltip($event);" ng-mouseover="hoverTooltip($event);" ng-mouseleave="deleteAllPop()" class ="ttTitre" contenteditable=false >{{tooltip.title}}</td>
+            <td ng-click="clickTooltip($event);" ng-mouseover="hoverTooltip($event);" ng-mouseleave="deleteAllPop()" class ="ttTitre" contenteditable=false spellcheck=false>{{tooltip.title}}</td>
 
             <td class = "nofocus ttEdit" ng-show="isEditMode">
               <i class="nofocus fa fa-pencil" style="float : right;" ng-click="toggleEditTooltip($event); isEditable = !isEditable; $event.stopPropagation()" ng-class="{'editable': isEditable, 'not-editable': !isEditable}"></i>
@@ -101,7 +101,7 @@
           <tr class="desc collapse-row">
             <td colspan = 3>
               <div uib-collapse="isCollapsed">
-                <div class="collapse-cell well well-lg" contenteditable=false>
+                <div class="collapse-cell well well-lg" contenteditable=false spellcheck=false>
                   {{tooltip.desc}}
                 </div>
               </div>

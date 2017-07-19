@@ -776,15 +776,12 @@
           divDesc.setAttribute("contenteditable", "false" ) ;
         } else divDesc.setAttribute("contenteditable", "true" ) ;
 
-
-        console.log(divDesc, tdTitre);
-
-
-        divDesc.addEventListener('keypress', updateTooltip(ttId, "desc", divDesc.textContent, "") );
-        tdTitre.addEventListener('keypress', updateTooltip(ttId, "titre", "", tdTitre.textContent) );
+        divDesc.addEventListener('keypress', function(){updateTooltip(ttId, "desc", divDesc.textContent, "")}, false );
+        tdTitre.addEventListener('keypress', function(){updateTooltip(ttId, "titre", "", tdTitre.textContent)}, false );
 
 
       };
+
       function getPIByID(colPI, id){
         for(let i=0; i< colPI.length; i++){
           if(colPI[i].getAttribute('ID') == id){
