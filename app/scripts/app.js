@@ -372,7 +372,7 @@
       //Fonction qui permet la rotation jusqu'a un angle donné
       $scope.goTo = function (angle) {
         if ($scope.angle != angle) {
-          if($scope.origAngle - angle < 0) {
+          if(Images.nbAngle - angle + $scope.origAngle < angle - $scope.origAngle) {
             $scope.setAngle($scope.angle - 1);
           } else $scope.setAngle($scope.angle + 1);
 
