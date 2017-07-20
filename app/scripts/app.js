@@ -155,8 +155,6 @@
       $scope.theme = 'grey';
       //
 
-
-
       //Variables lié aux modes
       $scope.clickRotation = true;
       $scope.clickTranslation = false;
@@ -389,7 +387,6 @@
         }
       };
       //A la fin du drag, on reset les valeurs
-
 
       //Gestion des event de touche du clavier
       $scope.keymove = function (e) {
