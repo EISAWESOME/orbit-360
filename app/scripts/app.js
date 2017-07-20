@@ -113,7 +113,7 @@
             $scope.id++;
             for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
               $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
-              console.log($scope.lookupAngle)
+              //console.log($scope.lookupAngle)
             }
 
             $scope.tooltips.push(tooltip);
@@ -538,13 +538,9 @@
 
       //Passe de rotation à translation
       $scope.modeCursor = function(){
-        console.log($scope.pinMode);
         if($scope.pinMode){
-          console.log('azaz');
-
           $scope.canvas.style.cursor = "crosshair";
           $scope.currentCursor = "crosshair";
-
 
         } else {
           if ($scope.clickRotation && !$scope.clickTranslation) {
@@ -747,10 +743,7 @@
           els.unshift(a);
           a = a.parentNode;
         }
-
         els[7].remove();
-
-        console.log($scope.tooltip);
         let indextt = $scope.tooltips.indexOf($scope.tooltip);
         $scope.tooltips.splice(indextt, 1);
 
@@ -833,7 +826,6 @@
 
           newDesc.appendChild(cdataDesc);
           $scope.xml.getElementsByTagName("PointInteret")[id2].appendChild(newDesc);
-          console.log($scope.xml.getElementsByTagName("PointInteret")[id2]);
         }
 
 
@@ -845,7 +837,6 @@
 
           newTitre.appendChild(cdataTitre);
           $scope.xml.getElementsByTagName("PointInteret")[id2].appendChild(newTitre);
-          console.log($scope.xml.getElementsByTagName("PointInteret")[id2]);
         }
 
       }
