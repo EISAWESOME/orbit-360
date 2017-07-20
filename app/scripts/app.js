@@ -111,20 +111,10 @@
             };
 
             $scope.id++;
-            $scope.lookupAngle = {};
-
             for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
               $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
+              console.log($scope.lookupAngle)
             }
-
-            $scope.translaY = 0;
-            $scope.translaX = 0;
-
-            $scope.prevDeltaX = 0;
-            $scope.prevDeltaY = 0;
-
-            $scope.pinIcon = new Image();
-            $scope.pinIcon.src = '../app/images/pinIcon-32x32.png';
 
             $scope.tooltips.push(tooltip);
           }
@@ -143,7 +133,7 @@
             }, 0);
           })
         });
-        modeCursor();
+        $scope.modeCursor();
       };
 
       /**************Declaration et initialisation des variable du scope**************/
@@ -151,9 +141,21 @@
       $scope.id = 0;
       //
 
+      $scope.lookupAngle = {};
+      $scope.translaY = 0;
+      $scope.translaX = 0;
+
+      $scope.prevDeltaX = 0;
+      $scope.prevDeltaY = 0;
+
+      $scope.pinIcon = new Image();
+      $scope.pinIcon.src = '../app/images/pinIcon-32x32.png';
+
       //Theme des dialog et de la navbar
       $scope.theme = 'grey';
       //
+
+
 
       //Variables lié aux modes
       $scope.clickRotation = true;
@@ -533,23 +535,35 @@
       };
 
       //Passe de rotation à translation
-      function modeCursor(){
-        if ($scope.clickRotation && !$scope.clickTranslation) {
-          $scope.canvas.style.cursor = "-webkit-grab";
-          $scope.canvas.style.cursor = "-moz-grab";
-          $scope.canvas.style.cursor = "grab";
-          $scope.currentCursor = "grab";
+      $scope.modeCursor = function(){
+        console.log($scope.pinMode);
+        if($scope.pinMode){
+          console.log('azaz');
+
+          $scope.canvas.style.cursor = "crosshair";
+          $scope.currentCursor = "crosshair";
+
+
+        } else {
+          if ($scope.clickRotation && !$scope.clickTranslation) {
+            $scope.canvas.style.cursor = "-webkit-grab";
+            $scope.canvas.style.cursor = "-moz-grab";
+            $scope.canvas.style.cursor = "grab";
+            $scope.currentCursor = "grab";
+          }
+
+          if ($scope.clickTranslation && !$scope.clickRotation)
+            $scope.canvas.style.cursor = "move";
+          $scope.currentCursor = "move";
         }
 
-        if ($scope.clickTranslation && !$scope.clickRotation)
-          $scope.canvas.style.cursor = "move";
-          $scope.currentCursor = "move";
+
       }
       $scope.switchMode = function () {
         $scope.clickRotation = !$scope.clickRotation;
         $scope.clickTranslation = !$scope.clickTranslation;
 
-        modeCursor();
+        $scope.modeCursor();
 
       };
 

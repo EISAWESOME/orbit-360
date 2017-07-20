@@ -120,7 +120,7 @@
     <li class = "nofocus" ng-click="{clickTranslation : switchMode()}"><img src="/orbit/app/images/icon_turn.png" ng-class="{'player-icon-selected' :clickRotation, 'player-icon': !clickRotation}"></li>
     <li class = "nofocus" ng-click="{clickRotation : switchMode()}"><img src="/orbit/app/images/icon_slide.png" ng-class="{'player-icon-selected' :clickTranslation, 'player-icon':!clickTranslation }"></li>
     <li class = "nofocus" ng-click="isFullscreen=!isFullscreen;toggleFullscreen()"><img src="{{fsSrc}}"></i></li>
-    <li class = "nofocus" ng-click="pinMode=!pinMode; deleteAllPop()" ng-class="{'ng-hide': !isEditMode}" > <img src="/orbit/app/images/icon_interest.png" ng-class="{'player-icon-selected' :pinMode, 'player-icon':!pinMode }"></li>
+    <li class = "nofocus" ng-click="pinMode=!pinMode; deleteAllPop(); modeCursor()" ng-class="{'ng-hide': !isEditMode}" > <img src="/orbit/app/images/icon_interest.png" ng-class="{'player-icon-selected' :pinMode, 'player-icon':!pinMode }"></li>
 	</ul>
 </div>
 
