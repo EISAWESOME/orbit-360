@@ -315,14 +315,16 @@
       /*******************Fonctions de deplacement*******************************/
       //Fonction de changement grab/grabbing
       $scope.toggleGrab =function (){
-        if($scope.canvas.style.cursor == "-webkit-grab" || $scope.canvas.style.cursor == "-moz-grab" || $scope.canvas.style.cursor == "grab"  ){
-          $scope.canvas.style.cursor = "-webkit-grabbing";
-          $scope.canvas.style.cursor = "-moz-grabbing";
-          $scope.canvas.style.cursor = "grabbing";
-        } else {
-          $scope.canvas.style.cursor = "-webkit-grab";
-          $scope.canvas.style.cursor = "-moz-grab";
-          $scope.canvas.style.cursor = "grab";
+        if(!$scope.pinMode){
+          if($scope.canvas.style.cursor == "-webkit-grab" || $scope.canvas.style.cursor == "-moz-grab" || $scope.canvas.style.cursor == "grab"  ){
+            $scope.canvas.style.cursor = "-webkit-grabbing";
+            $scope.canvas.style.cursor = "-moz-grabbing";
+            $scope.canvas.style.cursor = "grabbing";
+          } else {
+            $scope.canvas.style.cursor = "-webkit-grab";
+            $scope.canvas.style.cursor = "-moz-grab";
+            $scope.canvas.style.cursor = "grab";
+          }
         }
       };
 
