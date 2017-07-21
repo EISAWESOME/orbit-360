@@ -14,7 +14,6 @@
       });
       $rootScope.$on('onComplete', function () {
         let time = new Date();
-        //console.log('onComplete time: ' + time.getSeconds() + ' ' + time.getMilliseconds());
         $scope.loading = false;
       });
 
@@ -586,6 +585,10 @@
       }
       //Fonction d'export du flux XML courant => Dumb le flux dans une nouvelle fenêtre
       $scope.exportXML = function () {
+        let oldProperties = $scope.xml.getElementsByTagName('properties')[0];
+        $scope.xml.getElementsByTagName('sequence')[0].removeChild(oldProperties);
+
+
         let properties = $scope.xml.createElement('properties'),
             propTitre = $scope.xml.createElement('property'),
             propDesc = propTitre.cloneNode(true);
