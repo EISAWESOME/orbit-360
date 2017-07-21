@@ -1,18 +1,18 @@
 # Orbit
-Projet HTML5 de visualisation 360 d'un objet a partir d'un grand nombre de photographies
-prise à 360°, à different niveau de résolution.
+Projet HTML5 de visualisation 360 d'un objet à partir d'un grand nombre de photographies
+prisent à 360°, à différent niveaux de résolutions.
 
 # Fonctionnalitées
 
 -Visualisation 
-  Rotation et translation, zoom avec changement de résolution
+Rotation et translation, zoom avec changement de résolution
 
--Points d'interet :
-  Permet d'ajouter et de gerer des points d'interets sur le modèle
-  
-  
-  
+-Points d'intérêt :
+Permet d'ajouter et de gérer des points d'intérêts sur le modèle
+
+
+
 # Compatible mobile
 
-L'application à été developper en gardant en tête le fonctionnement avec un appareil tactile
+L'application à été développé en gardant en tête le fonctionnement avec un appareil tactile
 
