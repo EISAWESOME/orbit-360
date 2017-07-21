@@ -11,7 +11,7 @@ ob.factory('Images', ['$resource', '$location','$rootScope', '$http', function (
 
           }
           //Sinon on charge l'amonite par défaut
-          else return '../merycoidon/'
+          else return '../amonite/'
         },
         loadingQueue: [],
         loadSlot: 0,
