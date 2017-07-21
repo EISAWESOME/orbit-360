@@ -159,7 +159,7 @@
       $scope.autoPlay = false;
       $scope.isEditMode = false;
       $scope.isFullscreen = false;
-      $scope.fsSrc = "/orbit/app/images/icon_fullscreen.png";
+      $scope.fsSrc = "./images/icon_fullscreen.png";
       $scope.currentCursor = 'default';
       //
 
@@ -465,7 +465,7 @@
       $scope.toggleFullscreen = function () {
         let elem = document.querySelector("html");
         if ($scope.isFullscreen) {
-          $scope.fsSrc = "/orbit/app/images/icon_fullscreen_back.png";
+          $scope.fsSrc = "./images/icon_fullscreen_back.png";
           if (elem.requestFullscreen) {
             elem.requestFullscreen();
           } else if (elem.msRequestFullscreen) {
@@ -477,7 +477,7 @@
           }
         }
         else {
-          $scope.fsSrc = "/orbit/app/images/icon_fullscreen.png";
+          $scope.fsSrc = "./images/icon_fullscreen.png";
           if (document.exitFullscreen) {
             document.exitFullscreen();
           } else if (document.webkitExitFullscreen) {
