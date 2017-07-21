@@ -100,65 +100,17 @@
   <img seq="88" ext="jpg" name="a_0_88"/>
   <img seq="89" ext="jpg" name="a_0_89"/>
   <description></description>
-
-<PointInteret Angle="0" ID="0">
-<Titre>
-<![CDATA[ Angle 0 ]]>
-</Titre>
-<Description>
-<![CDATA[ Desc Angle 0 ]]>
-</Description>
-<Coord x="-878.6806406397704" y="-75.02290549582871"/>
-</PointInteret>
-<PointInteret Angle="5" ID="1">
-<Titre>
-<![CDATA[ Angle 5 ]]>
-</Titre>
-<Description>
-<![CDATA[ Desc angle 5 ]]>
-</Description>
-<Coord x="312.92045606829436" y="512.6565208881628"/>
-</PointInteret>
-<PointInteret Angle="15" ID="2">
-<Titre>
-<![CDATA[ Angle 15 ]]>
-</Titre>
-<Description>
-<![CDATA[ desc 15 ]]>
-</Description>
-<Coord x="465.62563862962196" y="405.12368967747506"/>
-</PointInteret>
-<PointInteret Angle="15" ID="3">
-<Titre>
-<![CDATA[ Angle 15 2 ]]>
-</Titre>
-<Description>
-<![CDATA[ desc 15 2 ]]>
-</Description>
-<Coord x="-415.55836565869487" y="307.5939125328977"/>
-</PointInteret>
-<PointInteret Angle="15" ID="4">
-<Titre>
-<![CDATA[ Test Kappa 123 ]]>
-</Titre>
-<Description>
-<![CDATA[ angle 15 aussi ]]>
-</Description>
-<Coord x="102.63790959040054" y="762.7328725409253"/>
-</PointInteret>
-<PointInteret Angle="37" ID="5">
-<Titre>
-<![CDATA[ Incroyable ]]>
-</Titre>
-<Description>
-<![CDATA[
-Oui c'est véritablement incroyable Oui c'est véritablement incroyable Oui c'est véritablement incroyable
-]]>
-</Description>
-<Coord x="821.1032767232043" y="412.62598022705794"/>
-</PointInteret>
-
-
+  <properties>
+    <property name="titre">
+      <![CDATA[ Amonite ]]>
+    </property>
+    
+    <property name="description">
+      <![CDATA[
+      Les ammonites au sens large (Ammonoidea) forment unesous-classeéteinte desmollusquescéphalopodes. Elles apparaissent dans le registre fossile durant le Dévonien et disparaissent peu après lacrise Crétacé-Paléocène. Elles se caractérisaient par une coquille univalve plus ou moins enroulée dont seule la dernière loge était occupée par l'animal, les autres loges servent à contrôler sa flottaison. Leurs fossiles sont considérés comme d'excellents marqueurs chronologiques. Leur taille va de quelques millimètres à plus de 2 mètres de diamètre.
+      ]]>
+    </property>
+  </properties>
 
 
 </sequence>
