@@ -8,7 +8,7 @@ prisent à 360°, à différent niveaux de résolutions.
 Rotation et translation, zoom avec changement de résolution
 
 -Points d'intérêt :
-Permet d'ajouter et de gérer des points d'intérêts sur le modèle
+Permet d'ajouter et de gérer des points d'intérêt sur le modèle
 
 
 
