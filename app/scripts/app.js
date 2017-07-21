@@ -113,9 +113,7 @@
             $scope.id++;
             for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
               $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
-              //console.log($scope.lookupAngle)
             }
-
             $scope.tooltips.push(tooltip);
           }
           if ($scope.lookupAngle[$scope.angle]) {
@@ -125,9 +123,8 @@
 
             setTimeout(function()
             {
+              let body = document.querySelector('#descImage');
               let regex = /(&nbsp;|<([^>]+)>)/ig;
-              let body = document.querySelector('#descImage')
-
               body.innerHTML = body.innerHTML.replace(regex, "")
 
             }, 0);
