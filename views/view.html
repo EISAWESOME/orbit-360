@@ -1,0 +1,129 @@
+<div id="orbit-loader-reso" ng-show="loadingReso"></div>
+<div id="orbit-loader" ng-show="loading">{{loading}}%</div>
+
+<div style="position:absolute; width:100%">
+  <div class="nofocus" style="height:100px" ng-click="isTitreCollapsed = !isTitreCollapsed">
+    <h1 id="titreImage" class="nofocus" contenteditable={{isEditMode}} spellcheck=false> {{titre}}</h1>
+    <img id="info" src="./images/icon_info.png">
+  </div>
+  <div uib-collapse="isTitreCollapsed">
+
+    <div id="descImage" class="well well-lg" contenteditable={{isEditMode}} spellcheck=false ng-cloak>
+      {{description}}
+    </div>
+  </div>
+</div>
+
+<div id="button-container">
+
+
+  <div style="top:35%; position:absolute">
+
+    <div class="nofocus canvasButton" ng-click="zoomIn(); deleteAllPop()">
+      <i class="fa fa-search-plus"></i>
+    </div>
+
+    <div class="nofocus canvasButton" ng-click="zoomOut(); deleteAllPop()">
+      <i class="fa fa-search-minus"></i>
+    </div>
+
+    <div id="separateur"></div>
+
+
+    <div class="nofocus canvasButton" ng-click="toggleLeft(); deleteAllPop()">
+      <md-tooltip md-direction="left">Ouvrir/Fermer le menu</md-tooltip>
+      <i class="fa fa-bars"></i>
+    </div>
+
+    <div class="nofocus canvasButton" ng-click="editMode()">
+      <md-tooltip md-direction="left">Mode édition</md-tooltip>
+      <i class="fa fa-pencil-square-o" ng-class="{'canvas-icon-selected' : isEditMode, 'canvas-icon' : !isEditMode }"></i>
+    </div>
+
+  </div>
+
+</div>
+
+<md-sidenav md-theme="{{theme}}" class="md-sidenav-left" md-component-id="left" md-disable-backdrop md-whiteframe="4">
+
+  <md-toolbar class="md-hue-2">
+    <div class="md-toolbar-tools">
+
+      <h1 flex md-truncate>Points d'interet</h1>
+
+      <md-button ng-show="isEditMode" class="md-icon-button" aria-label="Export XML" ng-click="exportXML()">
+        <md-icon class="fa fa-file-text-o fa-2x"></md-icon>
+        <md-tooltip md-direction="bottom">Export XML</md-tooltip>
+      </md-button>
+
+      <md-button class="md-icon-button" aria-label="Close Sidenav" ng-click="toggleLeft()">
+        <md-icon class="fa fa-times fa-2x" md-colors="::{color: '{{theme}}-primary'}"></md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+
+
+
+  <md-content layout-margin>
+    <br/>
+
+    <form>
+      <div class="form-group">
+        <div class="input-group">
+          <div class="input-group-addon"><i class="fa fa-search"></i></div>
+          <input type="text" class="form-control" placeholder="Recherche..." style="height : 50px; font-size:16pt" ng-model="motCle">
+        </div>
+      </div>
+    </form>
+
+    <table id="tooltip-table">
+      <br/>
+      <tbody ng-repeat="tooltip in tooltips | filter: motCle " id="{{tooltip.id}}">
+        <tr class="titre border_bottom">
+
+          <td class="nofocus" ng-click="isCollapsed = !isCollapsed; $event.stopPropagation();" style="min-width:20px">
+            <i ng-class="{'fa fa-chevron-right': isCollapsed, 'fa fa-chevron-right rotato': !isCollapsed}"></i>
+          </td>
+
+          <td ng-click="clickTooltip($event);" ng-mouseover="hoverTooltip($event);" ng-mouseleave="deleteAllPop()" class="ttTitre nofocus" contenteditable=false spellcheck=false>{{tooltip.title}}</td>
+
+          <td class="nofocus ttEdit" ng-show="isEditMode">
+            <i class="nofocus fa " style="float : right;" ng-click="toggleEditTooltip($event); isEditable = !isEditable; $event.stopPropagation()" ng-class="{'editable fa-check': isEditable, 'not-editable fa-pencil': !isEditable}"></i>
+          </td>
+
+          <td class="nofocus ttDelete" ng-show="isEditMode">
+            <i class="nofocus fa fa-trash-o" style="float : right; color:red;" ng-click="confirmDelete($event, $index); $event.stopPropagation(); deleteAllPop()"></i>
+          </td>
+
+        </tr>
+        <tr class="desc collapse-row">
+          <td colspan=3>
+            <div uib-collapse="isCollapsed">
+              <div class="collapse-cell well well-lg" contenteditable=false spellcheck=false>
+                {{tooltip.desc}}
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </md-content>
+
+
+</md-sidenav>
+
+<div id="menu-container" ng-class="{expand: showTooltips}">
+  <ul id="menu">
+    <li class="nofocus" ng-click="autoPlay=!autoPlay; play()"><img src="./images/icon_turndemo.png" ng-class="{'player-icon-selected' :autoPlay, 'player-icon': !autoPlay}"></li>
+    <li class="nofocus" ng-click="{clickTranslation : switchMode()}"><img src="./images/icon_turn.png" ng-class="{'player-icon-selected' :clickRotation, 'player-icon': !clickRotation}"></li>
+    <li class="nofocus" ng-click="{clickRotation : switchMode()}"><img src="./images/icon_slide.png" ng-class="{'player-icon-selected' :clickTranslation, 'player-icon':!clickTranslation }"></li>
+    <li class="nofocus" ng-click="isFullscreen=!isFullscreen;toggleFullscreen()"><img src="{{fsSrc}}"></i>
+    </li>
+    <li class="nofocus" ng-click="pinMode=!pinMode; deleteAllPop(); modeCursor()" ng-class="{'ng-hide': !isEditMode}"> <img src="./images/icon_interest.png" ng-class="{'player-icon-selected' :pinMode, 'player-icon':!pinMode }"></li>
+  </ul>
+</div>
+
+<div id="container">
+  <canvas id="orbit-canvas" hm-press="pin($event); deleteAllPop()" hm-tap="autoPlay=false; pin($event); deleteAllPop()" hm-drag="drag($event); deleteAllPop();" hm-dragstart="autoPlay=false; lastDrag=0; dragStart()" hm-dragend="dragEnd();" msd-wheel="onWheel($event); deleteAllPop()"></canvas>
+</div>
+<div ng-transclude></div>

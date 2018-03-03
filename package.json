@@ -1,0 +1,27 @@
+{
+  "name": "orbit-360",
+  "version": "1.0.0",
+  "description": "Photogrammetry app for Univ Lyon 1",
+  "main": "app.js",
+  "repository": "https://github.com/EISAWESOME/orbit-360.git",
+  "author": "Clément S- LAPTOP <c.simonin@lyon.ort.asso.fr>",
+  "license": "CC",
+  "private": true,
+  "dependencies": {
+    "angular": "^1.6.9",
+    "angular-animate": "^1.6.9",
+    "angular-aria": "^1.6.9",
+    "angular-cookies": "^1.6.9",
+    "angular-hammer": "^2.2.0",
+    "angular-material": "^1.1.7",
+    "angular-messages": "^1.6.9",
+    "angular-mocks": "^1.6.9",
+    "angular-prompt": "^1.2.0",
+    "angular-resource": "^1.6.9",
+    "angular-route": "^1.6.9",
+    "angular-sanitize": "^1.6.9",
+    "angular-touch": "^1.6.9",
+    "angular-ui-bootstrap": "^2.5.6",
+    "hammerjs": "^2.0.8"
+  }
+}
