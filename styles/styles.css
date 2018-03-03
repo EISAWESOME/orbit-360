@@ -6,7 +6,6 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-
 }
 
 orbitview {
@@ -311,6 +310,3 @@ div.titrePop{
 .nofocus:focus {
   outline:none;
 }
-
-
-

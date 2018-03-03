@@ -10,9 +10,9 @@ const ob = angular.module('Orbit', [
 ]);
 
 (function() {
-  ob.config(function($mdThemingProvider) {
+  ob.config(['$mdThemingProvider' ,function($mdThemingProvider) {
     $mdThemingProvider.theme('grey').primaryPalette('grey');
-  }).controller('OrbitCtrl', [
+  }]).controller('OrbitCtrl', [
     '$scope',
     '$rootScope',
     'Images',
@@ -334,35 +334,39 @@ const ob = angular.module('Orbit', [
 
       //Gestion du drag
       $scope.drag = function(e) {
-        //Si on est en mode Rotation
-        if ($scope.clickRotation && !$scope.clickTranslation) {
-          let dst = $scope.lastDrag - e.gesture.deltaX,
-            ratio;
 
-          dst *= 1;
-          ratio = dst / 10;
-          ratio = ratio.toFixed(0);
-          if (ratio === '-0') {
-            ratio = -1;
-          } else if (ratio === '0') {
-            ratio = 1;
+        if(!$scope.loading){
+          //Si on est en mode Rotation
+          if ($scope.clickRotation && !$scope.clickTranslation) {
+            let dst = $scope.lastDrag - e.gesture.deltaX,
+              ratio;
+
+            dst *= 1;
+            ratio = dst / 10;
+            ratio = ratio.toFixed(0);
+            if (ratio === '-0') {
+              ratio = -1;
+            } else if (ratio === '0') {
+              ratio = 1;
+            }
+            $scope.lastDrag = e.gesture.deltaX;
+            $scope.setAngle($scope.angle + parseInt(ratio));
           }
-          $scope.lastDrag = e.gesture.deltaX;
-          $scope.setAngle($scope.angle + parseInt(ratio));
+
+          //Si on est en mode translation
+          if ($scope.clickTranslation && !$scope.clickRotation) {
+            const deplacementX = e.gesture.deltaX - $scope.prevDeltaX,
+              deplacementY = e.gesture.deltaY - $scope.prevDeltaY;
+
+            $scope.incrTranslaX(deplacementX);
+            $scope.incrTranslaY(deplacementY);
+
+            $scope.prevDeltaX = e.gesture.deltaX;
+            $scope.prevDeltaY = e.gesture.deltaY;
+            $scope.edited = true;
+          }
         }
 
-        //Si on est en mode translation
-        if ($scope.clickTranslation && !$scope.clickRotation) {
-          const deplacementX = e.gesture.deltaX - $scope.prevDeltaX,
-            deplacementY = e.gesture.deltaY - $scope.prevDeltaY;
-
-          $scope.incrTranslaX(deplacementX);
-          $scope.incrTranslaY(deplacementY);
-
-          $scope.prevDeltaX = e.gesture.deltaX;
-          $scope.prevDeltaY = e.gesture.deltaY;
-          $scope.edited = true;
-        }
       };
 
       $scope.dragEnd = function() {
@@ -391,34 +395,36 @@ const ob = angular.module('Orbit', [
 
       //Gestion des event de touche du clavier
       $scope.keymove = function(e) {
-        //Les controle avec les fleches ne sont active que quant le menu est fermé
-        if ($scope.isNavCollapsed) {
-          //Mode Rotation
-          if ($scope.clickRotation && !$scope.clickTranslation) {
-            if (e.keyCode === 39)
-              $scope.setAngle($scope.angle - 1);
+        if(!$scope.loading){
+          //Les controle avec les fleches ne sont active que quant le menu est fermé
+          if ($scope.isNavCollapsed) {
+            //Mode Rotation
+            if ($scope.clickRotation && !$scope.clickTranslation) {
+              if (e.keyCode === 39)
+                $scope.setAngle($scope.angle - 1);
 
-            if (e.keyCode === 37)
-              $scope.setAngle($scope.angle + 1);
+              if (e.keyCode === 37)
+                $scope.setAngle($scope.angle + 1);
+              }
+            //Mode Translation
+            if ($scope.clickTranslation && !$scope.clickRotation) {
+              $scope.renderer.restore();
+              $scope.renderer.save();
+
+              if (e.keyCode === 37) // Gauche
+                $scope.incrTranslaX(-10);
+
+              if (e.keyCode === 38) // Haut
+                $scope.incrTranslaY(-10);
+
+              if (e.keyCode === 39) // Droite
+                $scope.incrTranslaX(10);
+
+              if (e.keyCode === 40) // Bas
+                $scope.incrTranslaY(10);
+
+              $scope.edited = true;
             }
-          //Mode Translation
-          if ($scope.clickTranslation && !$scope.clickRotation) {
-            $scope.renderer.restore();
-            $scope.renderer.save();
-
-            if (e.keyCode === 37) // Gauche
-              $scope.incrTranslaX(-10);
-
-            if (e.keyCode === 38) // Haut
-              $scope.incrTranslaY(-10);
-
-            if (e.keyCode === 39) // Droite
-              $scope.incrTranslaX(10);
-
-            if (e.keyCode === 40) // Bas
-              $scope.incrTranslaY(10);
-
-            $scope.edited = true;
           }
         }
       };
@@ -730,7 +736,7 @@ const ob = angular.module('Orbit', [
 
         //Remove dans le tooltip
 
-        const a = e.target;
+        let a = e.target;
         const els = [];
         while (a) {
           els.unshift(a);
@@ -844,7 +850,7 @@ const ob = angular.module('Orbit', [
           const popContainer = document.createElement("div"),
             popText = document.createTextNode(popContent);
 
-          const a = document.querySelector('orbitview');
+          let a = document.querySelector('orbitview');
           popContainer.appendChild(popText);
           popContainer.style.marginLeft = pointX + "px";
           popContainer.style.marginTop = pointY + "px";
@@ -856,7 +862,7 @@ const ob = angular.module('Orbit', [
 
       //Supprime tout les elements pop
       $scope.deleteAllPop = function() {
-        const a = document.querySelector('orbitview'),
+        let a = document.querySelector('orbitview'),
           b = document.querySelector('.titrePop'),
           c = document.querySelector('.descPop');
         if (b) {
@@ -870,7 +876,7 @@ const ob = angular.module('Orbit', [
 
       //Supprime les element titrePop
       $scope.deleteTitrePop = function() {
-        const a = document.querySelector('orbitview'),
+        let a = document.querySelector('orbitview'),
           b = document.querySelector('.titrePop');
         if (b) {
           a.removeChild(b);
@@ -889,7 +895,7 @@ const ob = angular.module('Orbit', [
         $scope.canvas.addEventListener('mousemove', function(e) {
           let lvl = $scope.level;
 
-          const aX = (e.pageX - $scope.canvas.clientWidth / 2) - $scope.translaX,
+          let aX = (e.pageX - $scope.canvas.clientWidth / 2) - $scope.translaX,
             aY = (e.pageY - $scope.canvas.clientHeight / 2) - $scope.translaY;
 
           const ratioX = Images.level[0].width / ($scope.actualTileWidth * Images.level[lvl].cols),
@@ -923,7 +929,7 @@ const ob = angular.module('Orbit', [
                 incr++
               }
               if (incr === matchedTt.length) {
-                const a = document.querySelector('orbitview');
+                let a = document.querySelector('orbitview');
                 const b = a.querySelector('.descPop');
                 if (b) {
                   a.removeChild(b);
