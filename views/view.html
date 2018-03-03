@@ -114,12 +114,25 @@
 
 <div id="menu-container" ng-class="{expand: showTooltips}">
   <ul id="menu">
-    <li class="nofocus" ng-click="autoPlay=!autoPlay; play()"><img src="./images/icon_turndemo.png" ng-class="{'player-icon-selected' :autoPlay, 'player-icon': !autoPlay}"></li>
-    <li class="nofocus" ng-click="{clickTranslation : switchMode()}"><img src="./images/icon_turn.png" ng-class="{'player-icon-selected' :clickRotation, 'player-icon': !clickRotation}"></li>
-    <li class="nofocus" ng-click="{clickRotation : switchMode()}"><img src="./images/icon_slide.png" ng-class="{'player-icon-selected' :clickTranslation, 'player-icon':!clickTranslation }"></li>
-    <li class="nofocus" ng-click="isFullscreen=!isFullscreen;toggleFullscreen()"><img src="{{fsSrc}}"></i>
+    <li class="nofocus" ng-click="autoPlay=!autoPlay; play()">
+      <img src="./images/icon_turndemo.png"
+           ng-class="{'player-icon-selected' :autoPlay, 'player-icon': !autoPlay}" alt="Autoplay">
     </li>
-    <li class="nofocus" ng-click="pinMode=!pinMode; deleteAllPop(); modeCursor()" ng-class="{'ng-hide': !isEditMode}"> <img src="./images/icon_interest.png" ng-class="{'player-icon-selected' :pinMode, 'player-icon':!pinMode }"></li>
+    <li class="nofocus" ng-click="{clickTranslation : switchMode()}">
+      <img src="./images/icon_turn.png"
+           ng-class="{'player-icon-selected' :clickRotation, 'player-icon': !clickRotation}" alt="Rotation">
+    </li>
+    <li class="nofocus" ng-click="{clickRotation : switchMode()}">
+      <img src="./images/icon_slide.png"
+           ng-class="{'player-icon-selected' :clickTranslation, 'player-icon':!clickTranslation }" alt="Translation">
+    </li>
+    <li class="nofocus" ng-click="isFullscreen=!isFullscreen;toggleFullscreen()">
+      <img src="{{fsSrc}}" alt="Fullscreen">
+    </i>
+    </li>
+    <li class="nofocus" ng-click="pinMode=!pinMode; deleteAllPop(); modeCursor()" ng-class="{'ng-hide': !isEditMode}">
+      <img src="./images/icon_interest.png" ng-class="{'player-icon-selected' :pinMode, 'player-icon':!pinMode }" alt="Point d'interet">
+    </li>
   </ul>
 </div>
 
