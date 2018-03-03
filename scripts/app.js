@@ -250,29 +250,31 @@ const ob = angular.module('Orbit', [
             $scope.renderer.drawImage(current[i].img, $scope.posX, $scope.posY, $scope.actualTileWidth, $scope.actualTileHeight);
           }
           //Une fois que toute les cases sont dessinées, on dessine les points d'interet
-          const points = $scope.xml.getElementsByTagName('PointInteret');
-          for (let j = 0; j < points.length; j++) {
-            //Si il existe un ou plusieurs point d'interet sur cet angle
-            if (points[j].getAttribute('Angle') == $scope.angle) {
+          if($scope.xml){
+            const points = $scope.xml.getElementsByTagName('PointInteret');
+            for (let j = 0; j < points.length; j++) {
+              //Si il existe un ou plusieurs point d'interet sur cet angle
+              if (points[j].getAttribute('Angle') == $scope.angle) {
 
-              //On recup les coords du point d'interet sur scale 100%
-              const pinCoord = points[j].getElementsByTagName('Coord'),
-                pinX = Number(pinCoord[0].getAttribute('x')),
-                pinY = Number(pinCoord[0].getAttribute('y'));
+                //On recup les coords du point d'interet sur scale 100%
+                const pinCoord = points[j].getElementsByTagName('Coord'),
+                  pinX = Number(pinCoord[0].getAttribute('x')),
+                  pinY = Number(pinCoord[0].getAttribute('y'));
 
-              //On applique le ratio pour avoir ses coord sur la scale courante
-              const drawX = pinX * $scope.zoom,
-                drawY = pinY * $scope.zoom;
+                //On applique le ratio pour avoir ses coord sur la scale courante
+                const drawX = pinX * $scope.zoom,
+                  drawY = pinY * $scope.zoom;
 
-              //Et on defini le centre du dessin comme l'origine
-              const centerX = ($scope.canvas.clientWidth / 2 + drawX),
-                centerY = ($scope.canvas.clientHeight / 2 + drawY);
+                //Et on defini le centre du dessin comme l'origine
+                const centerX = ($scope.canvas.clientWidth / 2 + drawX),
+                  centerY = ($scope.canvas.clientHeight / 2 + drawY);
 
-              //On attend que l'image soit chargé, puis on la dessine
-              $scope.renderer.drawImage($scope.pinIcon, centerX - 16, centerY - 32);
+                //On attend que l'image soit chargé, puis on la dessine
+                $scope.renderer.drawImage($scope.pinIcon, centerX - 16, centerY - 32);
+              }
             }
+            $scope.edited = false;
           }
-          $scope.edited = false;
         }
       };
 
