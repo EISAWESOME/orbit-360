@@ -1,7 +1,10 @@
 # Orbit
 Projet HTML5 de visualisation 360 d'un objet à partir d'un grand nombre de photographies
 prisent à 360°, à différents niveaux de résolutions.
-Host Lyon 1 : http://streams.univ-lyon1.fr/videoStream/streams/lyon1/modules/156756/web/156757/orbit360/app/
+
+Host Lyon 1 : 
+
+http://streams.univ-lyon1.fr/videoStream/streams/lyon1/modules/156756/web/156757/orbit360/app/
 
 # Fonctionnalités
 
