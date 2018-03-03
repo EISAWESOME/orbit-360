@@ -6,6 +6,10 @@ Host Lyon 1 :
 
 http://streams.univ-lyon1.fr/videoStream/streams/lyon1/modules/156756/web/156757/orbit360/app/
 
+Host Firebase :
+
+https://orbit-360.firebaseapp.com/
+
 # Fonctionnalités
 
 -Visualisation 
