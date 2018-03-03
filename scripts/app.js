@@ -156,7 +156,7 @@ const ob = angular.module('Orbit', [
       $scope.prevDeltaY = 0;
 
       $scope.pinIcon = new Image();
-      $scope.pinIcon.src = './images/pinIcon-32x32.png';
+      $scope.pinIcon.src = './resources/icons/pinIcon-32x32.png';
 
       //Theme des dialog et de la navbar
       $scope.theme = 'grey';
@@ -169,7 +169,7 @@ const ob = angular.module('Orbit', [
       $scope.autoPlay = false;
       $scope.isEditMode = false;
       $scope.isFullscreen = false;
-      $scope.fsSrc = "./images/icon_fullscreen.png";
+      $scope.fsSrc = "./resources/icons/icon_fullscreen.png";
       $scope.currentCursor = 'default';
       //
 
@@ -478,7 +478,7 @@ const ob = angular.module('Orbit', [
       $scope.toggleFullscreen = function() {
         const elem = document.querySelector("html");
         if ($scope.isFullscreen) {
-          $scope.fsSrc = "./images/icon_fullscreen_back.png";
+          $scope.fsSrc = "./resources/icons/icon_fullscreen_back.png";
           if (elem.requestFullscreen) {
             elem.requestFullscreen();
           } else if (elem.msRequestFullscreen) {
@@ -489,7 +489,7 @@ const ob = angular.module('Orbit', [
             elem.webkitRequestFullscreen();
           }
         } else {
-          $scope.fsSrc = "./images/icon_fullscreen.png";
+          $scope.fsSrc = "./resources/icons/icon_fullscreen.png";
           if (document.exitFullscreen) {
             document.exitFullscreen();
           } else if (document.webkitExitFullscreen) {

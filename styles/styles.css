@@ -178,24 +178,10 @@ orbitview a:hover {
   border-bottom:1px solid grey;
 }
 
-
-tooltip {
-  display: none;
-}
-
 .player-icon{
   filter: brightness(40%)
 }
 
-
-.player-icon-selected{
-
-}
-
-
-.canvas-icon{
-
-}
 
 .canvas-icon-selected{
 
