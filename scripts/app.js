@@ -896,7 +896,7 @@ const ob = angular.module('Orbit', [
           const cursorX = aX * ratioX,
             cursorY = aY * ratioY;
 
-          const incr = 0;
+          let incr = 0;
           //On boucle dans le tableau des point interet de l'angle actuel
           for (let i = 0; i < matchedTt.length; i++) {
             const pointX = ((matchedTt[i].x / ratioX) + $scope.translaX) + $scope.canvas.clientWidth / 2,
