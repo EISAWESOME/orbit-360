@@ -33,8 +33,7 @@
 <body ng-controller="OrbitCtrl" ng-keyup="keymove($event);">
   <orbitview/>
 
-  <script src="./scripts/controllers/hamster.js"></script>
-  <script src="./scripts/controllers/hammer.js"></script>
+
   <script src="./node_modules/angular/angular.js"></script>
   <script src="./node_modules/angular-animate/angular-animate.js"></script>
   <script src="./node_modules/angular-aria/angular-aria.js"></script>
@@ -43,8 +42,12 @@
   <script src="./node_modules/angular-material/angular-material.js"></script>
   <script src="./node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
 
-  <script src="./scripts/controllers/angular.hammer.js"></script>
-  <script src="./scripts/controllers/angular.mousewheel.js"></script>
+  <script src="./lib/angular.hammer.js"></script>
+  <script src="./lib/hammer.js"></script>
+
+  <script src="./lib/angular.mousewheel.js"></script>
+  <script src="./lib/hamster.js"></script>
+
   <!-- build:js js/app.js -->
   <script src="./scripts/app.js"></script>
   <script src="./scripts/services.js"></script>
