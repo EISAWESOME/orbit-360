@@ -1,4 +1,3 @@
-/*global ob, window */
 'use strict';
 (function () {
   ob.directive('orbitview', ['Images', function (Images) {
@@ -71,7 +70,7 @@
             }
           }
           Images.nbAngle = Images.level[0].resources.length;
-          //console.log(Images.url());
+
           $scope.init();
         });
       }

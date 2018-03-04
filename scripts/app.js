@@ -10,18 +10,19 @@ const ob = angular.module("Orbit", [
 ]);
 
 /**
- * TODO : 
+ * TODO :
  * -Service de dessin
- * -Service de point d'interet / sauvegarde XML - localstorage
+ * -Service de stockage des point d'interets
  * -Faire des modules (Rollup?)
- * 
+ *
+ * -Async load css
  * -Sass
  */
-(function () {
+(function() {
   ob
     .config([
       "$mdThemingProvider",
-      function ($mdThemingProvider) {
+      function($mdThemingProvider) {
         $mdThemingProvider.theme("grey").primaryPalette("grey");
       }
     ])
@@ -32,51 +33,21 @@ const ob = angular.module("Orbit", [
       "storageService",
       "$mdDialog",
       "$mdSidenav",
-      function ($scope, $rootScope, Images, storageService, $mdDialog, $mdSidenav) {
-
-        $rootScope.$on("onLoading", function (event, percent) {
+      function(
+        $scope,
+        $rootScope,
+        Images,
+        storageService,
+        $mdDialog,
+        $mdSidenav
+      ) {
+        $rootScope.$on("onLoading", function(event, percent) {
           $scope.loading = percent;
         });
-        $rootScope.$on("onComplete", function () {
+        $rootScope.$on("onComplete", function() {
           const time = new Date();
           $scope.loading = false;
         });
-
-        //Fonction executée a l'initialisation du scope
-        $scope.init = function () {
-          $scope.canvas = document.querySelector("#orbit-canvas");
-          $scope.renderer = $scope.canvas.getContext("2d");
-
-          $scope.level = Images.level.length - 1;
-          Images.loadLevel($scope.level);
-
-          window.onresize = $scope.resize;
-          $scope.resize();
-          $scope.visible = true;
-
-          //Boucle de dessin, verifie si il faut dessiné toute les 40ms
-          setInterval(function () {
-            $scope.loadingReso = $scope.waitingload;
-
-            $scope.draw();
-          }, 40);
-
-          Images.loadLevel($scope.level);
-
-          // Transferer vers le storageService ?
-          // Et retourner le titre et la description ?
-          Images.loadxml().then(function (dataXML) {
-
-            const ret = storageService.loadXml($scope.id, $scope.tooltips, $scope.angle, $scope.lookupAngle, dataXML);
-
-            $scope.id = ret.id;
-            $scope.titre = ret.titre;
-            $scope.description = ret.description;
-            $scope.details = ret.details;
-          });
-
-          $scope.modeCursor();
-        };
 
         /**************Declaration et initialisation des variable du scope**************/
         //Initalisation de l'id des tooltip
@@ -139,10 +110,51 @@ const ob = angular.module("Orbit", [
         $scope.isCollapsed = true;
         $scope.isTitreCollapsed = true;
 
+        //Fonction executée a l'initialisation du scope
+        $scope.init = function() {
+          $scope.canvas = document.querySelector("#orbit-canvas");
+          $scope.renderer = $scope.canvas.getContext("2d");
+
+          $scope.level = Images.level.length - 1;
+          Images.loadLevel($scope.level);
+
+          window.onresize = $scope.resize;
+          $scope.resize();
+          $scope.visible = true;
+
+          //Boucle de dessin, verifie si il faut dessiné toute les 40ms
+          setInterval(function() {
+            $scope.loadingReso = $scope.waitingload;
+
+            $scope.draw();
+          }, 40);
+
+          Images.loadLevel($scope.level);
+
+          // Transferer vers le storageService ?
+          // Et retourner le titre et la description ?
+          Images.loadxml().then(function(dataXML) {
+            const ret = storageService.loadXml(
+              $scope.id,
+              $scope.tooltips,
+              $scope.angle,
+              $scope.lookupAngle,
+              dataXML
+            );
+
+            $scope.id = ret.id;
+            $scope.titre = ret.titre;
+            $scope.description = ret.description;
+            $scope.details = ret.details;
+          });
+
+          $scope.modeCursor();
+        };
+
         /****************************************************************************/
 
         /****************************Dessin de l'objet**************************/
-        $scope.draw = function () {
+        $scope.draw = function() {
           if (
             ($scope.waitingload &&
               Images.resourcesLoaded($scope.level, $scope.angle)) ||
@@ -177,9 +189,9 @@ const ob = angular.module("Orbit", [
               posOriX = $scope.getX(),
               posOriY = $scope.getY(),
               lapX =
-              Math.floor(Images.level[0].width / ILvl.cols) * $scope.zoom,
+                Math.floor(Images.level[0].width / ILvl.cols) * $scope.zoom,
               lapY =
-              Math.floor(Images.level[0].height / ILvl.rows) * $scope.zoom;
+                Math.floor(Images.level[0].height / ILvl.rows) * $scope.zoom;
 
             //Pour chaque images du niveau
             for (let i = 0; i < current.length; i++) {
@@ -235,19 +247,20 @@ const ob = angular.module("Orbit", [
           }
         };
 
-        $scope.getX = function () {
+        $scope.getX = function() {
           return +(
             $scope.canvas.width / 2 -
             Images.level[0].width / 2 * $scope.zoom
           ).toFixed(0);
         };
-        $scope.getY = function () {
+        $scope.getY = function() {
           return -(
             (Images.level[0].height * $scope.zoom - $scope.canvas.height) /
             2
           ).toFixed(0);
         };
-        $scope.resize = function () {
+        
+        $scope.resize = function() {
           $scope.resetTransla();
           $scope.renderer.restore();
           $scope.canvas.width = $scope.canvas.offsetWidth;
@@ -274,11 +287,12 @@ const ob = angular.module("Orbit", [
           }
           $scope.edited = true;
         };
+
         /*************************************************************************/
 
         /*******************Fonctions de deplacement*******************************/
         //Fonction de changement grab/grabbing
-        $scope.toggleGrab = function () {
+        $scope.toggleGrab = function() {
           if (!$scope.pinMode) {
             if (
               $scope.canvas.style.cursor == "-webkit-grab" ||
@@ -296,14 +310,14 @@ const ob = angular.module("Orbit", [
           }
         };
 
-        $scope.dragStart = function () {
+        $scope.dragStart = function() {
           if ($scope.clickRotation && !$scope.clickTranslation) {
             $scope.toggleGrab();
           }
         };
 
         //Gestion du drag
-        $scope.drag = function (e) {
+        $scope.drag = function(e) {
           if (!$scope.loading) {
             //Si on est en mode Rotation
             if ($scope.clickRotation && !$scope.clickTranslation) {
@@ -337,7 +351,7 @@ const ob = angular.module("Orbit", [
           }
         };
 
-        $scope.dragEnd = function () {
+        $scope.dragEnd = function() {
           if ($scope.clickRotation && !$scope.clickTranslation) {
             $scope.toggleGrab();
           }
@@ -346,7 +360,7 @@ const ob = angular.module("Orbit", [
         };
 
         //Fonction qui permet la rotation jusqu'a un angle donné
-        $scope.goTo = function (angle) {
+        $scope.goTo = function(angle) {
           if ($scope.angle != angle) {
             if (
               Images.nbAngle - angle + $scope.origAngle <
@@ -364,7 +378,7 @@ const ob = angular.module("Orbit", [
         //A la fin du drag, on reset les valeurs
 
         //Gestion des event de touche du clavier
-        $scope.keymove = function (e) {
+        $scope.keymove = function(e) {
           if (!$scope.loading) {
             //Les controle avec les fleches ne sont active que quant le menu est fermé
             if ($scope.isNavCollapsed) {
@@ -402,14 +416,14 @@ const ob = angular.module("Orbit", [
         };
 
         //Fonctions d'incrémentation de la translation du canvas
-        $scope.incrTranslaX = function (translaX) {
+        $scope.incrTranslaX = function(translaX) {
           $scope.translaX += translaX;
         };
-        $scope.incrTranslaY = function (translaY) {
+        $scope.incrTranslaY = function(translaY) {
           $scope.translaY += translaY;
         };
 
-        $scope.setAngle = function (angle) {
+        $scope.setAngle = function(angle) {
           if (angle >= Images.nbAngle) $scope.angle = angle - Images.nbAngle;
           else if (angle < 0) $scope.angle = angle + Images.nbAngle;
           else $scope.angle = angle;
@@ -421,13 +435,13 @@ const ob = angular.module("Orbit", [
         };
 
         //Fonction de definition de la translation du canvas
-        $scope.setTranslaXY = function (translaX, translaY) {
+        $scope.setTranslaXY = function(translaX, translaY) {
           $scope.translaX = translaX;
           $scope.translaY = translaY;
           $scope.edited = true;
         };
 
-        $scope.resetTransla = function () {
+        $scope.resetTransla = function() {
           $scope.translaY = 0;
           $scope.translaX = 0;
           $scope.edited = true;
@@ -436,7 +450,7 @@ const ob = angular.module("Orbit", [
 
         /***************************Controles de l'application********************/
         //Permet la rotation automatique du modele
-        $scope.play = function () {
+        $scope.play = function() {
           if ($scope.autoPlay) {
             $scope.setAngle($scope.angle + 1);
             window.setTimeout($scope.play, 40);
@@ -444,7 +458,7 @@ const ob = angular.module("Orbit", [
         };
 
         //Plein écran
-        $scope.toggleFullscreen = function () {
+        $scope.toggleFullscreen = function() {
           const elem = document.querySelector("html");
           if ($scope.isFullscreen) {
             $scope.fsSrc = "./resources/icons/icon_fullscreen_back.png";
@@ -471,7 +485,7 @@ const ob = angular.module("Orbit", [
           }
         };
 
-        $scope.onWheel = function (e) {
+        $scope.onWheel = function(e) {
           $scope.renderer.restore();
           const zoom = $scope.zoom;
           if (e.deltaY > 0) {
@@ -482,7 +496,7 @@ const ob = angular.module("Orbit", [
           if (zoom != $scope.zoom) $scope.edited = true;
         };
 
-        $scope.zoomOut = function () {
+        $scope.zoomOut = function() {
           $scope.zoom -= 0.1;
           if ($scope.zoom < $scope.minZoom) {
             $scope.zoom = $scope.minZoom;
@@ -495,7 +509,7 @@ const ob = angular.module("Orbit", [
           $scope.edited = true;
         };
 
-        $scope.zoomIn = function () {
+        $scope.zoomIn = function() {
           $scope.zoom += 0.1;
           if ($scope.zoom >= $scope.maxZoom) {
             $scope.zoom = $scope.maxZoom;
@@ -509,7 +523,7 @@ const ob = angular.module("Orbit", [
         };
 
         //Toggle du mode edition
-        $scope.editMode = function () {
+        $scope.editMode = function() {
           $scope.isEditMode = !$scope.isEditMode;
           //Desactive le pinmode en meme temps que la modification
           if ($scope.isEditMode === false) {
@@ -518,7 +532,7 @@ const ob = angular.module("Orbit", [
         };
 
         //Passe de rotation à translation
-        $scope.modeCursor = function () {
+        $scope.modeCursor = function() {
           if ($scope.pinMode) {
             $scope.canvas.style.cursor = "crosshair";
             $scope.currentCursor = "crosshair";
@@ -535,42 +549,42 @@ const ob = angular.module("Orbit", [
             $scope.currentCursor = "move";
           }
         };
-        $scope.switchMode = function () {
+        $scope.switchMode = function() {
           $scope.clickRotation = !$scope.clickRotation;
           $scope.clickTranslation = !$scope.clickTranslation;
 
           $scope.modeCursor();
         };
 
-        $scope.exportXML = function(){
+        $scope.exportXML = function() {
           storageService.exportXML();
-        }
+        };
 
         /*************************************************************************/
 
         /********************Fonctions de gestion du pin ***************************/
         //Création d'un point d'interet au clic
-        $scope.pin = function (e) {
+        $scope.pin = function(e) {
           if ($scope.pinMode) {
             if (!$scope.isNavCollapsed) $scope.toggleLeft();
             let lvl = $scope.level;
             // Place l'origine de X et de Y au centre de l'image, prennant en compte la translation du canvas
             const cursorX =
-              e.gesture.center.pageX -
-              $scope.canvas.clientWidth / 2 -
-              $scope.translaX,
+                e.gesture.center.pageX -
+                $scope.canvas.clientWidth / 2 -
+                $scope.translaX,
               cursorY =
-              e.gesture.center.pageY -
-              $scope.canvas.clientHeight / 2 -
-              $scope.translaY;
+                e.gesture.center.pageY -
+                $scope.canvas.clientHeight / 2 -
+                $scope.translaY;
 
             //On etablie le ratio de proportion entre l'image scale 100% et l'image affiché à l'écran
             const ratioX =
-              Images.level[0].width /
-              ($scope.actualTileWidth * Images.level[lvl].cols),
+                Images.level[0].width /
+                ($scope.actualTileWidth * Images.level[lvl].cols),
               ratioY =
-              Images.level[0].height /
-              ($scope.actualTileHeight * Images.level[lvl].rows);
+                Images.level[0].height /
+                ($scope.actualTileHeight * Images.level[lvl].rows);
 
             //Les coordonnées du point à l'echelle 1:1 de l'image d'origine scale 100%
             $scope.tooltipTrueCoord = {
@@ -579,21 +593,23 @@ const ob = angular.module("Orbit", [
             };
 
             //On vérifie que la curseur soit dans la zone de dessin pour crée le point d'interet
-            if (!(
+            if (
+              !(
                 cursorX > $scope.actualTileWidth * Images.level[lvl].cols / 2 ||
                 cursorX <
-                -$scope.actualTileWidth * Images.level[lvl].cols / 2 ||
+                  -$scope.actualTileWidth * Images.level[lvl].cols / 2 ||
                 cursorY >
-                $scope.actualTileHeight * Images.level[lvl].rows / 2 ||
+                  $scope.actualTileHeight * Images.level[lvl].rows / 2 ||
                 cursorY < -$scope.actualTileHeight * Images.level[lvl].rows / 2
-              )) {
+              )
+            ) {
               $scope.promptPoint();
             }
           }
         };
 
         //Creation de l'objet correspondant au point
-        $scope.createTooltip = function () {
+        $scope.createTooltip = function() {
           const id = $scope.id;
           $scope.id++;
 
@@ -632,7 +648,7 @@ const ob = angular.module("Orbit", [
         };
 
         //Fonction de suppression d'un point d'interet
-        $scope.deletePoint = function (e) {
+        $scope.deletePoint = function(e) {
           const lookup = {};
           for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
             lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
@@ -664,7 +680,7 @@ const ob = angular.module("Orbit", [
           $scope.edited = true;
         };
 
-        $scope.toggleEditTooltip = function (e) {
+        $scope.toggleEditTooltip = function(e) {
           const lookup = {};
           for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
             lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
@@ -677,20 +693,32 @@ const ob = angular.module("Orbit", [
 
           //Rend le titre du tooltip editable ou pas
           const ligneTitre =
-            e.target.parentNode.parentNode.parentNode.childNodes[1],
+              e.target.parentNode.parentNode.parentNode.childNodes[1],
             tdTitre = ligneTitre.childNodes[3],
             ligneDesc = e.target.parentNode.parentNode.parentNode.childNodes[3],
             divDesc = ligneDesc.childNodes[1].childNodes[1].childNodes[1];
 
           if (tdTitre.contentEditable == "true") {
             tdTitre.setAttribute("contenteditable", "false");
-            storageService.updatePin(ttId, "titre", "", tdTitre.textContent, $scope.tooltip);
+            storageService.updatePin(
+              ttId,
+              "titre",
+              "",
+              tdTitre.textContent,
+              $scope.tooltip
+            );
           } else tdTitre.setAttribute("contenteditable", "true");
 
           //Rend la description du tooltip editable ou pas
           if (divDesc.contentEditable == "true") {
             divDesc.setAttribute("contenteditable", "false");
-            storageService.updatePin(ttId, "desc", divDesc.textContent, "", $scope.tooltip);
+            storageService.updatePin(
+              ttId,
+              "desc",
+              divDesc.textContent,
+              "",
+              $scope.tooltip
+            );
           } else divDesc.setAttribute("contenteditable", "true");
         };
 
@@ -698,7 +726,7 @@ const ob = angular.module("Orbit", [
 
         /************************ Fonctions d'affichage des pop *******************/
         //Cree un element pop (desc ou titre)
-        $scope.pointPop = function (mode, popContent, pointX, pointY) {
+        $scope.pointPop = function(mode, popContent, pointX, pointY) {
           if (!$scope.isPopDrawn) {
             const popContainer = document.createElement("div"),
               popText = document.createTextNode(popContent);
@@ -714,7 +742,7 @@ const ob = angular.module("Orbit", [
         };
 
         //Supprime tout les elements pop
-        $scope.deleteAllPop = function () {
+        $scope.deleteAllPop = function() {
           let a = document.querySelector("orbitview"),
             b = document.querySelector(".titrePop"),
             c = document.querySelector(".descPop");
@@ -728,7 +756,7 @@ const ob = angular.module("Orbit", [
         };
 
         //Supprime les element titrePop
-        $scope.deleteTitrePop = function () {
+        $scope.deleteTitrePop = function() {
           let a = document.querySelector("orbitview"),
             b = document.querySelector(".titrePop");
           if (b) {
@@ -745,18 +773,18 @@ const ob = angular.module("Orbit", [
             return element.image == $scope.angle;
           }
 
-          $scope.canvas.addEventListener("mousemove", function (e) {
+          $scope.canvas.addEventListener("mousemove", function(e) {
             let lvl = $scope.level;
 
             let aX = e.pageX - $scope.canvas.clientWidth / 2 - $scope.translaX,
               aY = e.pageY - $scope.canvas.clientHeight / 2 - $scope.translaY;
 
             const ratioX =
-              Images.level[0].width /
-              ($scope.actualTileWidth * Images.level[lvl].cols),
+                Images.level[0].width /
+                ($scope.actualTileWidth * Images.level[lvl].cols),
               ratioY =
-              Images.level[0].height /
-              ($scope.actualTileHeight * Images.level[lvl].rows);
+                Images.level[0].height /
+                ($scope.actualTileHeight * Images.level[lvl].rows);
 
             const cursorX = aX * ratioX,
               cursorY = aY * ratioY;
@@ -765,13 +793,13 @@ const ob = angular.module("Orbit", [
             //On boucle dans le tableau des point interet de l'angle actuel
             for (let i = 0; i < matchedTt.length; i++) {
               const pointX =
-                matchedTt[i].x / ratioX +
-                $scope.translaX +
-                $scope.canvas.clientWidth / 2,
+                  matchedTt[i].x / ratioX +
+                  $scope.translaX +
+                  $scope.canvas.clientWidth / 2,
                 pointY =
-                matchedTt[i].y / ratioY +
-                $scope.translaY +
-                $scope.canvas.clientHeight / 2;
+                  matchedTt[i].y / ratioY +
+                  $scope.translaY +
+                  $scope.canvas.clientHeight / 2;
 
               //Les offsets entrée sont arbitraires et correspondent a la tolerence de declenchement de l'affichage du tooltip
               //On divise par le zoom pour que la tolérence diminue plus le zoom est elevé, et inversement
@@ -812,7 +840,7 @@ const ob = angular.module("Orbit", [
         }
 
         //Effectue un goto jusqu'au point clické, crée et affiche un pop de son titre
-        $scope.clickTooltip = function (e) {
+        $scope.clickTooltip = function(e) {
           $scope.deleteAllPop();
           //On crée un lookup qui associe l'id d'un tooltip a son objet
           const lookup = {};
@@ -826,20 +854,20 @@ const ob = angular.module("Orbit", [
           $scope.autoPlay = false;
 
           const ratioX =
-            Images.level[0].width /
-            ($scope.actualTileWidth * Images.level[$scope.level].cols),
+              Images.level[0].width /
+              ($scope.actualTileWidth * Images.level[$scope.level].cols),
             ratioY =
-            Images.level[0].height /
-            ($scope.actualTileHeight * Images.level[$scope.level].rows);
+              Images.level[0].height /
+              ($scope.actualTileHeight * Images.level[$scope.level].rows);
 
           const pointX =
-            $scope.tooltip.x / ratioX +
-            $scope.translaX +
-            $scope.canvas.clientWidth / 2,
+              $scope.tooltip.x / ratioX +
+              $scope.translaX +
+              $scope.canvas.clientWidth / 2,
             pointY =
-            $scope.tooltip.y / ratioY +
-            $scope.translaY +
-            $scope.canvas.clientHeight / 2;
+              $scope.tooltip.y / ratioY +
+              $scope.translaY +
+              $scope.canvas.clientHeight / 2;
 
           $scope.pointPop("titre", $scope.tooltip.title, pointX, pointY);
           $scope.origAngle = $scope.angle;
@@ -848,7 +876,7 @@ const ob = angular.module("Orbit", [
 
         //Affiche la description du point au survol de ce dernier dans le menu
         //Seulement si on est deja sur son angle
-        $scope.hoverTooltip = function (e) {
+        $scope.hoverTooltip = function(e) {
           const lookup = {};
           for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
             lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
@@ -863,20 +891,20 @@ const ob = angular.module("Orbit", [
             $scope.deleteAllPop();
 
             const ratioX =
-              Images.level[0].width /
-              ($scope.actualTileWidth * Images.level[$scope.level].cols),
+                Images.level[0].width /
+                ($scope.actualTileWidth * Images.level[$scope.level].cols),
               ratioY =
-              Images.level[0].height /
-              ($scope.actualTileHeight * Images.level[$scope.level].rows);
+                Images.level[0].height /
+                ($scope.actualTileHeight * Images.level[$scope.level].rows);
 
             const pointX =
-              $scope.tooltip.x / ratioX +
-              $scope.translaX +
-              $scope.canvas.clientWidth / 2,
+                $scope.tooltip.x / ratioX +
+                $scope.translaX +
+                $scope.canvas.clientWidth / 2,
               pointY =
-              $scope.tooltip.y / ratioY +
-              $scope.translaY +
-              $scope.canvas.clientHeight / 2;
+                $scope.tooltip.y / ratioY +
+                $scope.translaY +
+                $scope.canvas.clientHeight / 2;
 
             $scope.pointPop("titre", $scope.tooltip.title, pointX, pointY);
             if (document.querySelector(".titrePop"))
@@ -890,7 +918,7 @@ const ob = angular.module("Orbit", [
         $scope.toggleRight = buildToggler("right");
 
         function buildToggler(componentId) {
-          return function () {
+          return function() {
             $mdSidenav(componentId).toggle();
             $scope.isNavCollapsed = !$scope.isNavCollapsed;
           };
@@ -899,7 +927,7 @@ const ob = angular.module("Orbit", [
 
         /********************************Dialogs**********************************/
         //Dialog de confirmation de la suppression
-        $scope.confirmDelete = function (ev, id) {
+        $scope.confirmDelete = function(ev, id) {
           // Appending dialog to document.body to cover sidenav in docs app
           const confirm = $mdDialog
             .confirm()
@@ -911,13 +939,13 @@ const ob = angular.module("Orbit", [
             .ok("Supprimer")
             .cancel("Annuler");
 
-          $mdDialog.show(confirm).then(function () {
+          $mdDialog.show(confirm).then(function() {
             $scope.deletePoint(ev, id);
           });
         };
 
         //Dialog de saisie du Titre et Desc d'un point
-        $scope.promptPoint = function (ev) {
+        $scope.promptPoint = function(ev) {
           $mdDialog
             .show({
               templateUrl: "views/tooltipPrompt.tpl.html",
@@ -927,17 +955,17 @@ const ob = angular.module("Orbit", [
               clickOutsideToClose: true,
               escapeToClose: true
             })
-            .then(function (answer) {
+            .then(function(answer) {
               $scope.tooltipTitre = answer.Titre;
               $scope.tooltipDesc = answer.Desc;
               $scope.createTooltip();
             });
         };
-        
-        $scope.envoyer = function (answer) {
+
+        $scope.envoyer = function(answer) {
           $mdDialog.hide(answer);
         };
-        $scope.closeDialog = function () {
+        $scope.closeDialog = function() {
           $mdDialog.cancel();
         };
         /***************************************************************************/
