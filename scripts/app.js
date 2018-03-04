@@ -130,7 +130,7 @@ const ob = angular.module("Orbit", [
             $scope.loadingReso = $scope.waitingload;
 
             $scope.draw();
-          }, 40);
+          }, 100);
 
           Images.loadLevel($scope.level);
 
