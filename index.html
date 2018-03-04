@@ -21,7 +21,7 @@
 
   <title>Orbit</title>
 
-  
+
   <link href="./styles/styles.min.css" rel="stylesheet">
   <script src="./node_modules/fg-loadcss/dist/cssrelpreload.min.js"></script>
 
@@ -75,6 +75,19 @@
       messagingSenderId: "149622186910"
     };
     firebase.initializeApp(config);
+  </script>
+
+  <!-- Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then(function () {
+          console.log("Service Worker Registered");
+        });
+    } else {
+      console.log("This browser does NOT support service worker");
+    }
   </script>
 </body>
 
