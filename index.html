@@ -37,6 +37,9 @@
 
 <body ng-controller="OrbitCtrl" ng-keyup="keymove($event);">
 
+  <h1 style="position: absolute; color: rgba(255, 255, 255, 0.603); z-index: 2; width: 100vw; height: 200px; top: 50%; left: 50%; text-align: center; margin-top: -100px; margin-left: -50vw;" 
+  id="loadingMessage">Bienvenue à Orbit 360 ...</h1>
+
   <orbitview/>
 
   <script src="./node_modules/angular/angular.min.js"></script>

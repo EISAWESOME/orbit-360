@@ -115,6 +115,8 @@ const ob = angular.module("Orbit", [
 
         //Fonction executée a l'initialisation du scope
         $scope.init = function() {
+          document.querySelector('#loadingMessage').style.display ='none';
+
           $scope.canvas = document.querySelector("#orbit-canvas");
           $scope.renderer = $scope.canvas.getContext("2d");
 
@@ -130,7 +132,8 @@ const ob = angular.module("Orbit", [
             $scope.loadingReso = $scope.waitingload;
 
             $scope.draw();
-          }, 100);
+            //15ms for 60fps booiiii
+          }, 15);
 
           Images.loadLevel($scope.level);
 
