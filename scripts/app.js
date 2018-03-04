@@ -17,7 +17,6 @@ const ob = angular.module("Orbit", [
  * 
  * -Sass
  */
-
 (function () {
   ob
     .config([
@@ -64,116 +63,18 @@ const ob = angular.module("Orbit", [
 
           Images.loadLevel($scope.level);
 
+          // Transferer vers le storageService ?
+          // Et retourner le titre et la description ?
           Images.loadxml().then(function (dataXML) {
-            if (window.DOMParser) {
-              // Standard
-              const tmp = new DOMParser();
-              $scope.xml = tmp.parseFromString(dataXML.data, "text/xml");
-            } else {
-              // IE
-              $scope.xml = new ActiveXObject("Microsoft.XMLDOM");
-              xml.async = "false";
-              xml.loadXML(dataXML);
-            }
-            if ($scope.xml) {
-              //Si il existe les proprietes dans content.xml, on les prends
-              if ($scope.xml.getElementsByTagName("property").length > 0) {
-                const colProperties = $scope.xml.getElementsByTagName(
-                  "property"
-                );
 
-                for (let i = 0; i < colProperties.length; i++) {
-                  if (colProperties[i].getAttribute("name") === "titre") {
-                    $scope.titre = colProperties[i].textContent;
-                  }
-                  if (colProperties[i].getAttribute("name") === "description") {
-                    $scope.description = colProperties[i].textContent;
-                  }
-                }
-              } else {
-                //Si elles n'existe pas, on essaye de les prendre dans content2.xml
-                Images.loadDetails().then(function (dataXML) {
-                  if (window.DOMParser) {
-                    // Standard
-                    const tmp = new DOMParser();
-                    $scope.details = tmp.parseFromString(
-                      dataXML.data,
-                      "text/xml"
-                    );
-                  } else {
-                    // IE
-                    $scope.details = new ActiveXObject("Microsoft.XMLDOM");
-                    details.async = "false";
-                    details.loadXML(dataXML);
-                  }
-                  const colProperties = $scope.details.getElementsByTagName(
-                    "property"
-                  );
-                  for (let i = 0; i < colProperties.length; i++) {
-                    if (
-                      colProperties[i].getAttribute("name") === "titre" &&
-                      !$scope.titre
-                    ) {
-                      $scope.titre = colProperties[i].textContent;
-                    }
+            const ret = storageService.loadXml($scope.id, $scope.tooltips, $scope.angle, $scope.lookupAngle, dataXML);
 
-                    if (
-                      colProperties[i].getAttribute("name") === "description" &&
-                      !$scope.description
-                    ) {
-                      $scope.description = colProperties[i].textContent;
-                    }
-                  }
-                });
-              }
-              storageService.setXml($scope.xml);
-            };
-
-            const colPoints = $scope.xml.getElementsByTagName("PointInteret");
-
-            for (let i = 0; i < colPoints.length; i++) {
-              const titre = colPoints[i].getElementsByTagName("Titre"),
-                desc = colPoints[i].getElementsByTagName("Description"),
-                angle = colPoints[i].attributes[0].value,
-                id = colPoints[i].attributes[1].value,
-                coord = {
-                  x: colPoints[i]
-                    .getElementsByTagName("Coord")[0]
-                    .getAttribute("x"),
-                  y: colPoints[i]
-                    .getElementsByTagName("Coord")[0]
-                    .getAttribute("y")
-                };
-
-              const tooltip = {
-                title: titre[0].textContent,
-                desc: desc[0].textContent,
-                image: angle,
-                x: coord.x,
-                y: coord.y,
-                id: id
-              };
-
-              $scope.id++;
-              for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-                $scope.lookupAngle[$scope.tooltips[i].image] =
-                  $scope.tooltips[i];
-              }
-              $scope.tooltips.push(tooltip);
-            }
-            if ($scope.lookupAngle[$scope.angle]) {
-              displayDesc();
-            }
-            document
-              .querySelector("#descImage")
-              .addEventListener("paste", function (e) {
-                setTimeout(function () {
-                  const body = document.querySelector("#descImage");
-                  const regex = /(&nbsp;|<([^>]+)>)/gi;
-                  body.innerHTML = body.innerHTML.replace(regex, "");
-                }, 0);
-              });
+            $scope.id = ret.id;
+            $scope.titre = ret.titre;
+            $scope.description = ret.description;
+            $scope.details = ret.details;
           });
+
           $scope.modeCursor();
         };
 
@@ -792,48 +693,6 @@ const ob = angular.module("Orbit", [
             storageService.updatePin(ttId, "desc", divDesc.textContent, "", $scope.tooltip);
           } else divDesc.setAttribute("contenteditable", "true");
         };
-
-        /*
-        function getPIByID(colPI, id) {
-          for (let i = 0; i < colPI.length; i++) {
-            if (colPI[i].getAttribute("ID") == id) {
-              return i;
-            }
-          }
-        }
-
-        function updateTooltip(id, champ, valeurDesc, valeurTitre) {
-          const colPI = $scope.xml.getElementsByTagName("PointInteret"),
-            id2 = getPIByID(colPI, id),
-            currentTooltip = colPI[id2],
-            titreNode = currentTooltip.getElementsByTagName("Titre"),
-            descNode = currentTooltip.getElementsByTagName("Description");
-
-          if (champ == "desc") {
-            $scope.tooltip.desc = valeurDesc;
-            // ICI comme le texte dans le html est generer a partir de l'objet tooltip, en changeant l'objet, on change aussi le texte dans le html
-            //On change donc le texte deux fois, d'ou le reset du curseur
-            currentTooltip.removeChild(descNode[0]);
-            const newDesc = $scope.xml.createElement("Description"),
-              cdataDesc = $scope.xml.createCDATASection(valeurDesc);
-
-            newDesc.appendChild(cdataDesc);
-            $scope.xml
-              .getElementsByTagName("PointInteret")[id2].appendChild(newDesc);
-          }
-
-          if (champ == "titre") {
-            $scope.tooltip.title = valeurTitre;
-            currentTooltip.removeChild(titreNode[0]);
-            const newTitre = $scope.xml.createElement("Titre"),
-              cdataTitre = $scope.xml.createCDATASection(valeurTitre);
-
-            newTitre.appendChild(cdataTitre);
-            $scope.xml
-              .getElementsByTagName("PointInteret")[id2].appendChild(newTitre);
-          }
-        }
-        */
 
         /***************************************************************************/
 
