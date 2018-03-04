@@ -5,15 +5,17 @@
       restrict: 'E',
       transclude: true,
       templateUrl: 'views/view.html',
-      controller: function ($scope) {
-        this.addTooltip = function (tooltip) {
-          $scope.tooltips.push(tooltip);
-        };
+      controller: ("OrbitViewController", ['$scope',
+        function ($scope) {
+          this.addTooltip = function (tooltip) {
+            $scope.tooltips.push(tooltip);
+          };
 
-        this.addDescription = function (description) {
-          $scope.description = description;
-        };
-      },
+          this.addDescription = function (description) {
+            $scope.description = description;
+          };
+        }
+      ]),
       link: function ($scope, $elem, $attr) {
         //console.log('link');
         //console.log(Images);

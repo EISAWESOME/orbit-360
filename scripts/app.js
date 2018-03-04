@@ -12,10 +12,13 @@ const ob = angular.module("Orbit", [
 /**
  * TODO :
  * -Service de dessin
- * -Service de stockage des point d'interets
+ * -Service de stockage des point d'interets **DONE**
+ *  -> Stocké les points d'interet dans le localstorage
+ * -Navbar controller ??
+ * -buttons controller ??
  * -Faire des modules (Rollup?)
  *
- * -Async load css
+ * -Async load css **DONE**
  * -Sass
  */
 (function() {
