@@ -23,27 +23,22 @@
   <link href="./styles/styles.min.css" rel="stylesheet">
   <script src="./node_modules/fg-loadcss/dist/cssrelpreload.min.js"></script>
 
-  
   <link rel="preload" href="./node_modules/angular-material/angular-material.min.css" as="style" onload="this.rel='stylesheet'">
   <link rel="preload" href="./styles/font-awesome.min.css" as="style" onload="this.rel='stylesheet'">
-  <link rel="preload" href="//fonts.googleapis.com/css?family=Roboto" as="style" onload="this.rel='stylesheet'">
-  <link rel="preload" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" as="style" onload="this.rel='stylesheet'">
-  
+  <link rel="preload" href="https://fonts.googleapis.com/css?family=Roboto" as="style" onload="this.rel='stylesheet'">
+  <link rel="preload" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" as="style" onload="this.rel='stylesheet'">
 
-  <noscript>  
+  <noscript>
     <link href="./node_modules/angular-material/angular-material.min.css" rel="stylesheet">
     <link href="./styles/font-awesome.min.css" rel="stylesheet">
-    <link href="//fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
   </noscript>
-
-
 </head>
 
 <body ng-controller="OrbitCtrl" ng-keyup="keymove($event);">
-  <noscript>Enable JavaScript to view this app</noscript>
-  <orbitview/>
 
+  <orbitview/>
 
   <script src="./node_modules/angular/angular.min.js"></script>
   <script src="./node_modules/angular-animate/angular-animate.min.js"></script>
@@ -68,7 +63,6 @@
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
   <script>
-    
     // Initialize Firebase
     var config = {
       apiKey: "AIzaSyBhlbOXGshkPYytc6TB-KaE2yF--dx2tW0",
@@ -79,9 +73,7 @@
       messagingSenderId: "149622186910"
     };
     firebase.initializeApp(config);
-   
   </script>
-
 </body>
 
 </html>
