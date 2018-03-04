@@ -1,25 +1,25 @@
 /*global ob, window */
 'use strict';
-(function() {  
-  ob.directive('orbitview', ['Images', function(Images) {
+(function () {
+  ob.directive('orbitview', ['Images', function (Images) {
     return {
       restrict: 'E',
       transclude: true,
       templateUrl: 'views/view.html',
-      controller: function($scope) {
-        this.addTooltip = function(tooltip) {
+      controller: function ($scope) {
+        this.addTooltip = function (tooltip) {
           $scope.tooltips.push(tooltip);
         };
 
-        this.addDescription = function(description) {
+        this.addDescription = function (description) {
           $scope.description = description;
         };
       },
-      link: function($scope, $elem, $attr) {
+      link: function ($scope, $elem, $attr) {
         //console.log('link');
         //console.log(Images);
 
-        Images.loadxml().then(function(dataXML) {
+        Images.loadxml().then(function (dataXML) {
           //console.log('success');
 
           if (window.DOMParser) { // Standard
