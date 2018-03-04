@@ -126,7 +126,6 @@ const ob = angular.module("Orbit", [
                   }
                 });
               }
-
               storageService.setXml($scope.xml);
             };
 
@@ -784,16 +783,17 @@ const ob = angular.module("Orbit", [
 
           if (tdTitre.contentEditable == "true") {
             tdTitre.setAttribute("contenteditable", "false");
-            updateTooltip(ttId, "titre", "", tdTitre.textContent);
+            storageService.updatePin(ttId, "titre", "", tdTitre.textContent, $scope.tooltip);
           } else tdTitre.setAttribute("contenteditable", "true");
 
           //Rend la description du tooltip editable ou pas
           if (divDesc.contentEditable == "true") {
             divDesc.setAttribute("contenteditable", "false");
-            updateTooltip(ttId, "desc", divDesc.textContent, "");
+            storageService.updatePin(ttId, "desc", divDesc.textContent, "", $scope.tooltip);
           } else divDesc.setAttribute("contenteditable", "true");
         };
 
+        /*
         function getPIByID(colPI, id) {
           for (let i = 0; i < colPI.length; i++) {
             if (colPI[i].getAttribute("ID") == id) {
@@ -833,6 +833,7 @@ const ob = angular.module("Orbit", [
               .getElementsByTagName("PointInteret")[id2].appendChild(newTitre);
           }
         }
+        */
 
         /***************************************************************************/
 
