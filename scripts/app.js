@@ -15,7 +15,8 @@ const ob = angular.module("Orbit", [
  * -Service de dessin
  * -Service de stockage des point d"interets **DONE**
  *  -> Stocké les points d"interet dans le localstorage
- * -Navbar controller ??
+ * -PopService **Done**
+ * -Navbar controller **DONE**
  * -buttons controller ??
  * -Faire des modules (Rollup?)
  *
@@ -23,16 +24,16 @@ const ob = angular.module("Orbit", [
  * -Progressive jpeg **DONE**
  * -Sass
  */
-(function() {
+(function () {
   ob
     .config([
       "$mdThemingProvider",
-      function($mdThemingProvider) {
+      function ($mdThemingProvider) {
         $mdThemingProvider.theme("grey").primaryPalette("grey");
       }
     ])
-    .run(["$http", "CacheFactory", function($http, CacheFactory){
-      
+    .run(["$http", "CacheFactory", function ($http, CacheFactory) {
+
       $http.defaults.cache = CacheFactory("o360cache", {
         maxAge: 10 * 24 * 60 * 60 * 1000, // Items added to this cache expire after 10 days
         cacheFlushInterval: 15 * 24 * 60 * 60 * 1000, // This cache will clear itself every 15 days

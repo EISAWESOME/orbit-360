@@ -5,6 +5,7 @@
         "$rootScope",
         "Images",
         "storageService",
+        "popService",
         "$mdDialog",
         "$mdSidenav",
         function (
@@ -12,15 +13,24 @@
             $rootScope,
             Images,
             storageService,
+            popService,
             $mdDialog,
             $mdSidenav
         ) {
-            $rootScope.$on("onLoading", function (event, percent) {
+            $rootScope.$on("onLoading", (event, percent) => {
                 $scope.loading = percent;
             });
-            $rootScope.$on("onComplete", function () {
+            $rootScope.$on("onComplete", () => {
                 const time = new Date();
                 $scope.loading = false;
+                
+                $scope.draw(true);
+            });
+
+            $rootScope.$on('canvasEdited', () => {
+                if($scope.canvas){
+                    $scope.draw(true);  
+                }                              
             });
 
             /**************Declaration et initialisation des variable du scope**************/
@@ -85,21 +95,26 @@
             $scope.isTitreCollapsed = true;
 
             //Fonction executée a l"initialisation du scope
-            $scope.init = function () {
+            $scope.init = () => {
                 document.querySelector("#loadingMessage").style.display = "none";
 
+                popService.setCanvas(document.querySelector("#orbit-canvas"));
                 $scope.canvas = document.querySelector("#orbit-canvas");
                 $scope.renderer = $scope.canvas.getContext("2d");
+                
 
                 $scope.level = Images.level.length - 1;
                 Images.loadLevel($scope.level);
 
                 window.onresize = $scope.resize;
                 $scope.resize();
+
                 $scope.visible = true;
 
+
+
                 //Boucle de dessin, verifie si il faut dessiné toute les 40ms
-                setInterval(function () {
+                setInterval(() => {
                     $scope.loadingReso = $scope.waitingload;
 
                     $scope.draw();
@@ -110,7 +125,7 @@
 
                 // Transferer vers le storageService ?
                 // Et retourner le titre et la description ?
-                Images.loadxml().then(function (dataXML) {
+                Images.loadxml().then((dataXML) => {
                     const ret = storageService.loadXml(
                         $scope.id,
                         $scope.tooltips,
@@ -131,12 +146,13 @@
             /****************************************************************************/
 
             /****************************Dessin de l"objet**************************/
-            $scope.draw = function () {
+            $scope.draw = (force) => {
                 if (
                     ($scope.waitingload &&
-                        Images.resourcesLoaded($scope.level, $scope.angle)) ||
-                    $scope.edited
-                ) {
+                    Images.resourcesLoaded($scope.level, $scope.angle)) ||
+                    force
+                    ) 
+                {
                     $scope.waitingload = false;
                     //Permet de reinitialisé le canvas
                     $scope.canvas.width = $scope.canvas.width;
@@ -193,8 +209,8 @@
                         );
                     }
                     //Une fois que toute les cases sont dessinées, on dessine les points d"interet
-                    if ($scope.xml) {
-                        const points = $scope.xml.getElementsByTagName("PointInteret");
+                    if (storageService.getXml()) {
+                        const points = storageService.getXml().getElementsByTagName("PointInteret");
                         for (let j = 0; j < points.length; j++) {
                             //Si il existe un ou plusieurs point d"interet sur cet angle
                             if (points[j].getAttribute("Angle") == $scope.angle) {
@@ -219,25 +235,24 @@
                                 );
                             }
                         }
-                        $scope.edited = false;
                     }
                 }
             };
 
-            $scope.getX = function () {
+            $scope.getX = () => {
                 return +(
                     $scope.canvas.width / 2 -
                     Images.level[0].width / 2 * $scope.zoom
                 ).toFixed(0);
             };
-            $scope.getY = function () {
+            $scope.getY = () => {
                 return -(
                     (Images.level[0].height * $scope.zoom - $scope.canvas.height) /
                     2
                 ).toFixed(0);
             };
 
-            $scope.resize = function () {
+            $scope.resize =  () => {
                 $scope.resetTransla();
                 $scope.renderer.restore();
                 $scope.canvas.width = $scope.canvas.offsetWidth;
@@ -262,14 +277,14 @@
                 if ($scope.visible) {
                     $scope.$apply();
                 }
-                $scope.edited = true;
+                $rootScope.$emit('canvasEdited');
             };
 
             /*************************************************************************/
 
             /*******************Fonctions de deplacement*******************************/
             //Fonction de changement grab/grabbing
-            $scope.toggleGrab = function () {
+            $scope.toggleGrab = () => {
                 if (!$scope.pinMode) {
                     if (
                         $scope.canvas.style.cursor == "-webkit-grab" ||
@@ -287,14 +302,14 @@
                 }
             };
 
-            $scope.dragStart = function () {
+            $scope.dragStart = () => {
                 if ($scope.clickRotation && !$scope.clickTranslation) {
                     $scope.toggleGrab();
                 }
             };
 
             //Gestion du drag
-            $scope.drag = function (e) {
+            $scope.drag = (e) => {
                 if (!$scope.loading) {
                     //Si on est en mode Rotation
                     if ($scope.clickRotation && !$scope.clickTranslation) {
@@ -323,12 +338,12 @@
 
                         $scope.prevDeltaX = e.gesture.deltaX;
                         $scope.prevDeltaY = e.gesture.deltaY;
-                        $scope.edited = true;
+                        $rootScope.$emit('canvasEdited');
                     }
                 }
             };
 
-            $scope.dragEnd = function () {
+            $scope.dragEnd = () => {
                 if ($scope.clickRotation && !$scope.clickTranslation) {
                     $scope.toggleGrab();
                 }
@@ -337,7 +352,7 @@
             };
 
             //Fonction qui permet la rotation jusqu"a un angle donné
-            $scope.goTo = function (angle) {
+            $scope.goTo = (angle) => {
                 if ($scope.angle != angle) {
                     if (
                         Images.nbAngle - angle + $scope.origAngle <
@@ -355,7 +370,7 @@
             //A la fin du drag, on reset les valeurs
 
             //Gestion des event de touche du clavier
-            $scope.keymove = function (e) {
+            $scope.keymove = (e) => {
                 if (!$scope.loading) {
                     //Les controle avec les fleches ne sont active que quant le menu est fermé
                     if ($scope.isNavCollapsed) {
@@ -386,48 +401,58 @@
                                 // Bas
                                 $scope.incrTranslaY(10);
 
-                            $scope.edited = true;
+                            $rootScope.$emit('canvasEdited');
                         }
                     }
                 }
             };
 
             //Fonctions d"incrémentation de la translation du canvas
-            $scope.incrTranslaX = function (translaX) {
+            $scope.incrTranslaX = (translaX) => {
                 $scope.translaX += translaX;
             };
-            $scope.incrTranslaY = function (translaY) {
+            $scope.incrTranslaY = (translaY) => {
                 $scope.translaY += translaY;
             };
 
-            $scope.setAngle = function (angle) {
+            $scope.setAngle = (angle) => {
                 if (angle >= Images.nbAngle) $scope.angle = angle - Images.nbAngle;
                 else if (angle < 0) $scope.angle = angle + Images.nbAngle;
                 else $scope.angle = angle;
                 if ($scope.lookupAngle[$scope.angle]) {
-                    displayDesc();
+                    popService.displayDesc(
+                        $scope.tooltips,
+                        $scope.angle,
+                        $scope.level,
+                        $scope.zoom, {
+                            x: $scope.translaX,
+                            y: $scope.translaY
+                        }, {
+                            h: $scope.actualTileHeight,
+                            w: $scope.actualTileWidth
+                        });
                 }
 
-                $scope.edited = true;
+                $rootScope.$emit('canvasEdited');
             };
 
             //Fonction de definition de la translation du canvas
-            $scope.setTranslaXY = function (translaX, translaY) {
+            $scope.setTranslaXY = (translaX, translaY) => {
                 $scope.translaX = translaX;
                 $scope.translaY = translaY;
-                $scope.edited = true;
+                $rootScope.$emit('canvasEdited');
             };
 
-            $scope.resetTransla = function () {
+            $scope.resetTransla = () => {
                 $scope.translaY = 0;
                 $scope.translaX = 0;
-                $scope.edited = true;
+                $rootScope.$emit('canvasEdited');
             };
             /*************************************************************************/
 
             /***************************Controles de l"application********************/
             //Permet la rotation automatique du modele
-            $scope.play = function () {
+            $scope.play = () => {
                 if ($scope.autoPlay) {
                     $scope.setAngle($scope.angle + 1);
                     window.setTimeout($scope.play, 40);
@@ -435,7 +460,7 @@
             };
 
             //Plein écran
-            $scope.toggleFullscreen = function () {
+            $scope.toggleFullscreen = () => {
                 const elem = document.querySelector("html");
                 if ($scope.isFullscreen) {
                     $scope.fsSrc = "./resources/icons/icon_fullscreen_back.png";
@@ -462,7 +487,7 @@
                 }
             };
 
-            $scope.onWheel = function (e) {
+            $scope.onWheel = (e) => {
                 $scope.renderer.restore();
                 const zoom = $scope.zoom;
                 if (e.deltaY > 0) {
@@ -470,10 +495,10 @@
                 } else {
                     $scope.zoomIn();
                 }
-                if (zoom != $scope.zoom) $scope.edited = true;
+                if (zoom != $scope.zoom) $rootScope.$emit('canvasEdited');;
             };
 
-            $scope.zoomOut = function () {
+            $scope.zoomOut = () => {
                 $scope.zoom -= 0.1;
                 if ($scope.zoom < $scope.minZoom) {
                     $scope.zoom = $scope.minZoom;
@@ -483,10 +508,10 @@
                     $scope.zoom * 1000 <= Images.level[$scope.level + 1].value
                 )
                     $scope.level++;
-                $scope.edited = true;
+                $rootScope.$emit('canvasEdited');;
             };
 
-            $scope.zoomIn = function () {
+            $scope.zoomIn = () => {
                 $scope.zoom += 0.1;
                 if ($scope.zoom >= $scope.maxZoom) {
                     $scope.zoom = $scope.maxZoom;
@@ -496,11 +521,11 @@
                     $scope.zoom * 1000 > Images.level[$scope.level].value
                 )
                     $scope.level--;
-                $scope.edited = true;
+                $rootScope.$emit('canvasEdited');;
             };
 
             //Toggle du mode edition
-            $scope.editMode = function () {
+            $scope.editMode = () => {
                 $scope.isEditMode = !$scope.isEditMode;
                 //Desactive le pinmode en meme temps que la modification
                 if ($scope.isEditMode === false) {
@@ -509,7 +534,7 @@
             };
 
             //Passe de rotation à translation
-            $scope.modeCursor = function () {
+            $scope.modeCursor = () => {
                 if ($scope.pinMode) {
                     $scope.canvas.style.cursor = "crosshair";
                     $scope.currentCursor = "crosshair";
@@ -525,23 +550,30 @@
                         $scope.canvas.style.cursor = "move";
                     $scope.currentCursor = "move";
                 }
+
+                popService.updateCurrentCursor($scope.currentCursor);
             };
-            $scope.switchMode = function () {
+            $scope.switchMode = () => {
                 $scope.clickRotation = !$scope.clickRotation;
                 $scope.clickTranslation = !$scope.clickTranslation;
 
                 $scope.modeCursor();
             };
 
-            $scope.exportXML = function () {
-                storageService.exportXML();
-            };
-
             /*************************************************************************/
+
+            const buildToggler = (componentId) => {
+                return () => {
+                    $mdSidenav(componentId).toggle();
+                    $scope.isNavCollapsed = !$scope.isNavCollapsed;
+                };
+            }
+
+            $scope.toggleLeft = buildToggler("left");
 
             /********************Fonctions de gestion du pin ***************************/
             //Création d"un point d"interet au clic
-            $scope.pin = function (e) {
+            $scope.pin = (e) => {
                 if ($scope.pinMode) {
                     if (!$scope.isNavCollapsed) $scope.toggleLeft();
                     let lvl = $scope.level;
@@ -583,8 +615,8 @@
                 }
             };
 
-            //Creation de l"objet correspondant au point
-            $scope.createTooltip = function () {
+            //Creation de l'objet correspondant au point
+            $scope.createTooltip = () => {
                 const id = $scope.id;
                 $scope.id++;
 
@@ -616,311 +648,28 @@
 
                 //Actualise la detection pour le nouveau point
                 if ($scope.lookupAngle[$scope.angle]) {
-                    displayDesc();
+                    popService.displayDesc(
+                        $scope.tooltips,
+                        $scope.angle,
+                        $scope.level,
+                        $scope.zoom, {
+                            x: $scope.translaX,
+                            y: $scope.translaY
+                        }, {
+                            h: $scope.actualTileHeight,
+                            w: $scope.actualTileWidth
+                        });
                 }
 
-                $scope.edited = true;
-            };
-
-            //Fonction de suppression d"un point d"interet
-            $scope.deletePoint = function (e) {
-                const lookup = {};
-                for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-                    lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
-                }
-
-                const ttId = e.target.parentNode.parentNode.parentNode.id;
-
-                $scope.tooltip = lookup[ttId];
-                $scope.tooltip.id = ttId;
-
-                //Remove dans le tooltip
-
-                let a = e.target;
-                const els = [];
-                while (a) {
-                    els.unshift(a);
-                    a = a.parentNode;
-                }
-                els[7].remove();
-                const indextt = $scope.tooltips.indexOf($scope.tooltip);
-                $scope.tooltips.splice(indextt, 1);
-
-                for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-                    $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
-                }
-
-                //Remove dans le XML
-                storageService.deletePin($scope.tooltip);
-                $scope.edited = true;
-            };
-
-            $scope.toggleEditTooltip = function (e) {
-                const lookup = {};
-                for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-                    lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
-                }
-
-                const ttId = e.target.parentNode.parentNode.parentNode.id;
-
-                $scope.tooltip = lookup[ttId];
-                $scope.tooltip.id = ttId;
-
-                //Rend le titre du tooltip editable ou pas
-                const ligneTitre =
-                    e.target.parentNode.parentNode.parentNode.childNodes[1],
-                    tdTitre = ligneTitre.childNodes[3],
-                    ligneDesc = e.target.parentNode.parentNode.parentNode.childNodes[3],
-                    divDesc = ligneDesc.childNodes[1].childNodes[1].childNodes[1];
-
-                if (tdTitre.contentEditable == "true") {
-                    tdTitre.setAttribute("contenteditable", "false");
-                    storageService.updatePin(
-                        ttId,
-                        "titre",
-                        "",
-                        tdTitre.textContent,
-                        $scope.tooltip
-                    );
-                } else tdTitre.setAttribute("contenteditable", "true");
-
-                //Rend la description du tooltip editable ou pas
-                if (divDesc.contentEditable == "true") {
-                    divDesc.setAttribute("contenteditable", "false");
-                    storageService.updatePin(
-                        ttId,
-                        "desc",
-                        divDesc.textContent,
-                        "",
-                        $scope.tooltip
-                    );
-                } else divDesc.setAttribute("contenteditable", "true");
+                $rootScope.$emit('canvasEdited');
             };
 
             /***************************************************************************/
 
-            /************************ Fonctions d"affichage des pop *******************/
-            //Cree un element pop (desc ou titre)
-            $scope.pointPop = function (mode, popContent, pointX, pointY) {
-                if (!$scope.isPopDrawn) {
-                    const popContainer = document.createElement("div"),
-                        popText = document.createTextNode(popContent);
-
-                    let a = document.querySelector("orbitview");
-                    popContainer.appendChild(popText);
-                    popContainer.style.marginLeft = pointX + "px";
-                    popContainer.style.marginTop = pointY + "px";
-                    popContainer.className = mode + "Pop";
-                    a.appendChild(popContainer);
-                    $scope.isPopDrawn = true;
-                }
-            };
-
-            //Supprime tout les elements pop
-            $scope.deleteAllPop = function () {
-                let a = document.querySelector("orbitview"),
-                    b = document.querySelector(".titrePop"),
-                    c = document.querySelector(".descPop");
-                if (b) {
-                    a.removeChild(b);
-                }
-                if (c) {
-                    a.removeChild(c);
-                }
-                $scope.isPopDrawn = false;
-            };
-
-            //Supprime les element titrePop
-            $scope.deleteTitrePop = function () {
-                let a = document.querySelector("orbitview"),
-                    b = document.querySelector(".titrePop");
-                if (b) {
-                    a.removeChild(b);
-                }
-            };
-
-            //Affiche le description du point quand on passe la souris dessus
-            function displayDesc() {
-                //Retourne un tableau contenant tout les points de l"angle courant
-                const matchedTt = $scope.tooltips.filter(matchAngle);
-
-                function matchAngle(element) {
-                    return element.image == $scope.angle;
-                }
-
-                $scope.canvas.addEventListener("mousemove", function (e) {
-                    let lvl = $scope.level;
-
-                    let aX = e.pageX - $scope.canvas.clientWidth / 2 - $scope.translaX,
-                        aY = e.pageY - $scope.canvas.clientHeight / 2 - $scope.translaY;
-
-                    const ratioX =
-                        Images.level[0].width /
-                        ($scope.actualTileWidth * Images.level[lvl].cols),
-                        ratioY =
-                        Images.level[0].height /
-                        ($scope.actualTileHeight * Images.level[lvl].rows);
-
-                    const cursorX = aX * ratioX,
-                        cursorY = aY * ratioY;
-
-                    let incr = 0;
-                    //On boucle dans le tableau des point interet de l"angle actuel
-                    for (let i = 0; i < matchedTt.length; i++) {
-                        const pointX =
-                            matchedTt[i].x / ratioX +
-                            $scope.translaX +
-                            $scope.canvas.clientWidth / 2,
-                            pointY =
-                            matchedTt[i].y / ratioY +
-                            $scope.translaY +
-                            $scope.canvas.clientHeight / 2;
-
-                        //Les offsets entrée sont arbitraires et correspondent a la tolerence de declenchement de l"affichage du tooltip
-                        //On divise par le zoom pour que la tolérence diminue plus le zoom est elevé, et inversement
-
-                        //Si la position du curseur correspond a celle d"un point
-                        if (matchedTt[i].image == $scope.angle) {
-                            if (
-                                cursorX >= Number(matchedTt[i].x) - 10 / $scope.zoom &&
-                                cursorX <= Number(matchedTt[i].x) + 10 / $scope.zoom
-                            ) {
-                                if (
-                                    cursorY >= Number(matchedTt[i].y) - 40 / $scope.zoom &&
-                                    cursorY <= Number(matchedTt[i].y) + 10 / $scope.zoom
-                                ) {
-                                    //On supprime le pop up précedent si il existe
-                                    $scope.deleteTitrePop();
-                                    //On crée le pop up du point en question
-                                    $scope.pointPop("desc", matchedTt[i].desc, pointX, pointY);
-                                    $scope.canvas.style.cursor = "default";
-                                } else {
-                                    incr++;
-                                }
-                            } else {
-                                incr++;
-                            }
-                            if (incr === matchedTt.length) {
-                                let a = document.querySelector("orbitview");
-                                const b = a.querySelector(".descPop");
-                                if (b) {
-                                    a.removeChild(b);
-                                    $scope.canvas.style.cursor = $scope.currentCursor;
-                                }
-                                $scope.isPopDrawn = false;
-                            }
-                        }
-                    }
-                });
-            }
-
-            //Effectue un goto jusqu"au point clické, crée et affiche un pop de son titre
-            $scope.clickTooltip = function (e) {
-                $scope.deleteAllPop();
-                //On crée un lookup qui associe l"id d"un tooltip a son objet
-                const lookup = {};
-                for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-                    lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
-                }
-                //On recupere l"id qui correspond au tooltip clické
-                const ttId = e.target.parentNode.parentNode.id;
-                $scope.tooltip = lookup[ttId];
-                $scope.tooltip.id = ttId;
-                $scope.autoPlay = false;
-
-                const ratioX =
-                    Images.level[0].width /
-                    ($scope.actualTileWidth * Images.level[$scope.level].cols),
-                    ratioY =
-                    Images.level[0].height /
-                    ($scope.actualTileHeight * Images.level[$scope.level].rows);
-
-                const pointX =
-                    $scope.tooltip.x / ratioX +
-                    $scope.translaX +
-                    $scope.canvas.clientWidth / 2,
-                    pointY =
-                    $scope.tooltip.y / ratioY +
-                    $scope.translaY +
-                    $scope.canvas.clientHeight / 2;
-
-                $scope.pointPop("titre", $scope.tooltip.title, pointX, pointY);
-                $scope.origAngle = $scope.angle;
-                $scope.goTo($scope.tooltip.image);
-            };
-
-            //Affiche la description du point au survol de ce dernier dans le menu
-            //Seulement si on est deja sur son angle
-            $scope.hoverTooltip = function (e) {
-                const lookup = {};
-                for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-                    lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
-                }
-
-                const ttId = e.target.parentNode.parentNode.id;
-                $scope.tooltip = lookup[ttId];
-                $scope.tooltip.id = ttId;
-                $scope.autoPlay = false;
-
-                if ($scope.tooltip.image == $scope.angle) {
-                    $scope.deleteAllPop();
-
-                    const ratioX =
-                        Images.level[0].width /
-                        ($scope.actualTileWidth * Images.level[$scope.level].cols),
-                        ratioY =
-                        Images.level[0].height /
-                        ($scope.actualTileHeight * Images.level[$scope.level].rows);
-
-                    const pointX =
-                        $scope.tooltip.x / ratioX +
-                        $scope.translaX +
-                        $scope.canvas.clientWidth / 2,
-                        pointY =
-                        $scope.tooltip.y / ratioY +
-                        $scope.translaY +
-                        $scope.canvas.clientHeight / 2;
-
-                    $scope.pointPop("titre", $scope.tooltip.title, pointX, pointY);
-                    if (document.querySelector(".titrePop"))
-                        document.querySelector(".titrePop").style.display = "block";
-                }
-            };
-            /****************************************************************************/
-
-            /***************** Fonction de toggle du Sidenav (menu vertical)************/
-            $scope.toggleLeft = buildToggler("left");
-            $scope.toggleRight = buildToggler("right");
-
-            function buildToggler(componentId) {
-                return function () {
-                    $mdSidenav(componentId).toggle();
-                    $scope.isNavCollapsed = !$scope.isNavCollapsed;
-                };
-            }
-            /**************************************************************************/
 
             /********************************Dialogs**********************************/
-            //Dialog de confirmation de la suppression
-            $scope.confirmDelete = function (ev, id) {
-                // Appending dialog to document.body to cover sidenav in docs app
-                const confirm = $mdDialog
-                    .confirm()
-                    .theme("grey")
-                    .title("Supprimer ce point d\'interet ?")
-                    .textContent("Vous ne pourrez pas revenir en arrière...")
-                    .ariaLabel("Suppression")
-                    .targetEvent(ev)
-                    .ok("Supprimer")
-                    .cancel("Annuler");
-
-                $mdDialog.show(confirm).then(function () {
-                    $scope.deletePoint(ev, id);
-                });
-            };
-
             //Dialog de saisie du Titre et Desc d"un point
-            $scope.promptPoint = function (ev) {
+            $scope.promptPoint = (ev) => {
                 $mdDialog
                     .show({
                         templateUrl: "views/tooltipPrompt.tpl.html",
@@ -930,17 +679,17 @@
                         clickOutsideToClose: true,
                         escapeToClose: true
                     })
-                    .then(function (answer) {
+                    .then((answer) => {
                         $scope.tooltipTitre = answer.Titre;
                         $scope.tooltipDesc = answer.Desc;
                         $scope.createTooltip();
                     });
             };
 
-            $scope.envoyer = function (answer) {
+            $scope.envoyer = (answer) => {
                 $mdDialog.hide(answer);
             };
-            $scope.closeDialog = function () {
+            $scope.closeDialog = () => {
                 $mdDialog.cancel();
             };
             /***************************************************************************/

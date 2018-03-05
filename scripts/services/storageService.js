@@ -1,17 +1,21 @@
 "use strict";
-(function() {
+(function () {
   ob.service("storageService", [
     "$mdToast",
-    function($mdToast) {
+    function ($mdToast) {
       let xml = null;
       const self = this;
 
-      this.setXml = function(xmlDoc) {
+      this.getXml = () => {
+        return xml;
+      };
+
+      this.setXml = (xmlDoc) => {
         xml = xmlDoc;
       };
 
       //Retourne titre, desc, et details du xml chargé si ils existent
-      this.loadXml = function(id, tooltips, angle, lookupAngle, dataXML) {
+      this.loadXml = (id, tooltips, angle, lookupAngle, dataXML) => {
         let titre, desc, details;
 
         if (window.DOMParser) {
@@ -39,7 +43,7 @@
             }
           } else {
             //Si elles n"existe pas, on essaye de les prendre dans content2.xml
-            Images.loadDetails().then(function(dataXML) {
+            Images.loadDetails().then((dataXML) => {
               if (window.DOMParser) {
                 // Standard
                 const tmp = new DOMParser();
@@ -102,8 +106,8 @@
         }
         document
           .querySelector("#descImage")
-          .addEventListener("paste", function(e) {
-            setTimeout(function() {
+          .addEventListener("paste", (e) => {
+            setTimeout(() => {
               const body = document.querySelector("#descImage");
               const regex = /(&nbsp;|<([^>]+)>)/gi;
               body.innerHTML = body.innerHTML.replace(regex, "");
@@ -119,7 +123,7 @@
       };
 
       //Ecris un pin dans le xml
-      this.writePin = function(titre, desc, angle, coord, id) {
+      this.writePin = (titre, desc, angle, coord, id) => {
         if (xml) {
           const elmPoint = xml.createElement("PointInteret"),
             elmTitre = xml.createElement("Titre"),
@@ -145,8 +149,8 @@
       };
 
       //Update un pin dans le xml
-      this.updatePin = function(id, champ, valeurDesc, valeurTitre, tooltip) {
-        function getPIByID(colPI, id) {
+      this.updatePin = (id, champ, valeurDesc, valeurTitre, tooltip) => {
+        const getPIByID = (colPI, id) => {
           for (let i = 0; i < colPI.length; i++) {
             if (colPI[i].getAttribute("ID") == id) {
               return i;
@@ -184,16 +188,16 @@
       };
 
       //Supprime un pin dans le xml
-      this.deletePin = function(tooltip) {
-        function deleteToast() {
+      this.deletePin = (tooltip) => {
+        const deleteToast = () => {
           const pinTo = "top right";
 
           $mdToast.show(
             $mdToast
-              .simple()
-              .textContent("Point d\'interet supprimé !")
-              .position(pinTo)
-              .hideDelay(3000)
+            .simple()
+            .textContent("Point d\'interet supprimé !")
+            .position(pinTo)
+            .hideDelay(3000)
           );
         }
 
@@ -202,7 +206,7 @@
           if (
             points[i].getAttribute("Angle") == tooltip.image &&
             points[i].getElementsByTagName("Titre")[0].textContent ==
-              tooltip.title
+            tooltip.title
           ) {
             const coord = points[i].getElementsByTagName("Coord")[0];
 
@@ -219,8 +223,8 @@
 
       //Ouvre une fenetre avec un dump du XML
       // ATTENTION marche pas sur chrome
-      this.exportXML = function() {
-        function detectIE() {
+      this.exportXML = () => {
+        const detectIE = () => {
           const ua = window.navigator.userAgent;
 
           const msie = ua.indexOf("MSIE ");
@@ -274,8 +278,8 @@
             //On wrap le content dans un textarea pour que les markups soient conservés
             popup.document.write(
               "<textarea style='width: 100%; height: 100%; border:none;'>" +
-                content +
-                "</textarea>"
+              content +
+              "</textarea>"
             );
           } else {
             window.open(

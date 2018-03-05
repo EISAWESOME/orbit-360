@@ -4,7 +4,7 @@
     return {
       //url: "../hyracotherium_pied-a-4-doigts/",
       //url: "../Axinite_prenite_epidote/",
-      url: function () {
+      url: () => {
         //Si la paremetre url est renseigné
         if ($location.search().model) {
           return "../" + $location.search().model + "/"
@@ -18,15 +18,15 @@
       loaded: 0,
       firstLevelLoaded: 0,
       //charge un xml, contenu recuperable dans le .then
-      loadxml: function () {
+      loadxml: () => {
         return $http.get(this.url() + "content.xml");
       },
 
-      loadDetails: function () {
+      loadDetails: () => {
 
         return $http.get(this.url() + "content2.xml");
       },
-      loadLevel: function (lvl) {
+      loadLevel: (lvl) => {
         let time = new Date();
         //console.log("loadLevel  "+ lvl +" time: "+ time.getSeconds() +" "+ time.getMilliseconds());
 
@@ -37,7 +37,7 @@
         }
       },
       //loadResources avec queue, sans et avec slot
-      loadResources: function (lvl, angle, priority) {
+      loadResources: (lvl, angle, priority) => {
         priority = (typeof priority !== "undefined") ? priority : true;
         // console.log("prio "+ priority);
         if (priority) {
@@ -50,7 +50,7 @@
         this.loadQueuedImages();
       },
       //renvoie vrai si toutes les images inclus dans resources sont chargées
-      resourcesLoaded: function (lvl, agl) {
+      resourcesLoaded: (lvl, agl) => {
         let angle = this.level[lvl].resources[agl];
         for (let i = 0; i < angle.length; i++) {
           if (!angle[i].loaded) return false;
@@ -59,7 +59,7 @@
       },
 
       //load sans queue
-      loadImage: function (lvl, angle, pos, fromQueue) {
+      loadImage: (lvl, angle, pos, fromQueue) => {
         fromQueue = fromQueue || false;
         let self = this.level[lvl].resources[angle][pos];
         let source = this.level[lvl].resources[angle][pos].img; //necessaire car cette info se perd si loadImage est executé plusieurs fois en parallèle
@@ -78,12 +78,8 @@
           $http.get(source, {
             method: "GET",
             cache: true
-          }).then(function () {
-            // setTimeout(function(){
-            //console.log(img);
+          }).then(() => {
             self.loaded = true;
-            // }, 1000);
-            // console.log(scope.level[lvl].resources[angle][pos].loaded);
             scope.loadSlot--;
             if (fromQueue) {
               // console.log("done "+ angle);
@@ -99,23 +95,20 @@
         }
       },
       //load avec queue à plusieurs slots
-      loadQueuedImages: function () {
+      loadQueuedImages: () => {
         if (this.loadSlot < 3 && this.loadingQueue.length > 0) {
           let current = this.loadingQueue.shift();
           if (this.loadImage(current[0], current[1], current[2], true)) {
-            //console.log("deja chargé " + current[0] +" "+ current[1] +" "+ current[2]);
           }
-          //else console.log("chargement " + current[0] +" "+ current[1] +" "+ current[2]);
         }
       },
       //loading queue avec slot et sans slot
-      loading: function (current, max) {
+      loading: (current, max) => {
         // this.loaded += 1;
         let percent = current * 100 / max;
         percent = percent.toFixed(1);
 
         //A analyser pour comprendre pourquoi l"image n"est pas directement disponible au déclenchement de "onFirstComplete"
-        // if (this.loaded == 1) /*setTimeout(function(){*/$rootScope.$emit("onFirstComplete");/*}, 1000);*/
         if (percent >= 100) {
           $rootScope.$emit("onComplete");
         } else {

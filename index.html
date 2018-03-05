@@ -35,7 +35,7 @@
   </noscript>
 </head>
 
-<body ng-controller="OrbitCtrl" ng-keyup="keymove($event);">
+<body ng-controller="OrbitCtrl as orbit" ng-keyup="keymove($event);">
 
   <h1 style="position: absolute; color: rgba(255, 255, 255, 0.603); z-index: 2; width: 100vw; height: 200px; top: 50%; left: 50%; text-align: center; margin-top: -100px; margin-left: -50vw;" 
   id="loadingMessage">Bienvenue à Orbit 360 ...</h1>
@@ -63,12 +63,14 @@
   <!-- Services -->
   <script src="./scripts/services/imageService.min.js"></script>
   <script src="./scripts/services/storageService.min.js"></script>
+  <script src="./scripts/services/popService.js"></script>
 
   <!-- Directives -->
   <script src="./scripts/directives/orbitview.min.js"></script>
 
   <!-- Controllers -->
   <script src="./scripts/controllers/orbitController.js"></script>
+  <script src="./scripts/controllers/sidebarController.js"></script>
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>

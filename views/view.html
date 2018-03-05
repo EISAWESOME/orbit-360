@@ -46,73 +46,75 @@
 
 </div>
 
-<md-sidenav md-theme="{{theme}}" class="md-sidenav-left" md-component-id="left" md-disable-backdrop md-whiteframe="4">
+<section ng-controller="SidebarController">
+  <md-sidenav  md-theme="{{theme}}" class="md-sidenav-left" md-component-id="left" md-disable-backdrop md-whiteframe="4">
+    
 
-  <md-toolbar class="md-hue-2">
-    <div class="md-toolbar-tools">
+    <md-toolbar class="md-hue-2">
+      <div class="md-toolbar-tools">
 
-      <h1 flex md-truncate>Points d'interet</h1>
+        <h1 flex md-truncate>Points d'interet</h1>
 
-      <md-button ng-show="isEditMode" class="md-icon-button" aria-label="Export XML" ng-click="exportXML()">
-        <md-icon class="fa fa-file-text-o fa-2x"></md-icon>
-        <md-tooltip md-direction="bottom">Export XML</md-tooltip>
-      </md-button>
+        <md-button ng-show="isEditMode" class="md-icon-button" aria-label="Export XML" ng-click="exportXML()">
+          <md-icon class="fa fa-file-text-o fa-2x"></md-icon>
+          <md-tooltip md-direction="bottom">Export XML</md-tooltip>
+        </md-button>
 
-      <md-button class="md-icon-button" aria-label="Close Sidenav" ng-click="toggleLeft()">
-        <md-icon class="fa fa-times fa-2x" md-colors="::{color: '{{theme}}-primary'}"></md-icon>
-      </md-button>
-    </div>
-  </md-toolbar>
-
-
-
-  <md-content layout-margin>
-    <br/>
-
-    <form>
-      <div class="form-group">
-        <div class="input-group">
-          <div class="input-group-addon"><i class="fa fa-search"></i></div>
-          <input type="text" class="form-control" placeholder="Recherche..." style="height : 50px; font-size:16pt" ng-model="motCle">
-        </div>
+        <md-button class="md-icon-button" aria-label="Close Sidenav" ng-click="toggleLeft()">
+          <md-icon class="fa fa-times fa-2x" md-colors="::{color: '{{theme}}-primary'}"></md-icon>
+        </md-button>
       </div>
-    </form>
+    </md-toolbar>
 
-    <table id="tooltip-table">
+
+
+    <md-content layout-margin>
       <br/>
-      <tbody ng-repeat="tooltip in tooltips | filter: motCle " id="{{tooltip.id}}">
-        <tr class="titre border_bottom">
 
-          <td class="nofocus" ng-click="isCollapsed = !isCollapsed; $event.stopPropagation();" style="min-width:20px">
-            <i ng-class="{'fa fa-chevron-right': isCollapsed, 'fa fa-chevron-right rotato': !isCollapsed}"></i>
-          </td>
+      <form>
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-addon"><i class="fa fa-search"></i></div>
+            <input type="text" class="form-control" placeholder="Recherche..." style="height : 50px; font-size:16pt" ng-model="motCle">
+          </div>
+        </div>
+      </form>
 
-          <td ng-click="clickTooltip($event);" ng-mouseover="hoverTooltip($event);" ng-mouseleave="deleteAllPop()" class="ttTitre nofocus" contenteditable=false spellcheck=false>{{tooltip.title}}</td>
+      <table id="tooltip-table">
+        <br/>
+        <tbody ng-repeat="tooltip in tooltips | filter: motCle " id="{{tooltip.id}}">
+          <tr class="titre border_bottom">
 
-          <td class="nofocus ttEdit" ng-show="isEditMode">
-            <i class="nofocus fa " style="float : right;" ng-click="toggleEditTooltip($event); isEditable = !isEditable; $event.stopPropagation()" ng-class="{'editable fa-check': isEditable, 'not-editable fa-pencil': !isEditable}"></i>
-          </td>
+            <td class="nofocus" ng-click="isCollapsed = !isCollapsed; $event.stopPropagation();" style="min-width:20px">
+              <i ng-class="{'fa fa-chevron-right': isCollapsed, 'fa fa-chevron-right rotato': !isCollapsed}"></i>
+            </td>
 
-          <td class="nofocus ttDelete" ng-show="isEditMode">
-            <i class="nofocus fa fa-trash-o" style="float : right; color:red;" ng-click="confirmDelete($event, $index); $event.stopPropagation(); deleteAllPop()"></i>
-          </td>
+            <td ng-click="clickTooltip($event);" ng-mouseover="hoverTooltip($event);" ng-mouseleave="deleteAllPop()" class="ttTitre nofocus" contenteditable=false spellcheck=false>{{tooltip.title}}</td>
 
-        </tr>
-        <tr class="desc collapse-row">
-          <td colspan=3>
-            <div uib-collapse="isCollapsed">
-              <div class="collapse-cell well well-lg" contenteditable=false spellcheck=false>
-                {{tooltip.desc}}
+            <td class="nofocus ttEdit" ng-show="isEditMode">
+              <i class="nofocus fa " style="float : right;" ng-click="toggleEditTooltip($event); isEditable = !isEditable; $event.stopPropagation()" ng-class="{'editable fa-check': isEditable, 'not-editable fa-pencil': !isEditable}"></i>
+            </td>
+
+            <td class="nofocus ttDelete" ng-show="isEditMode">
+              <i class="nofocus fa fa-trash-o" style="float : right; color:red;" ng-click="confirmDelete($event, $index); $event.stopPropagation(); deleteAllPop()"></i>
+            </td>
+
+          </tr>
+          <tr class="desc collapse-row">
+            <td colspan=3>
+              <div uib-collapse="isCollapsed">
+                <div class="collapse-cell well well-lg" contenteditable=false spellcheck=false>
+                  {{tooltip.desc}}
+                </div>
               </div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </md-content>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </md-content>
+  </md-sidenav>
+</section>
 
-
-</md-sidenav>
 
 <div id="menu-container" ng-class="{expand: showTooltips}">
   <ul id="menu">
