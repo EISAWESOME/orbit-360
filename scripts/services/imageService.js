@@ -76,7 +76,8 @@
           scope.level[lvl].resources[angle][pos].img = img;
           scope.loadSlot++;
           $http.get(source, {
-            method: 'GET'
+            method: 'GET',
+            cache: true
           }).then(function () {
             // setTimeout(function(){
             //console.log(img);

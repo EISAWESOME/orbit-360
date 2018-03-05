@@ -6,7 +6,8 @@ const ob = angular.module("Orbit", [
   "ngAnimate",
   "hmGestures",
   "mousewheel",
-  "ui.bootstrap"
+  "ui.bootstrap",
+  "angular-cache",
 ]);
 
 /**
@@ -19,6 +20,7 @@ const ob = angular.module("Orbit", [
  * -Faire des modules (Rollup?)
  *
  * -Async load css **DONE**
+ * -Progressive jpeg **DONE**
  * -Sass
  */
 (function() {
@@ -29,6 +31,14 @@ const ob = angular.module("Orbit", [
         $mdThemingProvider.theme("grey").primaryPalette("grey");
       }
     ])
+    .run(['$http', 'CacheFactory', function($http, CacheFactory){
+      
+      $http.defaults.cache = CacheFactory('o360cache', {
+        maxAge: 10 * 24 * 60 * 60 * 1000, // Items added to this cache expire after 10 days
+        cacheFlushInterval: 15 * 24 * 60 * 60 * 1000, // This cache will clear itself every 15 days
+        deleteOnExpire: 'aggressive' // Items will be deleted from this cache when they expire
+      });
+    }])
     .controller("OrbitCtrl", [
       "$scope",
       "$rootScope",
