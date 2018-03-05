@@ -38,7 +38,7 @@
               }
             }
           } else {
-            //Si elles n'existe pas, on essaye de les prendre dans content2.xml
+            //Si elles n"existe pas, on essaye de les prendre dans content2.xml
             Images.loadDetails().then(function(dataXML) {
               if (window.DOMParser) {
                 // Standard
@@ -162,8 +162,8 @@
 
         if (champ == "desc") {
           tooltip.desc = valeurDesc;
-          // ICI comme le texte dans le html est generer a partir de l'objet tooltip, en changeant l'objet, on change aussi le texte dans le html
-          //On change donc le texte deux fois, d'ou le reset du curseur
+          // ICI comme le texte dans le html est generer a partir de l"objet tooltip, en changeant l"objet, on change aussi le texte dans le html
+          //On change donc le texte deux fois, d"ou le reset du curseur
           currentTooltip.removeChild(descNode[0]);
           const newDesc = xml.createElement("Description"),
             cdataDesc = xml.createCDATASection(valeurDesc);
@@ -191,7 +191,7 @@
           $mdToast.show(
             $mdToast
               .simple()
-              .textContent("Point d'interet supprimé !")
+              .textContent("Point d\'interet supprimé !")
               .position(pinTo)
               .hideDelay(3000)
           );
