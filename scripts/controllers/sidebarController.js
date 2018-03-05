@@ -16,26 +16,48 @@
                     $scope.isNavCollapsed = !$scope.isNavCollapsed;
                 };
             };
+
+            const getPointCoord = () => {
+                const ratioX =
+                Images.level[0].width /
+                ($scope.actualTileWidth * Images.level[$scope.level].cols),
+
+                ratioY =
+                Images.level[0].height /
+                ($scope.actualTileHeight * Images.level[$scope.level].rows);
+
+                return{
+                    'X' : 
+                    $scope.tooltip.x / ratioX +
+                    $scope.translaX +
+                    $scope.canvas.clientWidth / 2,
+                    'Y' :
+                    $scope.tooltip.y / ratioY +
+                    $scope.translaY +
+                    $scope.canvas.clientHeight / 2
+                }
+            }
+                
             $scope.toggleRight = buildToggler("right");
 
             $scope.exportXML = () => {
                 storageService.exportXML();
             };
 
-            const lookupToolTip = () => {
+            const lookupToolTip = (e) => {
                 const lookup = {};
                 for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
                     lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
                 }
 
-                const ttId = e.target.parentNode.parentNode.parentNode.id;
+                const ttId = e.target.parentNode.parentNode.id;
 
                 $scope.tooltip = lookup[ttId];
                 $scope.tooltip.id = ttId;
             }
 
             $scope.toggleEditTooltip = (e) => {
-                lookupToolTip();
+                lookupToolTip(e);
 
                 //Rend le titre du tooltip editable ou pas
                 const ligneTitre =
@@ -74,7 +96,7 @@
 
             //Fonction de suppression d'un point d"interet
             $scope.deletePoint = (e) => {
-                lookupToolTip();
+                lookupToolTip(e);
 
                 //Remove dans le tooltip
 
@@ -120,9 +142,15 @@
             $scope.clickTooltip = (e) => {
                 popService.deleteAllPop();
                 //On crée un lookup qui associe l"id d"un tooltip a son objet
-                lookupToolTip();
+                lookupToolTip(e);
                 
                 $scope.autoPlay = false;
+
+                const coord = getPointCoord();
+
+
+
+                /*
 
                 const ratioX =
                     Images.level[0].width /
@@ -138,9 +166,9 @@
                     pointY =
                     $scope.tooltip.y / ratioY +
                     $scope.translaY +
-                    $scope.canvas.clientHeight / 2;
+                    $scope.canvas.clientHeight / 2;*/
 
-                popService.createPop("titre", $scope.tooltip.title, pointX, pointY);
+                popService.createPop("titre", $scope.tooltip.title, coord.X, coord.Y);
                 $scope.origAngle = $scope.angle;
                 $scope.goTo($scope.tooltip.image);
             };
@@ -148,29 +176,15 @@
             //Affiche la description du point au survol de ce dernier dans le menu
             //Seulement si on est deja sur son angle
             $scope.hoverTooltip = (e) => {
-                lookupToolTip();
+                lookupToolTip(e);
                 $scope.autoPlay = false;
 
                 if ($scope.tooltip.image == $scope.angle) {
                     $scope.deleteAllPop();
 
-                    const ratioX =
-                        Images.level[0].width /
-                        ($scope.actualTileWidth * Images.level[$scope.level].cols),
-                        ratioY =
-                        Images.level[0].height /
-                        ($scope.actualTileHeight * Images.level[$scope.level].rows);
+                    const coord = getPointCoord();
 
-                    const pointX =
-                        $scope.tooltip.x / ratioX +
-                        $scope.translaX +
-                        $scope.canvas.clientWidth / 2,
-                        pointY =
-                        $scope.tooltip.y / ratioY +
-                        $scope.translaY +
-                        $scope.canvas.clientHeight / 2;
-
-                    popService.createPop("titre", $scope.tooltip.title, pointX, pointY);
+                    popService.createPop("titre", $scope.tooltip.title, coord.X, coord.Y);
                     if (document.querySelector(".titrePop")){
                         document.querySelector(".titrePop").style.display = "block";
                     }                       
