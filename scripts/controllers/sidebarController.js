@@ -15,14 +15,14 @@
                     $mdSidenav(componentId).toggle();
                     $scope.isNavCollapsed = !$scope.isNavCollapsed;
                 };
-            }
+            };
             $scope.toggleRight = buildToggler("right");
 
             $scope.exportXML = () => {
                 storageService.exportXML();
             };
 
-            $scope.toggleEditTooltip = (e) => {
+            const lookupToolTip = () => {
                 const lookup = {};
                 for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
                     lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
@@ -32,6 +32,10 @@
 
                 $scope.tooltip = lookup[ttId];
                 $scope.tooltip.id = ttId;
+            }
+
+            $scope.toggleEditTooltip = (e) => {
+                lookupToolTip();
 
                 //Rend le titre du tooltip editable ou pas
                 const ligneTitre =
@@ -49,7 +53,9 @@
                         tdTitre.textContent,
                         $scope.tooltip
                     );
-                } else tdTitre.setAttribute("contenteditable", "true");
+                } else {
+                    tdTitre.setAttribute("contenteditable", "true");
+                }
 
                 //Rend la description du tooltip editable ou pas
                 if (divDesc.contentEditable == "true") {
@@ -61,20 +67,14 @@
                         "",
                         $scope.tooltip
                     );
-                } else divDesc.setAttribute("contenteditable", "true");
+                } else {
+                    divDesc.setAttribute("contenteditable", "true");
+                }
             };
 
             //Fonction de suppression d'un point d"interet
             $scope.deletePoint = (e) => {
-                const lookup = {};
-                for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-                    lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
-                }
-
-                const ttId = e.target.parentNode.parentNode.parentNode.id;
-
-                $scope.tooltip = lookup[ttId];
-                $scope.tooltip.id = ttId;
+                lookupToolTip();
 
                 //Remove dans le tooltip
 
@@ -90,7 +90,7 @@
 
                 //Remove dans le XML
                 storageService.deletePin($scope.tooltip);
-                $rootScope.$emit('canvasEdited');
+                $rootScope.$emit("canvasEdited");
             };
 
             //Dialog de confirmation de la suppression
@@ -120,14 +120,8 @@
             $scope.clickTooltip = (e) => {
                 popService.deleteAllPop();
                 //On crée un lookup qui associe l"id d"un tooltip a son objet
-                const lookup = {};
-                for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-                    lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
-                }
-                //On recupere l"id qui correspond au tooltip clické
-                const ttId = e.target.parentNode.parentNode.id;
-                $scope.tooltip = lookup[ttId];
-                $scope.tooltip.id = ttId;
+                lookupToolTip();
+                
                 $scope.autoPlay = false;
 
                 const ratioX =
@@ -154,14 +148,7 @@
             //Affiche la description du point au survol de ce dernier dans le menu
             //Seulement si on est deja sur son angle
             $scope.hoverTooltip = (e) => {
-                const lookup = {};
-                for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
-                    lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
-                }
-
-                const ttId = e.target.parentNode.parentNode.id;
-                $scope.tooltip = lookup[ttId];
-                $scope.tooltip.id = ttId;
+                lookupToolTip();
                 $scope.autoPlay = false;
 
                 if ($scope.tooltip.image == $scope.angle) {
@@ -184,11 +171,12 @@
                         $scope.canvas.clientHeight / 2;
 
                     popService.createPop("titre", $scope.tooltip.title, pointX, pointY);
-                    if (document.querySelector(".titrePop"))
+                    if (document.querySelector(".titrePop")){
                         document.querySelector(".titrePop").style.display = "block";
+                    }                       
                 }
             };
 
         }
-    ])
+    ]);
 }());
