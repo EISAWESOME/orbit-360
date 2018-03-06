@@ -24,14 +24,14 @@
             $rootScope.$on("onComplete", () => {
                 const time = new Date();
                 $scope.loading = false;
-                
+
                 $scope.draw(true);
             });
 
-            $rootScope.$on('canvasEdited', () => {
-                if($scope.canvas){
-                    $scope.draw(true);  
-                }                              
+            $rootScope.$on("canvasEdited", () => {
+                if ($scope.canvas) {
+                    $scope.draw(true);
+                }
             });
 
             /**************Declaration et initialisation des variable du scope**************/
@@ -102,7 +102,7 @@
                 popService.setCanvas(document.querySelector("#orbit-canvas"));
                 $scope.canvas = document.querySelector("#orbit-canvas");
                 $scope.renderer = $scope.canvas.getContext("2d");
-                
+
 
                 $scope.level = Images.level.length - 1;
                 Images.loadLevel($scope.level);
@@ -150,10 +150,9 @@
             $scope.draw = (force) => {
                 if (
                     ($scope.waitingload &&
-                    Images.resourcesLoaded($scope.level, $scope.angle)) ||
+                        Images.resourcesLoaded($scope.level, $scope.angle)) ||
                     force
-                    ) 
-                {
+                ) {
                     $scope.waitingload = false;
                     //Permet de reinitialisé le canvas
                     $scope.canvas.width = $scope.canvas.width;
@@ -253,7 +252,7 @@
                 ).toFixed(0);
             };
 
-            $scope.resize =  () => {
+            $scope.resize = () => {
                 $scope.resetTransla();
                 $scope.renderer.restore();
                 $scope.canvas.width = $scope.canvas.offsetWidth;
@@ -278,7 +277,7 @@
                 if ($scope.visible) {
                     $scope.$apply();
                 }
-                $rootScope.$emit('canvasEdited');
+                $rootScope.$emit("canvasEdited");
             };
 
             /*************************************************************************/
@@ -339,7 +338,7 @@
 
                         $scope.prevDeltaX = e.gesture.deltaX;
                         $scope.prevDeltaY = e.gesture.deltaY;
-                        $rootScope.$emit('canvasEdited');
+                        $rootScope.$emit("canvasEdited");
                     }
                 }
             };
@@ -360,12 +359,15 @@
                         angle - $scope.origAngle
                     ) {
                         $scope.setAngle($scope.angle - 1);
-                    } else $scope.setAngle($scope.angle + 1);
+                    } else {
+                        $scope.setAngle($scope.angle + 1);
+                    }
 
                     window.setTimeout($scope.goTo, 5, angle);
                 } else {
-                    if (document.querySelector(".titrePop"))
+                    if (document.querySelector(".titrePop")) {
                         document.querySelector(".titrePop").style.display = "block";
+                    }
                 }
             };
             //A la fin du drag, on reset les valeurs
@@ -377,32 +379,40 @@
                     if ($scope.isNavCollapsed) {
                         //Mode Rotation
                         if ($scope.clickRotation && !$scope.clickTranslation) {
-                            if (e.keyCode === 39) $scope.setAngle($scope.angle - 1);
+                            if (e.keyCode === 39) {
+                                $scope.setAngle($scope.angle - 1);
+                            }
 
-                            if (e.keyCode === 37) $scope.setAngle($scope.angle + 1);
+                            if (e.keyCode === 37) {
+                                $scope.setAngle($scope.angle + 1);
+                            }
                         }
                         //Mode Translation
                         if ($scope.clickTranslation && !$scope.clickRotation) {
                             $scope.renderer.restore();
                             $scope.renderer.save();
 
-                            if (e.keyCode === 37)
+                            if (e.keyCode === 37) {
                                 // Gauche
                                 $scope.incrTranslaX(-10);
+                            }
 
-                            if (e.keyCode === 38)
+                            if (e.keyCode === 38) {
                                 // Haut
                                 $scope.incrTranslaY(-10);
+                            }
 
-                            if (e.keyCode === 39)
+                            if (e.keyCode === 39) {
                                 // Droite
                                 $scope.incrTranslaX(10);
+                            }
 
-                            if (e.keyCode === 40)
+                            if (e.keyCode === 40) {
                                 // Bas
                                 $scope.incrTranslaY(10);
+                            }
 
-                            $rootScope.$emit('canvasEdited');
+                            $rootScope.$emit("canvasEdited");
                         }
                     }
                 }
@@ -417,9 +427,15 @@
             };
 
             $scope.setAngle = (angle) => {
-                if (angle >= Images.nbAngle) $scope.angle = angle - Images.nbAngle;
-                else if (angle < 0) $scope.angle = angle + Images.nbAngle;
-                else $scope.angle = angle;
+                if (angle >= Images.nbAngle){
+                    $scope.angle = angle - Images.nbAngle;
+                } 
+                else if (angle < 0){
+                    $scope.angle = angle + Images.nbAngle;
+                } 
+                else {
+                    $scope.angle = angle;
+                }
                 if ($scope.lookupAngle[$scope.angle]) {
                     popService.displayDesc(
                         $scope.tooltips,
@@ -434,20 +450,20 @@
                         });
                 }
 
-                $rootScope.$emit('canvasEdited');
+                $rootScope.$emit("canvasEdited");
             };
 
             //Fonction de definition de la translation du canvas
             $scope.setTranslaXY = (translaX, translaY) => {
                 $scope.translaX = translaX;
                 $scope.translaY = translaY;
-                $rootScope.$emit('canvasEdited');
+                $rootScope.$emit("canvasEdited");
             };
 
             $scope.resetTransla = () => {
                 $scope.translaY = 0;
                 $scope.translaX = 0;
-                $rootScope.$emit('canvasEdited');
+                $rootScope.$emit("canvasEdited");
             };
             /*************************************************************************/
 
@@ -496,7 +512,9 @@
                 } else {
                     $scope.zoomIn();
                 }
-                if (zoom != $scope.zoom) $rootScope.$emit('canvasEdited');;
+                if (zoom != $scope.zoom){
+                    $rootScope.$emit("canvasEdited");
+                } 
             };
 
             $scope.zoomOut = () => {
@@ -509,7 +527,7 @@
                     $scope.zoom * 1000 <= Images.level[$scope.level + 1].value
                 )
                     $scope.level++;
-                $rootScope.$emit('canvasEdited');;
+                $rootScope.$emit("canvasEdited");
             };
 
             $scope.zoomIn = () => {
@@ -522,7 +540,7 @@
                     $scope.zoom * 1000 > Images.level[$scope.level].value
                 )
                     $scope.level--;
-                $rootScope.$emit('canvasEdited');;
+                $rootScope.$emit("canvasEdited");
             };
 
             //Toggle du mode edition
@@ -547,11 +565,11 @@
                         $scope.currentCursor = "grab";
                     }
 
-                    if ($scope.clickTranslation && !$scope.clickRotation)
+                    if ($scope.clickTranslation && !$scope.clickRotation){
                         $scope.canvas.style.cursor = "move";
+                    }                        
                     $scope.currentCursor = "move";
                 }
-
                 popService.updateCurrentCursor($scope.currentCursor);
             };
             $scope.switchMode = () => {
@@ -568,7 +586,7 @@
                     $mdSidenav(componentId).toggle();
                     $scope.isNavCollapsed = !$scope.isNavCollapsed;
                 };
-            }
+            };
 
             $scope.toggleLeft = buildToggler("left");
 
@@ -576,7 +594,9 @@
             //Création d"un point d"interet au clic
             $scope.pin = (e) => {
                 if ($scope.pinMode) {
-                    if (!$scope.isNavCollapsed) $scope.toggleLeft();
+                    if (!$scope.isNavCollapsed){
+                        $scope.toggleLeft();
+                    } 
                     let lvl = $scope.level;
                     // Place l"origine de X et de Y au centre de l"image, prennant en compte la translation du canvas
                     const cursorX =
@@ -662,7 +682,7 @@
                         });
                 }
 
-                $rootScope.$emit('canvasEdited');
+                $rootScope.$emit("canvasEdited");
             };
 
             /***************************************************************************/
