@@ -427,13 +427,11 @@
             };
 
             $scope.setAngle = (angle) => {
-                if (angle >= Images.nbAngle){
+                if (angle >= Images.nbAngle) {
                     $scope.angle = angle - Images.nbAngle;
-                } 
-                else if (angle < 0){
+                } else if (angle < 0) {
                     $scope.angle = angle + Images.nbAngle;
-                } 
-                else {
+                } else {
                     $scope.angle = angle;
                 }
                 if ($scope.lookupAngle[$scope.angle]) {
@@ -512,9 +510,9 @@
                 } else {
                     $scope.zoomIn();
                 }
-                if (zoom != $scope.zoom){
+                if (zoom != $scope.zoom) {
                     $rootScope.$emit("canvasEdited");
-                } 
+                }
             };
 
             $scope.zoomOut = () => {
@@ -565,9 +563,9 @@
                         $scope.currentCursor = "grab";
                     }
 
-                    if ($scope.clickTranslation && !$scope.clickRotation){
+                    if ($scope.clickTranslation && !$scope.clickRotation) {
                         $scope.canvas.style.cursor = "move";
-                    }                        
+                    }
                     $scope.currentCursor = "move";
                 }
                 popService.updateCurrentCursor($scope.currentCursor);
@@ -594,9 +592,9 @@
             //Création d"un point d"interet au clic
             $scope.pin = (e) => {
                 if ($scope.pinMode) {
-                    if (!$scope.isNavCollapsed){
+                    if (!$scope.isNavCollapsed) {
                         $scope.toggleLeft();
-                    } 
+                    }
                     let lvl = $scope.level;
                     // Place l"origine de X et de Y au centre de l"image, prennant en compte la translation du canvas
                     const cursorX =
