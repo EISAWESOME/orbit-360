@@ -98,7 +98,6 @@
             //Fonction de suppression d'un point d"interet
             $scope.deletePoint = (e) => {
                 lookupToolTip(e);
-
                 //Remove dans le tooltip
 
                 let a = e.target;                

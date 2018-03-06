@@ -9,13 +9,9 @@
             let 
             isPopDrawn = false;
 
-            $rootScope.$on('angleChanged', () => {                  
-            });
-
             this.updatePopDrawn = (state) => {
                 isPopDrawn = state;
             };
-
 
             //Cree un element pop (desc ou titre)
             this.createPop = (mode, popContent, pointX, pointY) => {

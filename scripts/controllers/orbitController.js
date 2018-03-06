@@ -31,16 +31,12 @@
             $rootScope.$on("canvasEdited", () => {
                 if ($scope.canvas) {
                     $scope.draw(true);
-                }
-            });
 
-            $scope.$watch("angle", () => {
-                $rootScope.$broadcast('angleChanged', $scope.angle);
-                if($scope.tooltips){
-                    $scope.matchTooltip();    
-                }    
-            });
-            
+                    if($scope.tooltips){
+                        $scope.matchTooltip();    
+                    } 
+                }
+            });            
 
             /**************Declaration et initialisation des variable du scope**************/
             //Initalisation de l"id des tooltip
@@ -443,6 +439,8 @@
                 } else {
                     $scope.angle = angle;
                 }
+
+                popService.deleteAllPop();
 
                 $rootScope.$emit("angleChanged", $scope.angle);
                 $rootScope.$emit("canvasEdited");

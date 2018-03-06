@@ -276,24 +276,27 @@
 
         const content = new XMLSerializer().serializeToString(xml);
         if (content) {
-          if (detectIE()) {
+          /* TODO : Faire un ficher .xml a partir de la string, faire un fichier d'instruction sur le remplacement / export de points d'interets
+            Zip le tout, faire download
+          */
+          const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+          if(detectIE() || isChrome){
             const popup = window.open();
             //On wrap le content dans un textarea pour que les markups soient conservés
             popup.document.write(
               "<textarea style='width: 100%; height: 100%; border:none;'>" +
               content +
               "</textarea>"
-            );
+            );     
           } else {
             window.open(
               "data:text/xml," + encodeURIComponent(content),
               "Test",
               "width=900,height=900,scrollbars=1,resizable=1"
-            );
+            );  
           }
         }
       };
-
     }
   ]);
 }());
