@@ -67,7 +67,7 @@
 
                 if (
                   colProperties[i].getAttribute("name") === "description" &&
-                  !desc
+                  !description
                 ) {
                   description = colProperties[i].textContent;
                 }
@@ -251,7 +251,7 @@
 
           // other browser
           return false;
-        }
+        };
         const oldProperties = xml.getElementsByTagName("properties")[0];
         xml.getElementsByTagName("sequence")[0].removeChild(oldProperties);
 

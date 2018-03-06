@@ -1,4 +1,4 @@
-/* global ob, window */
+/* global ob, angular, window */
 "use strict";
 (function () {
     ob.controller("OrbitCtrl", [
@@ -34,12 +34,21 @@
                 }
             });
 
+            $scope.$watch("angle", () => {
+                $rootScope.$broadcast('angleChanged', $scope.angle);
+                if($scope.tooltips){
+                    $scope.matchTooltip();    
+                }    
+            });
+            
+
             /**************Declaration et initialisation des variable du scope**************/
             //Initalisation de l"id des tooltip
             $scope.id = 0;
             //
 
             $scope.lookupAngle = {};
+            $scope.matchedTt = null;
             $scope.translaY = 0;
             $scope.translaX = 0;
 
@@ -99,10 +108,10 @@
             $scope.init = () => {
                 document.querySelector("#loadingMessage").style.display = "none";
 
-                popService.setCanvas(document.querySelector("#orbit-canvas"));
                 $scope.canvas = document.querySelector("#orbit-canvas");
                 $scope.renderer = $scope.canvas.getContext("2d");
 
+                $scope.addMouseHoverListener();
 
                 $scope.level = Images.level.length - 1;
                 Images.loadLevel($scope.level);
@@ -287,9 +296,9 @@
             $scope.toggleGrab = () => {
                 if (!$scope.pinMode) {
                     if (
-                        $scope.canvas.style.cursor == "-webkit-grab" ||
-                        $scope.canvas.style.cursor == "-moz-grab" ||
-                        $scope.canvas.style.cursor == "grab"
+                        $scope.canvas.style.cursor === "-webkit-grab" ||
+                        $scope.canvas.style.cursor === "-moz-grab" ||
+                        $scope.canvas.style.cursor === "grab"
                     ) {
                         $scope.canvas.style.cursor = "-webkit-grabbing";
                         $scope.canvas.style.cursor = "-moz-grabbing";
@@ -434,20 +443,8 @@
                 } else {
                     $scope.angle = angle;
                 }
-                if ($scope.lookupAngle[$scope.angle]) {
-                    popService.displayDesc(
-                        $scope.tooltips,
-                        $scope.angle,
-                        $scope.level,
-                        $scope.zoom, {
-                            x: $scope.translaX,
-                            y: $scope.translaY
-                        }, {
-                            h: $scope.actualTileHeight,
-                            w: $scope.actualTileWidth
-                        });
-                }
 
+                $rootScope.$emit("angleChanged", $scope.angle);
                 $rootScope.$emit("canvasEdited");
             };
 
@@ -523,8 +520,10 @@
                 if (
                     $scope.level < Images.level.length - 1 &&
                     $scope.zoom * 1000 <= Images.level[$scope.level + 1].value
-                )
+                ){
                     $scope.level++;
+                }
+                    
                 $rootScope.$emit("canvasEdited");
             };
 
@@ -568,7 +567,6 @@
                     }
                     $scope.currentCursor = "move";
                 }
-                popService.updateCurrentCursor($scope.currentCursor);
             };
             $scope.switchMode = () => {
                 $scope.clickRotation = !$scope.clickRotation;
@@ -579,16 +577,28 @@
 
             /*************************************************************************/
 
-            const buildToggler = (componentId) => {
+            $scope.buildToggler = (componentId) => {
                 return () => {
                     $mdSidenav(componentId).toggle();
                     $scope.isNavCollapsed = !$scope.isNavCollapsed;
                 };
             };
 
-            $scope.toggleLeft = buildToggler("left");
+            $scope.toggleLeft = $scope.buildToggler("left");
 
             /********************Fonctions de gestion du pin ***************************/
+
+            const determineRatios = () => {
+                let lvl = $scope.level;
+                return {
+                    x : Images.level[0].width /
+                    ($scope.actualTileWidth * Images.level[lvl].cols),
+                    y : Images.level[0].height /
+                    ($scope.actualTileHeight * Images.level[lvl].rows)
+                };
+
+            };
+
             //Création d"un point d"interet au clic
             $scope.pin = (e) => {
                 if ($scope.pinMode) {
@@ -607,17 +617,13 @@
                         $scope.translaY;
 
                     //On etablie le ratio de proportion entre l"image scale 100% et l"image affiché à l"écran
-                    const ratioX =
-                        Images.level[0].width /
-                        ($scope.actualTileWidth * Images.level[lvl].cols),
-                        ratioY =
-                        Images.level[0].height /
-                        ($scope.actualTileHeight * Images.level[lvl].rows);
+
+                    const ratio = determineRatios();
 
                     //Les coordonnées du point à l"echelle 1:1 de l"image d"origine scale 100%
                     $scope.tooltipTrueCoord = {
-                        x: cursorX * ratioX,
-                        y: cursorY * ratioY
+                        x: cursorX * ratio.x,
+                        y: cursorY * ratio.y
                     };
 
                     //On vérifie que la curseur soit dans la zone de dessin pour crée le point d"interet
@@ -656,7 +662,7 @@
                     image: $scope.angle, //Angle
                     x: $scope.tooltipTrueCoord.x,
                     y: $scope.tooltipTrueCoord.y,
-                    id: id
+                    id
                 };
 
                 $scope.tooltips.push(tooltip);
@@ -665,24 +671,78 @@
                     $scope.lookupAngle[$scope.tooltips[i].image] = $scope.tooltips[i];
                 }
 
-                //Actualise la detection pour le nouveau point
-                if ($scope.lookupAngle[$scope.angle]) {
-                    popService.displayDesc(
-                        $scope.tooltips,
-                        $scope.angle,
-                        $scope.level,
-                        $scope.zoom, {
-                            x: $scope.translaX,
-                            y: $scope.translaY
-                        }, {
-                            h: $scope.actualTileHeight,
-                            w: $scope.actualTileWidth
-                        });
-                }
-
+                $scope.matchTooltip();
                 $rootScope.$emit("canvasEdited");
             };
 
+            $scope.matchTooltip = () => {
+                const matchAngle = (element) => {
+                    return element.image == $scope.angle;
+                };
+                $scope.matchedTt = $scope.tooltips.filter(matchAngle);
+            };
+
+            $scope.addMouseHoverListener = () => {
+                $scope.canvas.addEventListener("mousemove", function (e) {
+                    let lvl = $scope.level;
+    
+                    let aX = e.pageX - $scope.canvas.clientWidth / 2 - $scope.translaX,
+                        aY = e.pageY - $scope.canvas.clientHeight / 2 - $scope.translaY;
+    
+                    const ratio = determineRatios();
+    
+                    const cursorX = aX * ratio.x,
+                        cursorY = aY * ratio.y;
+    
+                    let incr = 0;
+                    //On boucle dans le tableau des point interet de l"angle actuel
+                    for (let i = 0; i < $scope.matchedTt.length; i++) {
+                        const pointX =
+                        $scope.matchedTt[i].x / ratio.x +
+                            $scope.translaX +
+                            $scope.canvas.clientWidth / 2,
+                            pointY =
+                            $scope.matchedTt[i].y / ratio.y +
+                            $scope.translaY +
+                            $scope.canvas.clientHeight / 2;
+    
+                        //Les offsets entrée sont arbitraires et correspondent a la tolerence de declenchement de l"affichage du tooltip
+                        //On divise par le zoom pour que la tolérence diminue plus le zoom est elevé, et inversement
+    
+                        //Si la position du curseur correspond a celle d"un point
+                        if ($scope.matchedTt[i].image == $scope.angle) {
+                            if (
+                                cursorX >= Number($scope.matchedTt[i].x) - 10 / $scope.zoom &&
+                                cursorX <= Number($scope.matchedTt[i].x) + 10 / $scope.zoom
+                            ) {
+                                if (
+                                    cursorY >= Number($scope.matchedTt[i].y) - 40 / $scope.zoom &&
+                                    cursorY <= Number($scope.matchedTt[i].y) + 10 / $scope.zoom
+                                ) {
+                                    //On supprime le pop up précedent si il existe
+                                    popService.deleteTitrePop();
+                                    //On crée le pop up du point en question
+                                    popService.createPop("desc", $scope.matchedTt[i].desc, pointX, pointY);
+                                    $scope.canvas.style.cursor = "default";
+                                } else {
+                                    incr++;
+                                }
+                            } else {
+                                incr++;
+                            }
+                            if (incr === $scope.matchedTt.length) {
+                                let a = document.querySelector("orbitview");
+                                const b = a.querySelector(".descPop");
+                                if (b) {
+                                    a.removeChild(b);
+                                    $scope.canvas.style.cursor = $scope.currentCursor;
+                                }
+                                popService.updatePopDrawn(false);
+                            }
+                        }
+                    }
+                });
+            };
             /***************************************************************************/
 
 

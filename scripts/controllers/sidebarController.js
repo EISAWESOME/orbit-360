@@ -12,14 +12,6 @@
         "$mdSidenav",
         function ($scope, $rootScope, Images, storageService, popService, $mdDialog, $mdSidenav) {
 
-            //A mettre dans un fichier commun
-            const buildToggler = (componentId) => {
-                return () => {
-                    $mdSidenav(componentId).toggle();
-                    $scope.isNavCollapsed = !$scope.isNavCollapsed;
-                };
-            };
-
             const getPointCoord = () => {
                 const ratioX =
                 Images.level[0].width /
@@ -41,19 +33,25 @@
                 };
             };
 
+            const findAncestor = (el, cls) => {
+                while ((el = el.parentElement) && !el.classList.contains(cls));
+                return el;
+            };
+
             const lookupToolTip = (e) => {
+
                 const lookup = {};
                 for (let i = 0, len = $scope.tooltips.length; i < len; i++) {
                     lookup[$scope.tooltips[i].id] = $scope.tooltips[i];
                 }
 
-                const ttId = e.target.parentNode.parentNode.id;
+                const ttId = findAncestor(e.target, "tooltipContainer").id;
 
                 $scope.tooltip = lookup[ttId];
                 $scope.tooltip.id = ttId;
             };
                 
-            $scope.toggleRight = buildToggler("right");
+            $scope.toggleRight = $scope.buildToggler("right");
 
             $scope.exportXML = () => {
                 storageService.exportXML();
@@ -69,7 +67,7 @@
                     ligneDesc = e.target.parentNode.parentNode.parentNode.childNodes[3],
                     divDesc = ligneDesc.childNodes[1].childNodes[1].childNodes[1];
 
-                if (tdTitre.contentEditable == "true") {
+                if (tdTitre.contentEditable === "true") {
                     tdTitre.setAttribute("contenteditable", "false");
                     storageService.updatePin(
                         ttId,
@@ -83,7 +81,7 @@
                 }
 
                 //Rend la description du tooltip editable ou pas
-                if (divDesc.contentEditable == "true") {
+                if (divDesc.contentEditable === "true") {
                     divDesc.setAttribute("contenteditable", "false");
                     storageService.updatePin(
                         ttId,
@@ -116,6 +114,7 @@
                 //Remove dans le XML
                 storageService.deletePin($scope.tooltip);
                 $rootScope.$emit("canvasEdited");
+                $rootScope.$emit("tooltipsEdited", $scope.tooltips);
             };
 
             //Dialog de confirmation de la suppression
@@ -162,7 +161,7 @@
                 lookupToolTip(e);
                 $scope.autoPlay = false;
 
-                if ($scope.tooltip.image == $scope.angle) {
+                if ($scope.tooltip.image === $scope.angle) {
                     $scope.deleteAllPop();
 
                     const coord = getPointCoord();

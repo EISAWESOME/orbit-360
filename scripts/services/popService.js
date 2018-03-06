@@ -2,21 +2,15 @@
 "use strict";
 (function () {
     ob.service("popService", [
-        "Images",
-        function (Images) {
+        "Images", "$rootScope",
+        function (Images, $rootScope) {
 
             const self = this;
-            let isPopDrawn = false;
-            let canvas = null;
-            let currentCursor = null;
+            let 
+            isPopDrawn = false;
 
-            this.updateCurrentCursor = (cursor) => {
-                currentCursor = cursor;
-            };
-
-            this.setCanvas = (currentCanvas) => {
-                canvas = currentCanvas;
-            };
+            $rootScope.$on('angleChanged', () => {                  
+            });
 
             this.updatePopDrawn = (state) => {
                 isPopDrawn = state;
@@ -60,81 +54,6 @@
                 if (b) {
                     a.removeChild(b);
                 }
-            };
-
-            //Affiche le description du point quand on passe la souris dessus
-            this.displayDesc = (tooltips, angle, level, zoom, transla = {x : 0, y : 0}, tile = {h : 0, w : 0}) => {
-                //Retourne un tableau contenant tout les points de l"angle courant
-                const matchAngle = (element) => {
-                    return element.image == angle;
-                }
-
-                const matchedTt = tooltips.filter(matchAngle);
-
-                canvas.addEventListener("mousemove", function (e) {
-                    let lvl = level;
-
-                    let aX = e.pageX - canvas.clientWidth / 2 - transla.x,
-                        aY = e.pageY - canvas.clientHeight / 2 - transla.y;
-
-                    const ratioX =
-                        Images.level[0].width /
-                        (tile.w * Images.level[lvl].cols),
-                        ratioY =
-                        Images.level[0].height /
-                        (tile.h * Images.level[lvl].rows);
-
-                    const cursorX = aX * ratioX,
-                        cursorY = aY * ratioY;
-
-                    let incr = 0;
-                    //On boucle dans le tableau des point interet de l"angle actuel
-                    for (let i = 0; i < matchedTt.length; i++) {
-                        const pointX =
-                            matchedTt[i].x / ratioX +
-                            transla.x +
-                            canvas.clientWidth / 2,
-                            pointY =
-                            matchedTt[i].y / ratioY +
-                            transla.y +
-                            canvas.clientHeight / 2;
-
-                        //Les offsets entrée sont arbitraires et correspondent a la tolerence de declenchement de l"affichage du tooltip
-                        //On divise par le zoom pour que la tolérence diminue plus le zoom est elevé, et inversement
-
-                        //Si la position du curseur correspond a celle d"un point
-                        if (matchedTt[i].image == angle) {
-                            if (
-                                cursorX >= Number(matchedTt[i].x) - 10 / zoom &&
-                                cursorX <= Number(matchedTt[i].x) + 10 / zoom
-                            ) {
-                                if (
-                                    cursorY >= Number(matchedTt[i].y) - 40 / zoom &&
-                                    cursorY <= Number(matchedTt[i].y) + 10 / zoom
-                                ) {
-                                    //On supprime le pop up précedent si il existe
-                                    self.deleteTitrePop();
-                                    //On crée le pop up du point en question
-                                    self.createPop("desc", matchedTt[i].desc, pointX, pointY);
-                                    canvas.style.cursor = "default";
-                                } else {
-                                    incr++;
-                                }
-                            } else {
-                                incr++;
-                            }
-                            if (incr === matchedTt.length) {
-                                let a = document.querySelector("orbitview");
-                                const b = a.querySelector(".descPop");
-                                if (b) {
-                                    a.removeChild(b);
-                                    canvas.style.cursor = currentCursor;
-                                }
-                                self.updatePopDrawn(false);
-                            }
-                        }
-                    }
-                });
             };
         }
     ]);

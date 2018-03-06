@@ -93,7 +93,7 @@
               // console.log("done "+ angle);
               scope.loadQueuedImages();
             }
-            if (scope.firstLevelLoaded < scope.nbAngle && lvl == scope.level.length - 1) {
+            if (scope.firstLevelLoaded < scope.nbAngle && lvl === scope.level.length - 1) {
               scope.firstLevelLoaded++;
               // $rootScope.$emit("onFirstComplete");
               scope.loading(scope.firstLevelLoaded, scope.nbAngle);
