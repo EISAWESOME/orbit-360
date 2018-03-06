@@ -1,3 +1,4 @@
+/* global ob, window */
 "use strict";
 (function () {
   ob.factory("Images", ["$resource", "$location", "$rootScope", "$http", function ($resource, $location, $rootScope, $http) {
@@ -18,12 +19,11 @@
       loaded: 0,
       firstLevelLoaded: 0,
       //charge un xml, contenu recuperable dans le .then
-      loadxml: function(){
+      loadxml: function () {
         return $http.get(this.url() + "content.xml");
       },
 
-      loadDetails: function(){
-
+      loadDetails: function () {
         return $http.get(this.url() + "content2.xml");
       },
       loadLevel: function (lvl) {
@@ -37,7 +37,7 @@
         }
       },
       //loadResources avec queue, sans et avec slot
-      loadResources: function(lvl, angle, priority){
+      loadResources: function (lvl, angle, priority) {
         priority = (typeof priority !== "undefined") ? priority : true;
         // console.log("prio "+ priority);
         if (priority) {
@@ -50,7 +50,7 @@
         this.loadQueuedImages();
       },
       //renvoie vrai si toutes les images inclus dans resources sont chargées
-      resourcesLoaded: function(lvl, agl) {
+      resourcesLoaded: function (lvl, agl) {
         let angle = this.level[lvl].resources[agl];
         for (let i = 0; i < angle.length; i++) {
           if (!angle[i].loaded) return false;
@@ -59,7 +59,7 @@
       },
 
       //load sans queue
-      loadImage: function(lvl, angle, pos, fromQueue) {
+      loadImage: function (lvl, angle, pos, fromQueue) {
         fromQueue = fromQueue || false;
         let self = this.level[lvl].resources[angle][pos];
         let source = this.level[lvl].resources[angle][pos].img; //necessaire car cette info se perd si loadImage est executé plusieurs fois en parallèle
@@ -95,7 +95,7 @@
         }
       },
       //load avec queue à plusieurs slots
-      loadQueuedImages: function() {
+      loadQueuedImages: function () {
         if (this.loadSlot < 3 && this.loadingQueue.length > 0) {
           let current = this.loadingQueue.shift();
           if (this.loadImage(current[0], current[1], current[2], true)) {

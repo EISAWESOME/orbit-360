@@ -1,3 +1,4 @@
+/* global ob, window */
 "use strict";
 (function () {
     ob.service("popService", [
@@ -9,11 +10,11 @@
             let canvas = null;
             let currentCursor = null;
 
-            this.updateCurrentCursor = (cursor) =>{
+            this.updateCurrentCursor = (cursor) => {
                 currentCursor = cursor;
             };
 
-            this.setCanvas = (currentCanvas) =>{
+            this.setCanvas = (currentCanvas) => {
                 canvas = currentCanvas;
             };
 
@@ -64,11 +65,11 @@
             //Affiche le description du point quand on passe la souris dessus
             this.displayDesc = (tooltips, angle, level, zoom, transla = {x : 0, y : 0}, tile = {h : 0, w : 0}) => {
                 //Retourne un tableau contenant tout les points de l"angle courant
-                const matchedTt = tooltips.filter(matchAngle);
-
-                function matchAngle(element) {
+                const matchAngle = (element) => {
                     return element.image == angle;
                 }
+
+                const matchedTt = tooltips.filter(matchAngle);
 
                 canvas.addEventListener("mousemove", function (e) {
                     let lvl = level;
@@ -134,7 +135,7 @@
                         }
                     }
                 });
-            }
+            };
         }
-    ])
-})();
+    ]);
+}());

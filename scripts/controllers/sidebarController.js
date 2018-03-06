@@ -1,3 +1,5 @@
+
+/* global ob, window*/
 "use strict";
 (function () {
     ob.controller("SidebarController", [
@@ -7,7 +9,8 @@
         "storageService",
         "popService",
         "$mdDialog",
-        function ($scope, $rootScope, Images, storageService, popService, $mdDialog) {
+        "$mdSidenav",
+        function ($scope, $rootScope, Images, storageService, popService, $mdDialog, $mdSidenav) {
 
             //A mettre dans un fichier commun
             const buildToggler = (componentId) => {
@@ -27,21 +30,15 @@
                 ($scope.actualTileHeight * Images.level[$scope.level].rows);
 
                 return{
-                    'X' : 
+                    "X" : 
                     $scope.tooltip.x / ratioX +
                     $scope.translaX +
                     $scope.canvas.clientWidth / 2,
-                    'Y' :
+                    "Y" :
                     $scope.tooltip.y / ratioY +
                     $scope.translaY +
                     $scope.canvas.clientHeight / 2
                 }
-            }
-                
-            $scope.toggleRight = buildToggler("right");
-
-            $scope.exportXML = () => {
-                storageService.exportXML();
             };
 
             const lookupToolTip = (e) => {
@@ -54,7 +51,13 @@
 
                 $scope.tooltip = lookup[ttId];
                 $scope.tooltip.id = ttId;
-            }
+            };
+                
+            $scope.toggleRight = buildToggler("right");
+
+            $scope.exportXML = () => {
+                storageService.exportXML();
+            };
 
             $scope.toggleEditTooltip = (e) => {
                 lookupToolTip(e);
@@ -147,26 +150,6 @@
                 $scope.autoPlay = false;
 
                 const coord = getPointCoord();
-
-
-
-                /*
-
-                const ratioX =
-                    Images.level[0].width /
-                    ($scope.actualTileWidth * Images.level[$scope.level].cols),
-                    ratioY =
-                    Images.level[0].height /
-                    ($scope.actualTileHeight * Images.level[$scope.level].rows);
-
-                const pointX =
-                    $scope.tooltip.x / ratioX +
-                    $scope.translaX +
-                    $scope.canvas.clientWidth / 2,
-                    pointY =
-                    $scope.tooltip.y / ratioY +
-                    $scope.translaY +
-                    $scope.canvas.clientHeight / 2;*/
 
                 popService.createPop("titre", $scope.tooltip.title, coord.X, coord.Y);
                 $scope.origAngle = $scope.angle;

@@ -1,3 +1,4 @@
+/* global ob, window */
 'use strict';
 (function () {
   ob.directive('orbitview', ['Images', function (Images) {

@@ -1,8 +1,10 @@
+/* global ob, window, ActiveXObject */
 "use strict";
 (function () {
   ob.service("storageService", [
+    "Images",
     "$mdToast",
-    function ($mdToast) {
+    function (Images, $mdToast) {
       let xml = null;
       const self = this;
 
@@ -79,9 +81,8 @@
 
         for (let i = 0; i < colPoints.length; i++) {
           const titre = colPoints[i].getElementsByTagName("Titre"),
-            desc = colPoints[i].getElementsByTagName("Description"),
+            description = colPoints[i].getElementsByTagName("Description"),
             angle = colPoints[i].attributes[0].value,
-            id = colPoints[i].attributes[1].value,
             coord = {
               x: colPoints[i]
                 .getElementsByTagName("Coord")[0]
@@ -89,13 +90,15 @@
               y: colPoints[i].getElementsByTagName("Coord")[0].getAttribute("y")
             };
 
+          let id = colPoints[i].attributes[1].value;
+
           const tooltip = {
             title: titre[0].textContent,
-            desc: desc[0].textContent,
+            desc: description[0].textContent,
             image: angle,
             x: coord.x,
             y: coord.y,
-            id: id
+            id
           };
 
           id++;
@@ -115,10 +118,10 @@
           });
 
         return {
-          id: id,
-          titre: titre,
-          description: desc,
-          details: details
+          id,
+          titre,
+          description,
+          details
         };
       };
 
@@ -156,7 +159,7 @@
               return i;
             }
           }
-        }
+        };
 
         const colPI = xml.getElementsByTagName("PointInteret"),
           id2 = getPIByID(colPI, id),
@@ -293,4 +296,4 @@
 
     }
   ]);
-})();
+}());

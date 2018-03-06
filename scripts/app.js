@@ -11,7 +11,16 @@ const ob = angular.module("Orbit", [
 ]);
 
 /**
- * TODO :
+ * TODO avant v2
+ * -Faire marcher l'export XML avec chrome
+ * -Faire marcher angular cache
+ * -Donner des noms a chaque controlleur / scope (Controller as ctrl)
+ * UNE FOIS QUE TOUT CA EST FAIT
+ * Faire un bundle de JS
+ */
+
+/**
+ * TODO general:
  * -Service de dessin
  * -Service de stockage des point d"interets **DONE**
  *  -> Stocké les points d"interet dans le localstorage
