@@ -70,7 +70,7 @@
                 if (tdTitre.contentEditable === "true") {
                     tdTitre.setAttribute("contenteditable", "false");
                     storageService.updatePin(
-                        ttId,
+                        $scope.tooltip.id,
                         "titre",
                         "",
                         tdTitre.textContent,
@@ -84,7 +84,7 @@
                 if (divDesc.contentEditable === "true") {
                     divDesc.setAttribute("contenteditable", "false");
                     storageService.updatePin(
-                        ttId,
+                        $scope.tooltip.id,
                         "desc",
                         divDesc.textContent,
                         "",
