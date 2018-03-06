@@ -1,12 +1,12 @@
 /* global ob, window */
-'use strict';
+"use strict";
 (function () {
-  ob.directive('orbitview', ['Images', function (Images) {
+  ob.directive("orbitview", ["Images", function (Images) {
     return {
-      restrict: 'E',
+      restrict: "E",
       transclude: true,
-      templateUrl: 'views/view.html',
-      controller: ("OrbitViewController", ['$scope',
+      templateUrl: "views/view.html",
+      controller: ("OrbitViewController", ["$scope",
         function ($scope) {
           this.addTooltip = function (tooltip) {
             $scope.tooltips.push(tooltip);
@@ -17,12 +17,9 @@
           };
         }
       ]),
-      link: function ($scope, $elem, $attr) {
-        //console.log('link');
-        //console.log(Images);
+      link($scope, $elem, $attr) {
 
         Images.loadxml().then(function (dataXML) {
-          //console.log('success');
 
           if (window.DOMParser) { // Standard
             let parser = new DOMParser();
@@ -34,39 +31,39 @@
             xml.loadXML(dataXML);
           }
 
-          let imgData = xml.getElementsByTagName('img');
-          let scaleData = xml.getElementsByTagName('scale');
+          let imgData = xml.getElementsByTagName("img");
+          let scaleData = xml.getElementsByTagName("scale");
           Images.level = []; //niveaux de résolution
-          Images.ext = imgData[0].getAttribute('ext'); //extension des fichiers images
+          Images.ext = imgData[0].getAttribute("ext"); //extension des fichiers images
           //pour chaque level(niveau de resolution)
           for (let i = 0; i < scaleData.length; i++) {
-            if (Number(scaleData[i].getAttribute('width')) > 200) {
+            if (Number(scaleData[i].getAttribute("width")) > 200) {
               Images.level.push({
-                value: Number(scaleData[i].getAttribute('value').replace('.', '')),
-                width: Number(scaleData[i].getAttribute('width')),
-                height: Number(scaleData[i].getAttribute('height')),
-                cols: Number(scaleData[i].getAttribute('cols')),
-                rows: Number(scaleData[i].getAttribute('rows')),
-                tileHeight: Number(scaleData[i].getAttribute('tile_height')),
-                tileWidth: Number(scaleData[i].getAttribute('tile_width')),
+                value: Number(scaleData[i].getAttribute("value").replace(".", "")),
+                width: Number(scaleData[i].getAttribute("width")),
+                height: Number(scaleData[i].getAttribute("height")),
+                cols: Number(scaleData[i].getAttribute("cols")),
+                rows: Number(scaleData[i].getAttribute("rows")),
+                tileHeight: Number(scaleData[i].getAttribute("tile_height")),
+                tileWidth: Number(scaleData[i].getAttribute("tile_width")),
                 resources: [],
               });
               //pour chaque resources(angle de vue)
               for (let j = 0; j < imgData.length; j++) {
                 Images.level[i].resources.push([]);
 
-                //pour chaque position(images découpées de l'angle de vue)
+                //pour chaque position(images découpées de l"angle de vue)
                 for (let k = 0; k < Images.level[i].cols * Images.level[i].rows; k++) {
                   let name = Images.url() +
-                    'images/' + imgData[j].getAttribute('name') +
-                    '_' + Images.level[i].value +
-                    '_' + Math.floor(k / Images.level[i].rows) +
-                    '_' + k % Images.level[i].rows +
-                    '.' + Images.ext;
+                    "images/" + imgData[j].getAttribute("name") +
+                    "_" + Images.level[i].value +
+                    "_" + Math.floor(k / Images.level[i].rows) +
+                    "_" + k % Images.level[i].rows +
+                    "." + Images.ext;
 
                   Images.level[i].resources[j].push({
-                    'loaded': false,
-                    'img': name
+                    "loaded": false,
+                    "img": name
                   });
                 }
               }

@@ -18,7 +18,7 @@
 
       //Retourne titre, desc, et details du xml chargé si ils existent
       this.loadXml = (id, tooltips, angle, lookupAngle, dataXML) => {
-        let titre, desc, details;
+        let titre, description, details;
 
         if (window.DOMParser) {
           // Standard
@@ -40,7 +40,7 @@
                 titre = colProperties[i].textContent;
               }
               if (colProperties[i].getAttribute("name") === "description") {
-                desc = colProperties[i].textContent;
+                description = colProperties[i].textContent;
               }
             }
           } else {
@@ -69,7 +69,7 @@
                   colProperties[i].getAttribute("name") === "description" &&
                   !desc
                 ) {
-                  desc = colProperties[i].textContent;
+                  description = colProperties[i].textContent;
                 }
               }
             });
