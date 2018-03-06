@@ -1,15 +1,15 @@
-self.addEventListener('install', function (e) {
+self.addEventListener("install", function (e) {
     e.waitUntil(
-        caches.open('orbit-360').then(function (cache) {
+        caches.open("orbit-360").then(function (cache) {
             return cache.addAll([
-                '/',
-                '/index.html'
+                "/",
+                "/index.html"
             ]);
         })
     );
 });
 
-self.addEventListener('fetch', function (event) {
+self.addEventListener("fetch", function (event) {
 
     //console.log(event.request.url);
 
