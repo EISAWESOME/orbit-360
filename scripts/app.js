@@ -1,3 +1,4 @@
+/* global angular */
 /* Sources dispo https://github.com/EISAWESOME/orbit */
 "use strict";
 const ob = angular.module("Orbit", [
@@ -48,5 +49,5 @@ const ob = angular.module("Orbit", [
         cacheFlushInterval: 15 * 24 * 60 * 60 * 1000, // This cache will clear itself every 15 days
         deleteOnExpire: "aggressive" // Items will be deleted from this cache when they expire
       });
-    }])
-})();
+    }]);
+}());

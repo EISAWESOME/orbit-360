@@ -38,7 +38,7 @@
                     $scope.tooltip.y / ratioY +
                     $scope.translaY +
                     $scope.canvas.clientHeight / 2
-                }
+                };
             };
 
             const lookupToolTip = (e) => {

@@ -202,7 +202,7 @@
             .position(pinTo)
             .hideDelay(3000)
           );
-        }
+        };
 
         const points = xml.getElementsByTagName("PointInteret");
         for (let i = 0; i < points.length; i++) {
