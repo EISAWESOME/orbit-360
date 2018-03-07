@@ -224,34 +224,9 @@
         }
       };
 
-      //Ouvre une fenetre avec un dump du XML
-      // ATTENTION marche pas sur chrome
+      //Telecharge un zip contenant un readme, et le fichier XML
       this.exportXML = () => {
-        const detectIE = () => {
-          const ua = window.navigator.userAgent;
-
-          const msie = ua.indexOf("MSIE ");
-          if (msie > 0) {
-            // IE 10 or older => return version number
-            return parseInt(ua.substring(msie + 5, ua.indexOf(".", msie)), 10);
-          }
-
-          const trident = ua.indexOf("Trident/");
-          if (trident > 0) {
-            // IE 11 => return version number
-            const rv = ua.indexOf("rv:");
-            return parseInt(ua.substring(rv + 3, ua.indexOf(".", rv)), 10);
-          }
-
-          const edge = ua.indexOf("Edge/");
-          if (edge > 0) {
-            // Edge (IE 12+) => return version number
-            return parseInt(ua.substring(edge + 5, ua.indexOf(".", edge)), 10);
-          }
-
-          // other browser
-          return false;
-        };
+        
         const oldProperties = xml.getElementsByTagName("properties")[0];
         xml.getElementsByTagName("sequence")[0].removeChild(oldProperties);
 
@@ -276,25 +251,19 @@
 
         const content = new XMLSerializer().serializeToString(xml);
         if (content) {
-          /* TODO : Faire un ficher .xml a partir de la string, faire un fichier d'instruction sur le remplacement / export de points d'interets
-            Zip le tout, faire download
-          */
-          const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-          if(detectIE() || isChrome){
-            const popup = window.open();
-            //On wrap le content dans un textarea pour que les markups soient conservés
-            popup.document.write(
-              "<textarea style='width: 100%; height: 100%; border:none;'>" +
-              content +
-              "</textarea>"
-            );     
-          } else {
-            window.open(
-              "data:text/xml," + encodeURIComponent(content),
-              "Test",
-              "width=900,height=900,scrollbars=1,resizable=1"
-            );  
-          }
+
+          const zip = new JSZip();
+          zip.file("content.xml", content);
+          const instruction = "Pour réutiliser vos point d'interets, remplacez le fichier content.xml du dossier 'amonite' par le fichier generé";
+          zip.file("README.txt", instruction);
+
+          let promise = null;
+          promise = zip.generateAsync({
+              type: "blob"
+            })
+            .then((blob) => {
+              saveAs(blob, "o360export.zip");
+            });
         }
       };
     }
