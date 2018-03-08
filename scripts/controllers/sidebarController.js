@@ -57,8 +57,9 @@
                 storageService.exportXML();
             };
 
-            $scope.deleteStorage = () => {
-                storageService.deleteStorage();
+            $scope.clearStorage = () => {
+                /** TODO : pop up de confirmation */
+                storageService.clearStorage();
             };
 
             $scope.toggleEditTooltip = (e) => {

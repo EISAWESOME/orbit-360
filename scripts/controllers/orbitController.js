@@ -714,7 +714,12 @@
                                     //On supprime le pop up précedent si il existe
                                     popService.deleteTitrePop();
                                     //On crée le pop up du point en question
-                                    popService.createPop("desc", $scope.matchedTt[i].desc, pointX, pointY);
+                                    if($scope.matchedTt[i].desc !== " "){
+                                        popService.createPop("desc", $scope.matchedTt[i].desc, pointX, pointY);
+                                    } else {
+                                        popService.createPop("desc", "Pas de description...", pointX, pointY);
+                                    }
+                                    
                                     $scope.canvas.style.cursor = "default";
                                 } else {
                                     incr++;
@@ -751,7 +756,7 @@
                     })
                     .then((answer) => {
                         $scope.tooltipTitre = answer.Titre;
-                        $scope.tooltipDesc = answer.Desc;
+                        $scope.tooltipDesc = answer.Desc ? answer.Desc : " ";
                         $scope.createClickTooltip(tttc);
                     });
             };

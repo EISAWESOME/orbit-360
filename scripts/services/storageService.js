@@ -369,10 +369,11 @@
         }
       };
 
-      this.deleteStorage = () => {
+      this.clearStorage = () => {
         if (typeof (Storage) !== "undefined") {
           localStorage.clear();
-        }        
+        }
+        //Supprime les points d'interet du XML       
       };
 
     }

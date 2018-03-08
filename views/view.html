@@ -55,12 +55,12 @@
 
         <h1 flex md-truncate>Points d'interet</h1>
 
-        <md-button class="md-icon-button" aria-label="Delete storage" ng-click="deleteStorage()">
+        <md-button ng-if="isEditMode" class="md-icon-button" aria-label="clear storage" ng-click="clearStorage()">
           <md-icon class="fa fa-trash-o fa-2x"></md-icon>
-          <md-tooltip md-direction="bottom">Sauvegarder les points d'interets</md-tooltip>
+          <md-tooltip md-direction="bottom">Supprimer les points d'interets</md-tooltip>
         </md-button>
 
-        <md-button ng-show="isEditMode" class="md-icon-button" aria-label="Export XML" ng-click="exportXML()">
+        <md-button ng-if="isEditMode" class="md-icon-button" aria-label="Export XML" ng-click="exportXML()">
           <md-icon class="fa fa-file-text-o fa-2x"></md-icon>
           <md-tooltip md-direction="bottom">Export XML</md-tooltip>
         </md-button>
