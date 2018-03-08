@@ -5,16 +5,15 @@
     "$http",
     "$location",
     "$mdToast",
+    "$rootScope",
     "Images",
-    function ($http, $location, $mdToast, Images) {
+    function ($http, $location, $mdToast, $rootScope, Images) {
       let 
         xml = null,
-        currentIdTooltip = 0;
+        currentIdTooltip = 0,
+        tooltips = [];
 
-      const 
-        tooltips = [],
-        self = this;
-      
+      const self = this;      
 
       this.getXml = () => {
         return xml;
@@ -187,24 +186,11 @@
             const parser = new DOMParser();
             const docPi = parser.parseFromString(stringPi, "text/xml");
             const elmPi = docPi.getElementsByTagName('PointInteret')[0];
-            //Ajoute le point des les tooltips
-
-            /*
-            const tooltip = {
-              title: title,
-              desc: desc,
-              image: $scope.angle, //Angle
-              x: tooltipTrueCoord.x,
-              y: tooltipTrueCoord.y,
-              id
-            };*/
 
             //Ajoute le point dans le XML
             xml.getElementsByTagName("sequence")[0].appendChild(elmPi);
             currentIdTooltip++;
           }
-          //initialise les variable tooltips et id
-          console.log(currentIdTooltip, tooltips);
         }
       };
 
@@ -316,6 +302,15 @@
             }
           }
         }
+
+        //Supprime le point d'interet dans le local storage
+        if (typeof (Storage) !== "undefined") {
+          localStorage.removeItem(`p${tooltip.id}`);
+        }
+
+        currentIdTooltip--;
+        $rootScope.$emit("tooltipChanged");
+
       };
 
       //Telecharge un zip contenant un readme, et le fichier XML
@@ -363,9 +358,8 @@
 
       this.savePI = (el, id) => {
         if (typeof (Storage) !== "undefined") {
-          console.log(el);
-          localStorage.setItem(`p${id}`, el)
-          console.log('Stocké !')
+          localStorage.setItem(`p${id}`, el);
+          console.log('Stocké !');
         }
       };
 
@@ -373,8 +367,18 @@
         if (typeof (Storage) !== "undefined") {
           localStorage.clear();
         }
-        //Supprime les points d'interet du XML       
+        //Supprime les points d'interet du XML 
+        const axp = xml.getElementsByTagName("PointInteret");
+        while(axp.length > 0){
+          axp[0].parentNode.removeChild(axp[0]);
+        }
+        
+        //Supprime les tooltip
+        tooltips = [];
+        currentIdTooltip = 0;
+        $rootScope.$emit("tooltipChanged");
       };
+
 
     }
   ]);

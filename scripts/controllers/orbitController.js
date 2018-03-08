@@ -38,6 +38,12 @@
                 }
             });
 
+            $rootScope.$on("tooltipChanged", () => {
+                $scope.tooltips = storageService.getTooltips();
+                $scope.id = storageService.getId();
+                $rootScope.$emit("canvasEdited");  
+            });
+
             /**************Declaration et initialisation des variable du scope**************/
             //Initalisation de l"id des tooltip
             $scope.id = storageService.getId();
@@ -115,7 +121,6 @@
                 $scope.resize();
 
                 $scope.visible = true;
-
 
 
                 //Boucle de dessin, verifie si il faut dessiné toute les 40ms

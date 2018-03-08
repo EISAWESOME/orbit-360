@@ -151,14 +151,17 @@ orbitview a:hover {
   padding: 10px 10px;
 }
 
-#menu-container #menu>li:hover {
-  color: white;
-}
-
 #menu-container.expand {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   border-top: 0;
+}
+
+.canvasControls {
+  top: 50%;
+  margin-top: -25vh;
+  position: absolute;
+  height: 50vh;
 }
 
 .canvasButton {
@@ -249,8 +252,9 @@ tr.border_bottom td {
 }
 
 #info {
-  margin-top: 15px;
-  margin-left: 15px;
+  top: 15px;
+  right: 15px;
+  position: absolute;
 }
 
 .rotato {
