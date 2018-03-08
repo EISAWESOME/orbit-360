@@ -17,15 +17,15 @@
 <div id="button-container">
 
 
-  <div class="canvasControls">
+  <div layout="column" class="canvasControls">
 
     <div class="nofocus canvasButton" ng-click="zoomIn(); deleteAllPop()">
-        <md-tooltip md-direction="left">Zoom +</md-tooltip>
+        <md-tooltip md-direction="left" md-delay="0.8">Zoom +</md-tooltip>
       <i class="fa fa-search-plus"></i>
     </div>
 
     <div class="nofocus canvasButton" ng-click="zoomOut(); deleteAllPop()">
-        <md-tooltip md-direction="left">Zoom -</md-tooltip>
+        <md-tooltip md-direction="left" md-delay="0.8">Zoom -</md-tooltip>
       <i class="fa fa-search-minus"></i>
     </div>
 
@@ -33,12 +33,12 @@
 
 
     <div class="nofocus canvasButton" ng-click="toggleLeft(); deleteAllPop()">
-      <md-tooltip md-direction="left">Ouvrir/Fermer le menu</md-tooltip>
+      <md-tooltip md-direction="left" md-delay="0.8">Ouvrir/Fermer le menu</md-tooltip>
       <i class="fa fa-bars"></i>
     </div>
 
     <div class="nofocus canvasButton" ng-click="editMode()">
-      <md-tooltip md-direction="left">Mode édition</md-tooltip>
+      <md-tooltip md-direction="left" md-delay="0.8">Mode édition</md-tooltip>
       <i class="fa fa-pencil-square-o" ng-class="{'canvas-icon-selected' : isEditMode, 'canvas-icon' : !isEditMode }"></i>
     </div>
 
@@ -56,13 +56,13 @@
         <h1 flex md-truncate>Points d'interet</h1>
 
         <md-button ng-if="isEditMode" class="md-icon-button" aria-label="clear storage" ng-click="clearStorage()">
-          <md-icon class="fa fa-trash-o fa-2x"></md-icon>
-          <md-tooltip md-direction="bottom">Supprimer les points d'interets</md-tooltip>
+          <md-icon class="fa fa-trash-o fa-2x" style="color : red"></md-icon>
+          <md-tooltip md-direction="bottom" md-delay="0.8">Supprimer les points d'interets</md-tooltip>
         </md-button>
 
         <md-button ng-if="isEditMode" class="md-icon-button" aria-label="Export XML" ng-click="exportXML()">
           <md-icon class="fa fa-file-text-o fa-2x"></md-icon>
-          <md-tooltip md-direction="bottom">Export XML</md-tooltip>
+          <md-tooltip md-direction="bottom" md-delay="0.8">Export XML</md-tooltip>
         </md-button>
 
         <md-button class="md-icon-button" aria-label="Close Sidenav" ng-click="toggleLeft()">

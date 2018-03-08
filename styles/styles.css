@@ -207,12 +207,10 @@ orbitview a:hover {
   color: red;
 }
 
-md-dialog.medium-dialog {
-  max-width: 50%;
-  max-height: 50%;
-  width: 500px;
-  height: 350px;
-  border-radius: 0;
+.promptDialog {
+  position: absolute !important;
+  top: 10%;
+  width: 95%;
 }
 
 #tooltip-table {
