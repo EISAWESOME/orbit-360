@@ -57,6 +57,10 @@
                 storageService.exportXML();
             };
 
+            $scope.deleteStorage = () => {
+                storageService.deleteStorage();
+            };
+
             $scope.toggleEditTooltip = (e) => {
                 lookupToolTip(e);
 

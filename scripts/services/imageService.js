@@ -3,31 +3,11 @@
 (function () {
   ob.factory("Images", ["$resource", "$location", "$rootScope", "$http", function ($resource, $location, $rootScope, $http) {
     return {
-      //url: "../hyracotherium_pied-a-4-doigts/",
-      //url: "../Axinite_prenite_epidote/",
-      url: () => {
-        //Si la paremetre url est renseigné
-        if ($location.search().model) {
-          return "../" + $location.search().model + "/";
-
-        }
-        //Sinon on charge l"amonite par défaut
-        else {
-          return "../amonite/";
-        }
-      },
       loadingQueue: [],
       loadSlot: 0,
       loaded: 0,
       firstLevelLoaded: 0,
-      //charge un xml, contenu recuperable dans le .then
-      loadxml() {
-        return $http.get(this.url() + "content.xml");
-      },
 
-      loadDetails() {
-        return $http.get(this.url() + "content2.xml");
-      },
       loadLevel(lvl) {
         let time = new Date();
         //console.log("loadLevel  "+ lvl +" time: "+ time.getSeconds() +" "+ time.getMilliseconds());

@@ -1,7 +1,7 @@
 /* global ob, window */
 "use strict";
 (function () {
-  ob.directive("orbitview", ["Images", function (Images) {
+  ob.directive("orbitview", ["Images", "storageService", function (Images, storageService) {
     return {
       restrict: "E",
       transclude: true,
@@ -19,7 +19,7 @@
       ]),
       link($scope, $elem, $attr) {
 
-        Images.loadxml().then(function (dataXML) {
+        storageService.loadXml().then(function (dataXML) {
 
           if (window.DOMParser) { // Standard
             let parser = new DOMParser();
@@ -54,7 +54,7 @@
 
                 //pour chaque position(images découpées de l"angle de vue)
                 for (let k = 0; k < Images.level[i].cols * Images.level[i].rows; k++) {
-                  let name = Images.url() +
+                  let name = storageService.determineUrl() +
                     "images/" + imgData[j].getAttribute("name") +
                     "_" + Images.level[i].value +
                     "_" + Math.floor(k / Images.level[i].rows) +

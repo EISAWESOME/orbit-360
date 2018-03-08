@@ -1,24 +1,75 @@
-/* global ob, window, ActiveXObject */
+/* global ob, window, ActiveXObject, JSZip, saveAs */
 "use strict";
 (function () {
   ob.service("storageService", [
-    "Images",
+    "$http",
+    "$location",
     "$mdToast",
-    function (Images, $mdToast) {
-      let xml = null;
-      const self = this;
+    "Images",
+    function ($http, $location, $mdToast, Images) {
+      let 
+        xml = null,
+        currentIdTooltip = 0;
+
+      const 
+        tooltips = [],
+        self = this;
+      
 
       this.getXml = () => {
         return xml;
       };
 
-      this.setXml = (xmlDoc) => {
-        xml = xmlDoc;
+      this.setXml = (_xml) => {
+        xml = _xml;
+      };
+
+      this.getId = () => {
+        return currentIdTooltip;
+      };
+
+      /*
+      this.setId = (_xml) => {
+        xml = _xml;
+      };*/
+
+      this.getTooltips = () => {
+        return tooltips;
+      };
+
+      /*
+      this.setTooltips = (_xml) => {
+        xml = _xml;
+      };*/
+
+      //url: "../hyracotherium_pied-a-4-doigts/",
+      //url: "../Axinite_prenite_epidote/",
+      this.determineUrl = () => {
+        //Si la paremetre url est renseigné
+
+        /*
+        if ($location.search().model) {
+          return "../" + $location.search().model + "/";
+        }
+        //Sinon on charge l"amonite par défaut
+        else {
+          */
+        return "../amonite/";
+        //}
+      };
+
+      //charge un xml, retoune une promesse
+      this.loadXml = function () {
+        return $http.get(self.determineUrl() + "content.xml")
+      };
+
+      this.loadDetails = function () {
+        return $http.get(self.determineUrl() + "content2.xml");
       };
 
       //Retourne titre, desc, et details du xml chargé si ils existent
-      this.loadXml = (id, tooltips, angle, lookupAngle, dataXML) => {
-        let titre, description, details;
+      this.readXml = ( dataXML) => {
+        let titre, description, details, lookupAngle = [], id = 0;
 
         if (window.DOMParser) {
           // Standard
@@ -31,6 +82,8 @@
           xml.loadXML(dataXML);
         }
         if (xml) {
+
+          self.loadLocalStorage(xml);
           //Si il existe les proprietes dans content.xml, on les prends
           if (xml.getElementsByTagName("property").length > 0) {
             const colProperties = xml.getElementsByTagName("property");
@@ -90,7 +143,7 @@
               y: colPoints[i].getElementsByTagName("Coord")[0].getAttribute("y")
             };
 
-          let id = colPoints[i].attributes[1].value;
+          let currentIdTooltip = colPoints[i].attributes[1].value;
 
           const tooltip = {
             title: titre[0].textContent,
@@ -98,10 +151,10 @@
             image: angle,
             x: coord.x,
             y: coord.y,
-            id
+            id :currentIdTooltip
           };
 
-          id++;
+          currentIdTooltip++;
           for (let i = 0, len = tooltips.length; i < len; i++) {
             lookupAngle[tooltips[i].image] = tooltips[i];
           }
@@ -118,17 +171,48 @@
           });
 
         return {
-          id,
+          id : currentIdTooltip,
           titre,
           description,
-          details
+          details,
+          lookupAngle
         };
+      };
+
+      this.loadLocalStorage = (xmlDoc) => {
+        if (typeof (Storage) !== "undefined") {
+          currentIdTooltip = 0;
+          while(localStorage.getItem(`p${currentIdTooltip}`) && localStorage.getItem(`p${currentIdTooltip}`) != ""){
+            let stringPi = localStorage.getItem(`p${currentIdTooltip}`);
+            const parser = new DOMParser();
+            const docPi = parser.parseFromString(stringPi, "text/xml");
+            const elmPi = docPi.getElementsByTagName('PointInteret')[0];
+            //Ajoute le point des les tooltips
+
+            /*
+            const tooltip = {
+              title: title,
+              desc: desc,
+              image: $scope.angle, //Angle
+              x: tooltipTrueCoord.x,
+              y: tooltipTrueCoord.y,
+              id
+            };*/
+
+            //Ajoute le point dans le XML
+            xml.getElementsByTagName("sequence")[0].appendChild(elmPi);
+            currentIdTooltip++;
+          }
+          //initialise les variable tooltips et id
+          console.log(currentIdTooltip, tooltips);
+        }
       };
 
       //Ecris un pin dans le xml
       this.writePin = (titre, desc, angle, coord, id) => {
         if (xml) {
           const elmPoint = xml.createElement("PointInteret"),
+          
             elmTitre = xml.createElement("Titre"),
             elmDesc = xml.createElement("Description"),
             elmCoord = xml.createElement("Coord"),
@@ -148,6 +232,16 @@
           elmPoint.appendChild(elmCoord);
 
           xml.getElementsByTagName("sequence")[0].appendChild(elmPoint);
+
+          //Ecris / update le XML dans le localstorage
+          if (typeof (Storage) !== "undefined") {
+            const 
+              parser = new XMLSerializer(),
+              idPoint = elmPoint.getAttribute("ID"),
+              stringPoint = parser.serializeToString(elmPoint);
+
+            self.savePI(stringPoint, idPoint);
+          }
         }
       };
 
@@ -226,7 +320,7 @@
 
       //Telecharge un zip contenant un readme, et le fichier XML
       this.exportXML = () => {
-        
+
         const oldProperties = xml.getElementsByTagName("properties")[0];
         xml.getElementsByTagName("sequence")[0].removeChild(oldProperties);
 
@@ -266,6 +360,21 @@
             });
         }
       };
+
+      this.savePI = (el, id) => {
+        if (typeof (Storage) !== "undefined") {
+          console.log(el);
+          localStorage.setItem(`p${id}`, el)
+          console.log('Stocké !')
+        }
+      };
+
+      this.deleteStorage = () => {
+        if (typeof (Storage) !== "undefined") {
+          localStorage.clear();
+        }        
+      };
+
     }
   ]);
 }());

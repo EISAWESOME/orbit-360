@@ -32,15 +32,15 @@
                 if ($scope.canvas) {
                     $scope.draw(true);
 
-                    if($scope.tooltips){
-                        $scope.matchTooltip();    
-                    } 
+                    if ($scope.tooltips) {
+                        $scope.matchTooltip();
+                    }
                 }
-            });            
+            });
 
             /**************Declaration et initialisation des variable du scope**************/
             //Initalisation de l"id des tooltip
-            $scope.id = 0;
+            $scope.id = storageService.getId();
             //
 
             $scope.lookupAngle = {};
@@ -70,9 +70,8 @@
             //
 
             //Variables lié au tooltips
-            $scope.tooltips = [];
+            $scope.tooltips = storageService.getTooltips();
             $scope.tooltip = null;
-            $scope.tooltipTrueCoord = {};
             $scope.tooltipTitre = "";
             $scope.tooltipDesc = "";
             $scope.isPopDrawn = false;
@@ -131,19 +130,14 @@
 
                 // Transferer vers le storageService ?
                 // Et retourner le titre et la description ?
-                Images.loadxml().then((dataXML) => {
-                    const ret = storageService.loadXml(
-                        $scope.id,
-                        $scope.tooltips,
-                        $scope.angle,
-                        $scope.lookupAngle,
-                        dataXML
-                    );
+                storageService.loadXml().then((xml) => {
+                    const ret = storageService.readXml(xml);
 
                     $scope.id = ret.id;
                     $scope.titre = ret.titre;
                     $scope.description = ret.description;
                     $scope.details = ret.details;
+                    $scope.lookupAngle = ret.lookupAngle;
                 });
 
                 $scope.modeCursor();
@@ -518,10 +512,10 @@
                 if (
                     $scope.level < Images.level.length - 1 &&
                     $scope.zoom * 1000 <= Images.level[$scope.level + 1].value
-                ){
+                ) {
                     $scope.level++;
                 }
-                    
+
                 $rootScope.$emit("canvasEdited");
             };
 
@@ -589,10 +583,10 @@
             const determineRatios = () => {
                 let lvl = $scope.level;
                 return {
-                    x : Images.level[0].width /
-                    ($scope.actualTileWidth * Images.level[lvl].cols),
-                    y : Images.level[0].height /
-                    ($scope.actualTileHeight * Images.level[lvl].rows)
+                    x: Images.level[0].width /
+                        ($scope.actualTileWidth * Images.level[lvl].cols),
+                    y: Images.level[0].height /
+                        ($scope.actualTileHeight * Images.level[lvl].rows)
                 };
 
             };
@@ -619,7 +613,7 @@
                     const ratio = determineRatios();
 
                     //Les coordonnées du point à l"echelle 1:1 de l"image d"origine scale 100%
-                    $scope.tooltipTrueCoord = {
+                    const tooltipTrueCoord = {
                         x: cursorX * ratio.x,
                         y: cursorY * ratio.y
                     };
@@ -633,13 +627,13 @@
                             $scope.actualTileHeight * Images.level[lvl].rows / 2 ||
                             cursorY < -$scope.actualTileHeight * Images.level[lvl].rows / 2
                         )) {
-                        $scope.promptPoint();
+                        $scope.promptPoint(tooltipTrueCoord);
                     }
                 }
             };
 
             //Creation de l'objet correspondant au point
-            $scope.createTooltip = () => {
+            $scope.createClickTooltip = (tooltipTrueCoord) => {
                 const id = $scope.id;
                 $scope.id++;
 
@@ -650,7 +644,7 @@
                     title,
                     desc,
                     $scope.angle,
-                    $scope.tooltipTrueCoord,
+                    tooltipTrueCoord,
                     id
                 );
 
@@ -658,8 +652,8 @@
                     title: title,
                     desc: desc,
                     image: $scope.angle, //Angle
-                    x: $scope.tooltipTrueCoord.x,
-                    y: $scope.tooltipTrueCoord.y,
+                    x: tooltipTrueCoord.x,
+                    y: tooltipTrueCoord.y,
                     id
                 };
 
@@ -683,30 +677,30 @@
             $scope.addMouseHoverListener = () => {
                 $scope.canvas.addEventListener("mousemove", function (e) {
                     let lvl = $scope.level;
-    
+
                     let aX = e.pageX - $scope.canvas.clientWidth / 2 - $scope.translaX,
                         aY = e.pageY - $scope.canvas.clientHeight / 2 - $scope.translaY;
-    
+
                     const ratio = determineRatios();
-    
+
                     const cursorX = aX * ratio.x,
                         cursorY = aY * ratio.y;
-    
+
                     let incr = 0;
                     //On boucle dans le tableau des point interet de l"angle actuel
                     for (let i = 0; i < $scope.matchedTt.length; i++) {
                         const pointX =
-                        $scope.matchedTt[i].x / ratio.x +
+                            $scope.matchedTt[i].x / ratio.x +
                             $scope.translaX +
                             $scope.canvas.clientWidth / 2,
                             pointY =
                             $scope.matchedTt[i].y / ratio.y +
                             $scope.translaY +
                             $scope.canvas.clientHeight / 2;
-    
+
                         //Les offsets entrée sont arbitraires et correspondent a la tolerence de declenchement de l"affichage du tooltip
                         //On divise par le zoom pour que la tolérence diminue plus le zoom est elevé, et inversement
-    
+
                         //Si la position du curseur correspond a celle d"un point
                         if ($scope.matchedTt[i].image == $scope.angle) {
                             if (
@@ -746,12 +740,11 @@
 
             /********************************Dialogs**********************************/
             //Dialog de saisie du Titre et Desc d"un point
-            $scope.promptPoint = (ev) => {
+            $scope.promptPoint = (tttc) => {
                 $mdDialog
                     .show({
                         templateUrl: "views/tooltipPrompt.tpl.html",
                         parent: angular.element(document.body),
-                        targetEvent: ev,
                         controller: "OrbitCtrl",
                         clickOutsideToClose: true,
                         escapeToClose: true
@@ -759,7 +752,7 @@
                     .then((answer) => {
                         $scope.tooltipTitre = answer.Titre;
                         $scope.tooltipDesc = answer.Desc;
-                        $scope.createTooltip();
+                        $scope.createClickTooltip(tttc);
                     });
             };
 
