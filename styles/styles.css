@@ -20,6 +20,19 @@ orbitview a {
 orbitview a:hover {
   text-decoration: underline;
 }
+orbitview #info {
+  top: 15px;
+  right: 5px;
+  position: absolute;
+}
+orbitview #titreImage {
+  cursor: help;
+  color: #ffffff;
+  font-weight: bold;
+  width: 100%;
+  position: absolute;
+  text-align: center;
+}
 orbitview #orbit-canvas {
   position: absolute;
   width: 100%;
@@ -81,20 +94,8 @@ orbitview #orbit-loader {
   margin-top: -50px;
 }
 orbitview #orbit-loader-reso {
-  width: 30px;
-  height: 30px;
-  left: 50px;
-  top: 50px;
-}
-@-webkit-keyframes rotate {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+  left: .5vw;
+  top: .5vw;
 }
 @keyframes rotate {
   0% {
@@ -109,23 +110,29 @@ orbitview #orbit-loader-reso {
   }
 }
 orbitview #menu-container {
+  width: 100%;
   position: absolute;
   z-index: 10;
-  width: 80vw;
   font-size: 24px;
   background-color: rgba(0, 0, 0, 0.7);
   border: solid black 1px;
   bottom: 20px;
   border-radius: 3px;
-  left: 50%;
-  margin-left: -40vw;
   text-align: center;
 }
-orbitview #menu-container #menu > li {
+orbitview #menu-container #menu {
+  width: 100%;
+}
+orbitview #menu-container #menu div {
   cursor: pointer;
   color: rgba(255, 255, 255, 0.7);
   display: inline-block;
-  padding: 10px 10px;
+  padding: 1vw 1vw;
+}
+orbitview #menu-container #menu div img {
+  max-width: 50px;
+  min-width: 30px;
+  width: 10vw;
 }
 orbitview #menu-container .expand {
   border-top-left-radius: 0;
@@ -156,7 +163,7 @@ orbitview #button-container .canvasButton {
   color: rgba(255, 255, 255, 0.7);
   width: 50px;
   height: 50px;
-  line-height: 50px;
+  line-height: 45px;
   margin: 10px 0 10px 0;
   background-color: rgba(0, 0, 0, 0.6);
   border: solid rgba(255, 255, 255, 0.6) 3px;
@@ -171,54 +178,46 @@ orbitview #button-container .canvasButton:hover,
 orbitview #button-container .canvasButton:active {
   color: white;
 }
-orbitview .canvas-icon-selected {
+orbitview #button-container .canvasButton .canvas-icon-selected {
   color: red;
-}
-orbitview .promptDialog {
-  position: absolute !important;
-  top: 10%;
-  width: 95%;
 }
 orbitview #tooltip-table {
   width: 95%;
   table-layout: fixed;
 }
-orbitview #tooltip-table tr {
-  height: 20px;
+orbitview #tooltip-table tbody {
   font-size: 16pt;
 }
-orbitview #tooltip-table tr td .ttTitre {
+orbitview #tooltip-table tbody tr {
+  height: 20px;
+}
+orbitview #tooltip-table tbody tr .border_bottom td {
+  border-bottom: 1pt inset;
+}
+orbitview #tooltip-table tbody td {
+  min-width: 20px;
+}
+orbitview #tooltip-table tbody td .rotato {
+  transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  transition: all 0.2s ease;
+  -moz-transition: all 0.2s ease;
+  -webkit-transition: all 0.2s ease;
+}
+orbitview #tooltip-table tbody td .editable {
+  color: lawngreen;
+}
+orbitview #tooltip-table tbody td .not-editable {
+  color: grey;
+}
+orbitview #tooltip-table tbody .ttTitre {
   width: 80%;
   word-wrap: break-word;
 }
-orbitview #tooltip-table tr .ttTitre:hover {
-  background-color: #ececec;
-}
-orbitview #tooltip-table tr .titre:hover {
+orbitview #tooltip-table tbody .ttTitre .titre:hover {
   cursor: pointer;
   background-color: #ececec;
-}
-orbitview .editable {
-  color: lawngreen;
-}
-orbitview .not-editable {
-  color: grey;
-}
-orbitview tr.border_bottom td {
-  border-bottom: 1pt inset;
-}
-orbitview #info {
-  top: 15px;
-  right: 15px;
-  position: absolute;
-}
-orbitview #titreImage {
-  cursor: help;
-  color: #ffffff;
-  font-weight: bold;
-  width: 100%;
-  position: absolute;
-  text-align: center;
 }
 orbitview md-tooltip .md-content {
   position: relative;
@@ -245,4 +244,24 @@ orbitview div.titrePop {
 }
 orbitview .nofocus:focus {
   outline: none;
+}
+.promptDialog {
+  position: absolute !important;
+  top: 10%;
+  width: 95%;
+}
+@media (max-width: 500px) {
+  orbitview #info {
+    width: 30px;
+  }
+  orbitview #button-container {
+    margin-left: -35px;
+  }
+  orbitview #button-container .canvasButton {
+    font-size: 15px;
+    width: 30px;
+    height: 30px;
+    line-height: 25px;
+    margin: 10px 0 10px 0;
+  }
 }

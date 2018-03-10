@@ -20,6 +20,22 @@ orbitview {
             text-decoration: underline;
         }
     }
+
+        #info {
+        top: 15px;
+        right: 5px;
+        position: absolute;
+    }
+    #titreImage {
+        cursor: help;
+        color: #ffffff;
+        font-weight: bold;
+        width: 100%;
+        position: absolute;
+        text-align: center;
+    }
+
+
     #orbit-canvas {
         position: absolute;
         width: 100%;
@@ -77,20 +93,8 @@ orbitview {
         margin-top: -50px;
     }
     #orbit-loader-reso {
-        width: 30px;
-        height: 30px;
-        left: 50px;
-        top: 50px;
-    }
-    @-webkit-keyframes rotate {
-        0% {
-            -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-        }
-        100% {
-            -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
-        }
+        left: .5vw;
+        top: .5vw;
     }
     @keyframes rotate {
         0% {
@@ -104,23 +108,30 @@ orbitview {
             transform: rotate(360deg);
         }
     }
+
     #menu-container {
+        width: 100%;
         position: absolute;
         z-index: 10;
-        width: 80vw;
         font-size: 24px;
         background-color: rgba(0, 0, 0, 0.7);
         border: solid black 1px;
         bottom: 20px;
         border-radius: 3px;
-        left: 50%;
-        margin-left: -40vw;
         text-align: center;
-        #menu>li {
-            cursor: pointer;
-            color: rgba(255, 255, 255, 0.7);
-            display: inline-block;
-            padding: 10px 10px;
+        #menu {
+            width: 100%;
+            div {
+                cursor: pointer;
+                color: rgba(255, 255, 255, 0.7);
+                display: inline-block;
+                padding: 1vw 1vw;
+                img {
+                    max-width: 50px;
+                    min-width: 30px;
+                    width: 10vw;
+                }
+            }
         }
         .expand {
             border-top-left-radius: 0;
@@ -151,7 +162,7 @@ orbitview {
             color: rgba(255, 255, 255, 0.7);
             width: 50px;
             height: 50px;
-            line-height: 50px;
+            line-height: 45px;
             margin: 10px 0 10px 0;
             background-color: rgba(0, 0, 0, 0.6);
             border: solid rgba(255, 255, 255, 0.6) 3px;
@@ -165,61 +176,64 @@ orbitview {
             &:active {
                 color: white;
             }
+
+            .canvas-icon-selected {
+                color: red;
+            }
         }
     }
-    .canvas-icon-selected {
-        color: red;
-    }
-    .promptDialog {
-        position: absolute !important;
-        top: 10%;
-        width: 95%;
-    }
+
     #tooltip-table {
         width: 95%;
         table-layout: fixed;
-        tr {
-            height: 20px;
-            td {
-                .ttTitre {
-                    width: 80%;
-                    word-wrap: break-word;
-                }
-            }
+        tbody {
             font-size: 16pt;
-            .ttTitre:hover {
-                background-color: rgb(236, 236, 236);
+            tr {
+                height: 20px;
+                .border_bottom {
+                    td {
+                    border-bottom: 1pt inset;
+                    }
+                }                
+
             }
+
+            td {
+                min-width : 20px;
+
+                .rotato {
+                    transform: rotate(90deg);
+                    -ms-transform: rotate(90deg);
+                    -webkit-transform: rotate(90deg);
+                    transition: all 0.2s ease;
+                    -moz-transition: all 0.2s ease;
+                    -webkit-transition: all 0.2s ease;
+                }
+
+                .editable {
+                    color: lawngreen;
+                }
+                .not-editable {
+                    color: grey;
+                }
+
+            }
+            
+            .ttTitre {
+                width: 80%;
+                word-wrap: break-word;
+            }
+            .ttTitre
             .titre {
                 &:hover {
                     cursor: pointer;
                     background-color: rgb(236, 236, 236);
                 }
-            }
+            }    
         }
+
     }
-    .editable {
-        color: lawngreen;
-    }
-    .not-editable {
-        color: grey;
-    }
-    tr.border_bottom td {
-        border-bottom: 1pt inset;
-    }
-    #info {
-        top: 15px;
-        right: 15px;
-        position: absolute;
-    }
-    #titreImage {
-        cursor: help;
-        color: #ffffff;
-        font-weight: bold;
-        width: 100%;
-        position: absolute;
-        text-align: center;
-    }
+
     md-tooltip .md-content {
         position: relative;
         opacity: 1;
@@ -245,5 +259,29 @@ orbitview {
     }
     .nofocus:focus {
         outline: none;
+    }
+}
+
+.promptDialog {
+    position: absolute !important;
+    top: 10%;
+    width: 95%;
+}
+
+@media (max-width : 500px){
+    orbitview {
+        #info {
+            width:30px;
+        }
+        #button-container {
+            margin-left: -35px;
+            .canvasButton {
+                font-size: 15px;
+                width: 30px;
+                height: 30px;
+                line-height: 25px;
+                margin: 10px 0 10px 0;
+            }
+        }
     }
 }
