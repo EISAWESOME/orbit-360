@@ -1,4 +1,3 @@
-
 /* global ob, window*/
 "use strict";
 (function () {
@@ -13,22 +12,20 @@
 
             const getPointCoord = () => {
                 const ratioX =
-                Images.level[0].width /
-                ($scope.actualTileWidth * Images.level[$scope.level].cols),
+                    Images.level[0].width /
+                    ($scope.actualTileWidth * Images.level[$scope.level].cols),
 
-                ratioY =
-                Images.level[0].height /
-                ($scope.actualTileHeight * Images.level[$scope.level].rows);
+                    ratioY =
+                    Images.level[0].height /
+                    ($scope.actualTileHeight * Images.level[$scope.level].rows);
 
-                return{
-                    "X" : 
-                    $scope.tooltip.x / ratioX +
-                    $scope.translaX +
-                    $scope.canvas.clientWidth / 2,
-                    "Y" :
-                    $scope.tooltip.y / ratioY +
-                    $scope.translaY +
-                    $scope.canvas.clientHeight / 2
+                return {
+                    "X": $scope.tooltip.x / ratioX +
+                        $scope.translaX +
+                        $scope.canvas.clientWidth / 2,
+                    "Y": $scope.tooltip.y / ratioY +
+                        $scope.translaY +
+                        $scope.canvas.clientHeight / 2
                 };
             };
 
@@ -49,7 +46,7 @@
                 $scope.tooltip = lookup[ttId];
                 $scope.tooltip.id = ttId;
             };
-                
+
             $scope.toggleRight = $scope.buildToggler("right");
 
             $scope.exportXML = () => {
@@ -57,8 +54,18 @@
             };
 
             $scope.clearStorage = () => {
-                /** TODO : pop up de confirmation */
-                storageService.clearStorage();
+                const confirm = $mdDialog
+                    .confirm()
+                    .theme("grey")
+                    .title("Supprimer tout les points d\'interet ?")
+                    .textContent("Vous ne pourrez pas revenir en arrière...")
+                    .ariaLabel("Suppression")
+                    .ok("Supprimer")
+                    .cancel("Annuler");
+
+                $mdDialog.show(confirm).then(() => {
+                    storageService.clearStorage();
+                });                
             };
 
             $scope.toggleEditTooltip = (e) => {
@@ -104,7 +111,7 @@
                 lookupToolTip(e);
                 //Remove dans le tooltip
 
-                let a = e.target;                
+                let a = e.target;
                 a.parentNode.remove();
 
                 const indextt = $scope.tooltips.indexOf($scope.tooltip);
@@ -148,13 +155,13 @@
                 popService.deleteAllPop();
                 //On crée un lookup qui associe l"id d"un tooltip a son objet
                 lookupToolTip(e);
-                
+
                 $scope.autoPlay = false;
 
                 const coord = getPointCoord();
 
                 popService.createPop("titre", $scope.tooltip.title, coord.X, coord.Y);
-                $scope.origAngle = $scope.angle;
+                $scope.toggleLeft();
                 $scope.goTo($scope.tooltip.image);
             };
 
@@ -170,9 +177,9 @@
                     const coord = getPointCoord();
 
                     popService.createPop("titre", $scope.tooltip.title, coord.X, coord.Y);
-                    if (document.querySelector(".titrePop")){
+                    if (document.querySelector(".titrePop")) {
                         document.querySelector(".titrePop").style.display = "block";
-                    }                       
+                    }
                 }
             };
 

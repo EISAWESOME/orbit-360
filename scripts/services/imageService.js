@@ -9,7 +9,6 @@
       firstLevelLoaded: 0,
 
       loadLevel(lvl) {
-        let time = new Date();
         //console.log("loadLevel  "+ lvl +" time: "+ time.getSeconds() +" "+ time.getMilliseconds());
 
         let scope = this.level[lvl];

@@ -5,7 +5,7 @@
   "main": "index.html",
   "repository": "https://github.com/EISAWESOME/orbit-360.git",
   "author": "Clément S- LAPTOP <c.simonin@lyon.ort.asso.fr>",
-  "license": "CC",
+  "license": "Creative Common BY NC SA",
   "private": true,
   "dependencies": {
     "angular": "^1.6.9",

@@ -9,20 +9,18 @@
         "popService",
         "$mdDialog",
         "$mdSidenav",
-        function (
-            $scope,
+        function 
+           ($scope,
             $rootScope,
             Images,
             storageService,
             popService,
             $mdDialog,
-            $mdSidenav
-        ) {
+            $mdSidenav) {
             $rootScope.$on("onLoading", (event, percent) => {
                 $scope.loading = percent;
             });
             $rootScope.$on("onComplete", () => {
-                const time = new Date();
                 $scope.loading = false;
 
                 $scope.draw(true);
@@ -59,6 +57,7 @@
 
             $scope.pinIcon = new Image();
             $scope.pinIcon.src = "./resources/icons/pinIcon-32x32.png";
+            $scope.pinIcon.size = 32;
 
             //Theme des dialog et de la navbar
             $scope.theme = "grey";
@@ -219,23 +218,26 @@
                             //Si il existe un ou plusieurs point d"interet sur cet angle
                             if (points[j].getAttribute("Angle") == $scope.angle) {
                                 //On recup les coords du point d"interet sur scale 100%
-                                const pinCoord = points[j].getElementsByTagName("Coord"),
+                                const 
+                                    pinCoord = points[j].getElementsByTagName("Coord"),
                                     pinX = Number(pinCoord[0].getAttribute("x")),
                                     pinY = Number(pinCoord[0].getAttribute("y"));
 
                                 //On applique le ratio pour avoir ses coord sur la scale courante
-                                const drawX = pinX * $scope.zoom,
+                                const 
+                                    drawX = pinX * $scope.zoom,
                                     drawY = pinY * $scope.zoom;
 
                                 //Et on defini le centre du dessin comme l"origine
-                                const centerX = $scope.canvas.clientWidth / 2 + drawX,
+                                const 
+                                    centerX = $scope.canvas.clientWidth / 2 + drawX,
                                     centerY = $scope.canvas.clientHeight / 2 + drawY;
 
                                 //On attend que l"image soit chargé, puis on la dessine
                                 $scope.renderer.drawImage(
                                     $scope.pinIcon,
-                                    centerX - 16,
-                                    centerY - 32
+                                    centerX - $scope.pinIcon.size / 2,
+                                    centerY - $scope.pinIcon.size
                                 );
                             }
                         }
@@ -281,6 +283,20 @@
                 if ($scope.visible) {
                     $scope.$apply();
                 }
+
+                let w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+                let h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+                let minDim = Math.min(w, h);
+
+                if(minDim < 300) {
+                    $scope.pinIcon.src = "./resources/icons/pinIcon-16x16.png";
+                    $scope.pinIcon.size = 16;
+                } else {
+                    $scope.pinIcon.src = "./resources/icons/pinIcon-32x32.png";
+                    $scope.pinIcon.size = 32;
+                }
+
                 $rootScope.$emit("canvasEdited");
             };
 
@@ -357,11 +373,9 @@
 
             //Fonction qui permet la rotation jusqu"a un angle donné
             $scope.goTo = (angle) => {
+
                 if ($scope.angle != angle) {
-                    if (
-                        Images.nbAngle - angle + $scope.origAngle <
-                        angle - $scope.origAngle
-                    ) {
+                    if ($scope.angle > angle) {
                         $scope.setAngle($scope.angle - 1);
                     } else {
                         $scope.setAngle($scope.angle + 1);
@@ -681,8 +695,6 @@
 
             $scope.addMouseHoverListener = () => {
                 $scope.canvas.addEventListener("mousemove", function (e) {
-                    let lvl = $scope.level;
-
                     let aX = e.pageX - $scope.canvas.clientWidth / 2 - $scope.translaX,
                         aY = e.pageY - $scope.canvas.clientHeight / 2 - $scope.translaY;
 

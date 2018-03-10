@@ -20,12 +20,12 @@
   <div layout="column" class="canvasControls">
 
     <div class="nofocus canvasButton" ng-click="zoomIn(); deleteAllPop()">
-        <!--<md-tooltip md-direction="left" md-delay="0.8">Zoom +</md-tooltip> -->
+      <!--<md-tooltip md-direction="left" md-delay="0.8">Zoom +</md-tooltip> -->
       <i class="fa fa-search-plus"></i>
     </div>
 
     <div class="nofocus canvasButton" ng-click="zoomOut(); deleteAllPop()">
-       <!--  <md-tooltip md-direction="left" md-delay="0.8">Zoom -</md-tooltip> -->
+      <!--  <md-tooltip md-direction="left" md-delay="0.8">Zoom -</md-tooltip> -->
       <i class="fa fa-search-minus"></i>
     </div>
 
@@ -47,8 +47,8 @@
 </div>
 
 <section ng-controller="SidebarController">
-  <md-sidenav  md-theme="{{theme}}" class="md-sidenav-left" md-component-id="left" md-disable-backdrop md-whiteframe="4">
-    
+  <md-sidenav md-theme="{{theme}}" class="md-sidenav-left" md-component-id="left" md-disable-backdrop md-whiteframe="4">
+
 
     <md-toolbar class="md-hue-2">
       <div class="md-toolbar-tools">
@@ -79,7 +79,9 @@
       <form>
         <div class="form-group">
           <div class="input-group">
-            <div class="input-group-addon"><i class="fa fa-search"></i></div>
+            <div class="input-group-addon">
+              <i class="fa fa-search"></i>
+            </div>
             <input type="text" class="form-control" placeholder="Recherche..." style="height : 50px; font-size:16pt" ng-model="motCle">
           </div>
         </div>
@@ -90,14 +92,16 @@
         <tbody ng-repeat="tooltip in tooltips | filter: motCle " class="tooltipContainer" id="{{tooltip.id}}">
           <tr class="titre border_bottom">
 
-            <td class="nofocus" ng-click="isCollapsed = !isCollapsed; $event.stopPropagation();" style="min-width:20px">
+            <td class="nofocus" ng-click="tooltip.desc != ' ' ? isCollapsed = !isCollapsed : null ; $event.stopPropagation();" style="min-width:20px">
               <i ng-class="{'fa fa-chevron-right': isCollapsed, 'fa fa-chevron-right rotato': !isCollapsed}"></i>
             </td>
 
-            <td ng-click="clickTooltip($event);" ng-mouseover="hoverTooltip($event);" ng-mouseleave="deleteAllPop()" class="ttTitre nofocus" contenteditable=false spellcheck=false>{{tooltip.title}}</td>
+            <td ng-click="clickTooltip($event);" ng-mouseover="hoverTooltip($event);" ng-mouseleave="deleteAllPop()" class="ttTitre nofocus"
+              contenteditable=false spellcheck=false>{{tooltip.title}}</td>
 
             <td class="nofocus ttEdit" ng-show="isEditMode">
-              <i class="nofocus fa " style="float : right;" ng-click="toggleEditTooltip($event); isEditable = !isEditable; $event.stopPropagation()" ng-class="{'editable fa-check': isEditable, 'not-editable fa-pencil': !isEditable}"></i>
+              <i class="nofocus fa " style="float : right;" ng-click="toggleEditTooltip($event); isEditable = !isEditable; $event.stopPropagation()"
+                ng-class="{'editable fa-check': isEditable, 'not-editable fa-pencil': !isEditable}"></i>
             </td>
 
             <td class="nofocus ttDelete" ng-show="isEditMode">
@@ -120,24 +124,22 @@
   </md-sidenav>
 </section>
 
-
-<div id="menu-container" layout="row" ng-class="{expand: showTooltips}">
+<div id="menu-container" layout="row" layout-align="center center" ng-class="{expand: showTooltips}">
   <div id="menu" layout-align="center center">
     <div class="nofocus" ng-click="autoPlay=!autoPlay; play()">
-      <img src="./resources/icons/icon_turndemo.png"
-           ng-class="{'player-icon-selected' :autoPlay, 'player-icon': !autoPlay}" alt="Autoplay">
+      <img src="./resources/icons/icon_turndemo.png" ng-class="{'player-icon-selected' :autoPlay, 'player-icon': !autoPlay}" alt="Autoplay">
     </div>
     <div class="nofocus" ng-click="{clickTranslation : switchMode()}">
-      <img src="./resources/icons/icon_turn.png"
-           ng-class="{'player-icon-selected' :clickRotation, 'player-icon': !clickRotation}" alt="Rotation">
+      <img src="./resources/icons/icon_turn.png" ng-class="{'player-icon-selected' :clickRotation, 'player-icon': !clickRotation}"
+        alt="Rotation">
     </div>
     <div class="nofocus" ng-click="{clickRotation : switchMode()}">
-      <img src="./resources/icons/icon_slide.png"
-           ng-class="{'player-icon-selected' :clickTranslation, 'player-icon':!clickTranslation }" alt="Translation">
+      <img src="./resources/icons/icon_slide.png" ng-class="{'player-icon-selected' :clickTranslation, 'player-icon':!clickTranslation }"
+        alt="Translation">
     </div>
     <div class="nofocus" ng-click="isFullscreen=!isFullscreen;toggleFullscreen()">
       <img src="{{fsSrc}}" alt="Fullscreen">
-    </i>
+      </i>
     </div>
     <div class="nofocus" ng-click="pinMode=!pinMode; deleteAllPop(); modeCursor()" ng-class="{'ng-hide': !isEditMode}">
       <img src="./resources/icons/icon_interest.png" ng-class="{'player-icon-selected' :pinMode, 'player-icon':!pinMode }" alt="Point d'interet">
@@ -146,6 +148,7 @@
 </div>
 
 <div id="container">
-  <canvas id="orbit-canvas" hm-press="pin($event); deleteAllPop()" hm-tap="autoPlay=false; pin($event); deleteAllPop()" hm-drag="drag($event); deleteAllPop();" hm-dragstart="autoPlay=false; lastDrag=0; dragStart()" hm-dragend="dragEnd();" msd-wheel="onWheel($event); deleteAllPop()"></canvas>
+  <canvas id="orbit-canvas" hm-press="pin($event); deleteAllPop()" hm-tap="autoPlay=false; pin($event); deleteAllPop()" hm-drag="drag($event); deleteAllPop();"
+    hm-dragstart="autoPlay=false; lastDrag=0; dragStart()" hm-dragend="dragEnd();" msd-wheel="onWheel($event); deleteAllPop()"></canvas>
 </div>
 <div ng-transclude></div>

@@ -13,10 +13,11 @@ const ob = angular.module("Orbit", [
 /**
  * TODO v2
  * -Faire marcher l'export XML avec chrome ** DONE **
- * -Finir la gestion du localStorage *
+ * -Finir la gestion du localStorage **DONE**
  * 
  * UNE FOIS QUE TOUT CA EST FAIT
- * Faire un bundle de JS, rediger la doc v2
+ * Faire un bundle de JS => Pas trop possible, il faudrait port en ES6
+ *  rediger la doc v2
  * 
  * TODO v2.1
  * -Changer les icons
@@ -27,7 +28,7 @@ const ob = angular.module("Orbit", [
  * TODO v3 : Goal
  * -Controllers et Services -> ES6 Class
  * -Rollup
- * -Full open source loader pour les photos à 360 
+ * -Full open source loader pour les photos à 360 sur un axe + zoom
  *  -> Renseigne le format de la séquence
  * 
  * ET PEUT ETRE

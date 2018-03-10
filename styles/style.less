@@ -110,26 +110,25 @@ orbitview {
     }
 
     #menu-container {
-        width: 100%;
+        width : 100%;
         position: absolute;
         z-index: 10;
-        font-size: 24px;
-        background-color: rgba(0, 0, 0, 0.7);
-        border: solid black 1px;
         bottom: 20px;
         border-radius: 3px;
-        text-align: center;
+        pointer-events: none;
         #menu {
-            width: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: solid black 1px;
             div {
+                pointer-events: auto;
                 cursor: pointer;
                 color: rgba(255, 255, 255, 0.7);
                 display: inline-block;
-                padding: 1vw 1vw;
+                padding: 1vmin 1vmin;
                 img {
                     max-width: 50px;
                     min-width: 30px;
-                    width: 10vw;
+                    width: 10vmin;
                 }
             }
         }
@@ -268,7 +267,7 @@ orbitview {
     width: 95%;
 }
 
-@media (max-width : 500px){
+@media (max-width : 500px), (max-height : 500px){
     orbitview {
         #info {
             width:30px;
@@ -284,4 +283,14 @@ orbitview {
             }
         }
     }
+
+    /*
+    md-input-container {
+        display: inline-block;
+        position: relative;
+        padding: 2px;
+        margin: 8px 0;
+        vertical-align: middle;
+    }
+    */
 }
