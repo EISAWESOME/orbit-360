@@ -2,8 +2,8 @@
 "use strict";
 (function () {
     ob.service("popService", [
-        "Images", "$rootScope",
-        function (Images, $rootScope) {
+        "Images",
+        function () {
 
             const self = this;
             let 

@@ -68,7 +68,7 @@
 
       //Retourne titre, desc, et details du xml chargé si ils existent
       this.readXml = ( dataXML) => {
-        let titre, description, details, lookupAngle = [], id = 0;
+        let titre, description, details, lookupAngle = [];
 
         if (window.DOMParser) {
           // Standard
@@ -161,7 +161,7 @@
         }
         document
           .querySelector("#descImage")
-          .addEventListener("paste", (e) => {
+          .addEventListener("paste", () => {
             setTimeout(() => {
               const body = document.querySelector("#descImage");
               const regex = /(&nbsp;|<([^>]+)>)/gi;
@@ -178,7 +178,7 @@
         };
       };
 
-      this.loadLocalStorage = (xmlDoc) => {
+      this.loadLocalStorage = () => {
         if (typeof (Storage) !== "undefined") {
           currentIdTooltip = 0;
           while(localStorage.getItem(`p${currentIdTooltip}`) && localStorage.getItem(`p${currentIdTooltip}`) != ""){
@@ -346,8 +346,7 @@
           const instruction = "Pour réutiliser vos point d'interets, remplacez le fichier content.xml du dossier 'amonite' par le fichier generé";
           zip.file("README.txt", instruction);
 
-          let promise = null;
-          promise = zip.generateAsync({
+          zip.generateAsync({
               type: "blob"
             })
             .then((blob) => {

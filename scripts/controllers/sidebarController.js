@@ -9,8 +9,7 @@
         "storageService",
         "popService",
         "$mdDialog",
-        "$mdSidenav",
-        function ($scope, $rootScope, Images, storageService, popService, $mdDialog, $mdSidenav) {
+        function ($scope, $rootScope, Images, storageService, popService, $mdDialog) {
 
             const getPointCoord = () => {
                 const ratioX =

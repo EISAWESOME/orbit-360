@@ -1,13 +1,3 @@
-*,
-*:before,
-*:after {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 orbitview {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -23,17 +13,14 @@ orbitview {
   background-color: black;
   overflow: hidden;
 }
-
 orbitview a {
   color: #1478fa;
   text-decoration: none;
 }
-
 orbitview a:hover {
   text-decoration: underline;
 }
-
-#orbit-canvas {
+orbitview #orbit-canvas {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -50,9 +37,8 @@ orbitview a:hover {
   -ms-interpolation-mode: nearest-neighbor;
   /* IE (non-standard property) */
 }
-
-#orbit-loader,
-#orbit-loader-reso {
+orbitview #orbit-loader,
+orbitview #orbit-loader-reso {
   z-index: 10;
   position: absolute;
   text-align: center;
@@ -60,27 +46,23 @@ orbitview a:hover {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.7);
 }
-
-#orbit-loader {
-  width: 100px;
-  height: 100px;
-  left: 50%;
-  margin-left: -50px;
-  top: 50%;
-  margin-top: -50px;
+orbitview #orbit-loader:before,
+orbitview #orbit-loader-reso:before {
+  border: solid rgba(255, 255, 255, 0.1) 3px;
+  background-color: black;
+  opacity: 0.7;
 }
-
-#orbit-loader-reso {
-  width: 30px;
-  height: 30px;
-  left: 50px;
-  top: 50px;
+orbitview #orbit-loader:after,
+orbitview #orbit-loader-reso:after {
+  border: solid transparent 3px;
+  border-top-color: rgba(255, 255, 255, 0.7);
+  -webkit-animation: rotate 1s linear infinite;
+  animation: rotate 1s linear infinite;
 }
-
-#orbit-loader:before,
-#orbit-loader-reso:before,
-#orbit-loader:after,
-#orbit-loader-reso:after {
+orbitview #orbit-loader:before,
+orbitview #orbit-loader-reso:before,
+orbitview #orbit-loader:after,
+orbitview #orbit-loader-reso:after {
   position: absolute;
   top: 25px;
   left: 25px;
@@ -90,22 +72,20 @@ orbitview a:hover {
   content: '';
   border-radius: 70px;
 }
-
-#orbit-loader:before,
-#orbit-loader-reso:before {
-  border: solid rgba(255, 255, 255, 0.1) 3px;
-  background-color: black;
-  opacity: 0.7;
+orbitview #orbit-loader {
+  width: 100px;
+  height: 100px;
+  left: 50%;
+  margin-left: -50px;
+  top: 50%;
+  margin-top: -50px;
 }
-
-#orbit-loader:after,
-#orbit-loader-reso:after {
-  border: solid transparent 3px;
-  border-top-color: rgba(255, 255, 255, 0.7);
-  -webkit-animation: rotate 1s linear infinite;
-  animation: rotate 1s linear infinite;
+orbitview #orbit-loader-reso {
+  width: 30px;
+  height: 30px;
+  left: 50px;
+  top: 50px;
 }
-
 @-webkit-keyframes rotate {
   0% {
     -webkit-transform: rotate(0deg);
@@ -116,7 +96,6 @@ orbitview a:hover {
     transform: rotate(360deg);
   }
 }
-
 @keyframes rotate {
   0% {
     -webkit-transform: rotate(0deg);
@@ -129,42 +108,49 @@ orbitview a:hover {
     transform: rotate(360deg);
   }
 }
-
-#menu-container {
+orbitview #menu-container {
   position: absolute;
   z-index: 10;
-  width: 400px;
+  width: 80vw;
   font-size: 24px;
   background-color: rgba(0, 0, 0, 0.7);
   border: solid black 1px;
   bottom: 20px;
   border-radius: 3px;
   left: 50%;
-  margin-left: -200px;
+  margin-left: -40vw;
   text-align: center;
 }
-
-#menu-container #menu>li {
+orbitview #menu-container #menu > li {
   cursor: pointer;
   color: rgba(255, 255, 255, 0.7);
   display: inline-block;
   padding: 10px 10px;
 }
-
-#menu-container.expand {
+orbitview #menu-container .expand {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   border-top: 0;
 }
-
-.canvasControls {
+orbitview #menu-container .player-icon {
+  filter: brightness(40%);
+}
+orbitview #button-container {
+  height: 100%;
+  left: 100%;
+  margin-left: -55px;
+  position: absolute;
+}
+orbitview #button-container .canvasControls {
   top: 50%;
   margin-top: -25vh;
   position: absolute;
   height: 50vh;
 }
-
-.canvasButton {
+orbitview #button-container #separateur {
+  border-bottom: 1px solid grey;
+}
+orbitview #button-container .canvasButton {
   z-index: 10;
   font-size: 24px;
   color: rgba(255, 255, 255, 0.7);
@@ -178,93 +164,55 @@ orbitview a:hover {
   text-align: center;
   cursor: pointer;
 }
-
-.canvasButton:hover,
-.canvasButton:active {
-  color: white;
-}
-
-.canvasButton.active {
+orbitview #button-container .canvasButton .active {
   border: solid transparent 3px;
 }
-
-#button-container {
-  height: 100%;
-  left: 100%;
-  margin-left: -55px;
-  position: absolute;
+orbitview #button-container .canvasButton:hover,
+orbitview #button-container .canvasButton:active {
+  color: white;
 }
-
-#separateur {
-  border-bottom: 1px solid grey;
-}
-
-.player-icon {
-  filter: brightness(40%)
-}
-
-.canvas-icon-selected {
+orbitview .canvas-icon-selected {
   color: red;
 }
-
-.promptDialog {
+orbitview .promptDialog {
   position: absolute !important;
   top: 10%;
   width: 95%;
 }
-
-#tooltip-table {
+orbitview #tooltip-table {
   width: 95%;
   table-layout: fixed;
 }
-
-#tooltip-table td.ttTitre {
-  width: 80%;
-  word-wrap: break-word;
-}
-
-#tooltip-table tr.ttTitre:hover {
-  background-color: rgb(236, 236, 236);
-}
-
-#tooltip-table tr {
+orbitview #tooltip-table tr {
   height: 20px;
   font-size: 16pt;
 }
-
-#tooltip-table tr.titre:hover {
-  cursor: pointer;
-  background-color: rgb(236, 236, 236);
+orbitview #tooltip-table tr td .ttTitre {
+  width: 80%;
+  word-wrap: break-word;
 }
-
-.editable {
+orbitview #tooltip-table tr .ttTitre:hover {
+  background-color: #ececec;
+}
+orbitview #tooltip-table tr .titre:hover {
+  cursor: pointer;
+  background-color: #ececec;
+}
+orbitview .editable {
   color: lawngreen;
 }
-
-.not-editable {
+orbitview .not-editable {
   color: grey;
 }
-
-tr.border_bottom td {
+orbitview tr.border_bottom td {
   border-bottom: 1pt inset;
 }
-
-#info {
+orbitview #info {
   top: 15px;
   right: 15px;
   position: absolute;
 }
-
-.rotato {
-  transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
-  -webkit-transform: rotate(90deg);
-  transition: all 0.2s ease;
-  -moz-transition: all 0.2s ease;
-  -webkit-transition: all 0.2s ease;
-}
-
-#titreImage {
+orbitview #titreImage {
   cursor: help;
   color: #ffffff;
   font-weight: bold;
@@ -272,14 +220,12 @@ tr.border_bottom td {
   position: absolute;
   text-align: center;
 }
-
-md-tooltip .md-content {
+orbitview md-tooltip .md-content {
   position: relative;
   opacity: 1;
 }
-
-div.titrePop,
-div.descPop {
+orbitview div.titrePop,
+orbitview div.descPop {
   word-wrap: break-word;
   position: absolute;
   color: #303030;
@@ -294,11 +240,9 @@ div.descPop {
   border: 1px solid #868686;
   border-radius: 0px 5px 5px 5px;
 }
-
-div.titrePop {
+orbitview div.titrePop {
   display: none;
 }
-
-.nofocus:focus {
+orbitview .nofocus:focus {
   outline: none;
 }

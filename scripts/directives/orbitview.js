@@ -1,4 +1,4 @@
-/* global ob, window */
+/* global ob, window, ActiveXObject */
 "use strict";
 (function () {
   ob.directive("orbitview", ["Images", "storageService", function (Images, storageService) {
@@ -17,7 +17,7 @@
           };
         }
       ]),
-      link($scope, $elem, $attr) {
+      link($scope) {
 
         storageService.loadXml().then(function (dataXML) {
 
