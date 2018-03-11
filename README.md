@@ -4,6 +4,9 @@
 Projet HTML5 de visualisation 360 d'un objet à partir d'un grand nombre de photographies
 prisent à 360°, à différents niveaux de résolutions.
 
+
+![Orbit 360](https://image.noelshack.com/fichiers/2018/10/7/1520793493-o360.png)
+
 Host Lyon 1 (legacy): 
 
 http://streams.univ-lyon1.fr/videoStream/streams/lyon1/modules/156756/web/156757/orbit360/app/
