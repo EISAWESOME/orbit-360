@@ -8,6 +8,7 @@ const uglify = require('gulp-uglify-es').default;
 
 const rename = require('gulp-rename');
 
+const webserver = require('gulp-webserver');
 const gulpUtil = require('gulp-util');
 
 gulp.task('index', function () {
@@ -84,4 +85,15 @@ gulp.task('fa', function () {
 
 gulp.task('libs', ['lib', 'node_modules', 'fa']);
 
+gulp.task('webserver', function() {
+  gulp.src('build')
+    .pipe(webserver({
+      livereload: true,
+      directoryListing: false,
+      open: true
+    }));
+});
+
 gulp.task('build', [ 'index', 'root', 'views', 'css', 'js', 'resources', 'libs' ]);
+
+gulp.task('build-n-serve', ['build', 'webserver']);
