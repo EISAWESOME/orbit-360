@@ -9,7 +9,6 @@ const uglify = require('gulp-uglify-es').default;
 const rename = require('gulp-rename');
 
 const webserver = require('gulp-webserver');
-const gulpUtil = require('gulp-util');
 
 gulp.task('index', function () {
   return gulp.src('index.build.html')
@@ -48,7 +47,7 @@ gulp.task('css', ['less', 'lib_css']);
 gulp.task('js', function () {
   return gulp.src('scripts/**/*.js')
     .pipe(concat('bundle.min.js'))
-    .pipe(uglify().on('error', gulpUtil.log))
+    .pipe(uglify())
     .pipe(gulp.dest('../build/'));
 });
 
