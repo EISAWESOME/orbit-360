@@ -38,6 +38,6 @@ Thumbs.db
 
 # Specific #
 ######################
-public
+build
 node_modules
 .firebaserc
