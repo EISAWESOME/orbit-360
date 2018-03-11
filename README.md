@@ -22,20 +22,20 @@ https://orbit-360.firebaseapp.com/
 # Fonctionnalités
 
 -Visualisation 
-Rotation et translation, zoom avec changement de résolution
+Rotation et translation, zoom avec changement de résolution.
 
 -Points d'intérêt :
-Permet d'ajouter et de gérer des points d'intérêt sur le modèle
-Stockage local dans le navigateur, possibilité d'exporter au format XML
+Permet d'ajouter et de gérer des points d'intérêt sur le modèle.
+Stockage local dans le navigateur, avec possibilité d'exporter au format XML.
 
 -Hors ligne
 Grace a l'utilisation de service worker, l'application est consultable en cache hors ligne, du moment qu'elle à déjà été visité.
-Possibilité d'ajouter l'application à l'écran d'accueil
+Possibilité d'ajouter l'application à l'écran d'accueil.
 
 
 # Compatible mobile
 
-L'application est optimiser pour les appareil tactiles, et responsive.
+L'application est optimisée pour les appareil tactiles, et responsive.
 
 
 # Documentation
