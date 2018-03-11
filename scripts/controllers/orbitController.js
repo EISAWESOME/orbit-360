@@ -142,6 +142,9 @@
                     $scope.description = ret.description;
                     $scope.details = ret.details;
                     $scope.lookupAngle = ret.lookupAngle;
+                }, (err) => {
+                    //Erreur !
+                    console.log(err);
                 });
 
                 $scope.modeCursor();
@@ -152,8 +155,8 @@
             /****************************Dessin de l"objet**************************/
             $scope.draw = (force) => {
                 if (
-                    ($scope.waitingload &&
-                        Images.resourcesLoaded($scope.level, $scope.angle)) ||
+                    $scope.waitingload &&
+                        Images.resourcesLoaded($scope.level, $scope.angle) ||
                     force
                 ) {
                     $scope.waitingload = false;
@@ -546,8 +549,10 @@
                 if (
                     $scope.level > 0 &&
                     $scope.zoom * 1000 > Images.level[$scope.level].value
-                )
+                ) {
                     $scope.level--;
+                }
+                    
                 $rootScope.$emit("canvasEdited");
             };
 
@@ -775,6 +780,8 @@
                         $scope.tooltipTitre = answer.Titre;
                         $scope.tooltipDesc = answer.Desc ? answer.Desc : " ";
                         $scope.createClickTooltip(tttc);
+                    }, () => {
+                        //Cancel ...
                     });
             };
 

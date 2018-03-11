@@ -20,13 +20,14 @@
       link($scope) {
 
         storageService.loadXml().then(function (dataXML) {
+          let xml = null;
 
           if (window.DOMParser) { // Standard
             let parser = new DOMParser();
-            var xml = parser.parseFromString(dataXML.data, "text/xml");
+            xml = parser.parseFromString(dataXML.data, "text/xml");
 
           } else { // IE
-            var xml = new ActiveXObject("Microsoft.XMLDOM");
+            xml = new ActiveXObject("Microsoft.XMLDOM");
             xml.async = "false";
             xml.loadXML(dataXML);
           }
@@ -72,6 +73,10 @@
           Images.nbAngle = Images.level[0].resources.length;
 
           $scope.init();
+        }, (err) => {
+
+          console.log(err);
+
         });
       }
     };

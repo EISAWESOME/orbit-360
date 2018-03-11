@@ -19,7 +19,7 @@
       },
       //loadResources avec queue, sans et avec slot
       loadResources(lvl, angle, priority) {
-        priority = (typeof priority !== "undefined") ? priority : true;
+        priority = typeof priority !== "undefined" ? priority : true;
         // console.log("prio "+ priority);
         if (priority) {
           for (let i = 0; i < this.level[lvl].resources[angle].length; i++){
@@ -77,6 +77,9 @@
               // $rootScope.$emit("onFirstComplete");
               scope.loading(scope.firstLevelLoaded, scope.nbAngle);
             }
+          }, (err) => {
+            //Erreur
+            console.log(err);
           });
           return false;
         }

@@ -18,6 +18,23 @@
         "no-unreachable": "warn",
         "no-unused-vars": "warn",
         "constructor-super": "warn",
-        "valid-typeof": "warn"
+        "valid-typeof": "warn",
+        "getter-return" : "warn",
+
+        "quotes" : "warn",
+
+        "no-extra-parens" : "warn",
+        "no-extra-semi" : "warn",
+        "no-func-assign" : "warn",
+        "curly" : "warn",
+        "no-empty-function" : "warn",
+        "no-loop-func" : "warn",
+        
+        "arrow-parens" : "warn",
+        "no-var" : "warn"
+        
+
+        
+
     }
 }

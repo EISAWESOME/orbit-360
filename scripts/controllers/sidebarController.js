@@ -65,6 +65,8 @@
 
                 $mdDialog.show(confirm).then(() => {
                     storageService.clearStorage();
+                }, () => {
+                    //Cancel
                 });                
             };
 
@@ -142,6 +144,8 @@
 
                 $mdDialog.show(confirm).then(() => {
                     $scope.deletePoint(ev, id);
+                }, () => {
+                    //Cancel
                 });
             };
 

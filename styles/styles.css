@@ -245,7 +245,7 @@ orbitview .nofocus:focus {
   outline: none;
 }
 .promptDialog {
-  position: absolute !important;
+  position: absolute;
   top: 10%;
   width: 95%;
 }
