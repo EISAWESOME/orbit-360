@@ -5,7 +5,11 @@ Projet HTML5 de visualisation 360 d'un objet à partir d'un grand nombre de phot
 prisent à 360°, à différents niveaux de résolutions.
 
 
-![Orbit 360](https://image.noelshack.com/fichiers/2018/10/7/1520793493-o360.png)
+
+
+<p align="center">
+  <img src="https://image.noelshack.com/fichiers/2018/10/7/1520793493-o360.png">
+</p>
 
 Host Lyon 1 (legacy): 
 
