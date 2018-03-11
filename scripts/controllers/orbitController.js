@@ -181,13 +181,11 @@
             //Image(s) courante, de 1 à 12 (index 0 à 11 ...)
             //Le nombre d'image varie en fonction du level
           }
-          const ILvl = Images.level[lvl],
-            posOriX = $scope.getX(),
-            posOriY = $scope.getY(),
-            lapX =
-            Math.floor(Images.level[0].width / ILvl.cols) * $scope.zoom,
-            lapY =
-            Math.floor(Images.level[0].height / ILvl.rows) * $scope.zoom;
+          const ILvl = Images.level[lvl];
+          const posOriX = $scope.getX();
+          const posOriY = $scope.getY();
+          const lapX = Math.floor(Images.level[0].width / ILvl.cols) * $scope.zoom;
+          const lapY = Math.floor(Images.level[0].height / ILvl.rows) * $scope.zoom;
 
           //Pour chaque images du niveau
           for (let i = 0; i < current.length; i++) {
@@ -218,20 +216,17 @@
               //Si il existe un ou plusieurs point d'interet sur cet angle
               if (points[j].getAttribute('Angle') == $scope.angle) {
                 //On recup les coords du point d'interet sur scale 100%
-                const
-                  pinCoord = points[j].getElementsByTagName('Coord'),
-                  pinX = Number(pinCoord[0].getAttribute('x')),
-                  pinY = Number(pinCoord[0].getAttribute('y'));
+                const pinCoord = points[j].getElementsByTagName('Coord');
+                const pinX = Number(pinCoord[0].getAttribute('x'));
+                const pinY = Number(pinCoord[0].getAttribute('y'));
 
                 //On applique le ratio pour avoir ses coord sur la scale courante
-                const
-                  drawX = pinX * $scope.zoom,
-                  drawY = pinY * $scope.zoom;
+                const drawX = pinX * $scope.zoom;
+                const drawY = pinY * $scope.zoom;
 
                 //Et on defini le centre du dessin comme l'origine
-                const
-                  centerX = $scope.canvas.clientWidth / 2 + drawX,
-                  centerY = $scope.canvas.clientHeight / 2 + drawY;
+                const centerX = $scope.canvas.clientWidth / 2 + drawX;
+                const centerY = $scope.canvas.clientHeight / 2 + drawY;
 
                 //On attend que l'image soit chargé, puis on la dessine
                 $scope.renderer.drawImage(
@@ -333,8 +328,8 @@
         if (!$scope.loading) {
           //Si on est en mode Rotation
           if ($scope.clickRotation && !$scope.clickTranslation) {
-            let dst = $scope.lastDrag - e.gesture.deltaX,
-              ratio;
+            let dst = $scope.lastDrag - e.gesture.deltaX;
+            let ratio;
 
             dst *= 1;
             ratio = dst / 10;
@@ -350,8 +345,8 @@
 
           //Si on est en mode translation
           if ($scope.clickTranslation && !$scope.clickRotation) {
-            const deplacementX = e.gesture.deltaX - $scope.prevDeltaX,
-              deplacementY = e.gesture.deltaY - $scope.prevDeltaY;
+            const deplacementX = e.gesture.deltaX - $scope.prevDeltaX;
+            const deplacementY = e.gesture.deltaY - $scope.prevDeltaY;
 
             $scope.incrTranslaX(deplacementX);
             $scope.incrTranslaY(deplacementY);
@@ -621,8 +616,9 @@
           const cursorX =
             e.gesture.center.pageX -
             $scope.canvas.clientWidth / 2 -
-            $scope.translaX,
-            cursorY =
+            $scope.translaX;
+
+          const cursorY =
             e.gesture.center.pageY -
             $scope.canvas.clientHeight / 2 -
             $scope.translaY;
@@ -695,13 +691,13 @@
 
       $scope.addMouseHoverListener = () => {
         $scope.canvas.addEventListener('mousemove', function (e) {
-          let aX = e.pageX - $scope.canvas.clientWidth / 2 - $scope.translaX,
-            aY = e.pageY - $scope.canvas.clientHeight / 2 - $scope.translaY;
+          let aX = e.pageX - $scope.canvas.clientWidth / 2 - $scope.translaX;
+          let aY = e.pageY - $scope.canvas.clientHeight / 2 - $scope.translaY;
 
           const ratio = determineRatios();
 
-          const cursorX = aX * ratio.x,
-            cursorY = aY * ratio.y;
+          const cursorX = aX * ratio.x;
+          const cursorY = aY * ratio.y;
 
           let incr = 0;
           //On boucle dans le tableau des point interet de l'angle actuel
@@ -709,8 +705,8 @@
             const pointX =
               $scope.matchedTt[i].x / ratio.x +
               $scope.translaX +
-              $scope.canvas.clientWidth / 2,
-              pointY =
+              $scope.canvas.clientWidth / 2;
+            const pointY =
               $scope.matchedTt[i].y / ratio.y +
               $scope.translaY +
               $scope.canvas.clientHeight / 2;
@@ -785,7 +781,6 @@
       $scope.closeDialog = () => {
         $mdDialog.cancel();
       };
-      /***************************************************************************/
     }
   ]);
 }());

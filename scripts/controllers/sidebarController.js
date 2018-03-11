@@ -12,9 +12,9 @@
       const getPointCoord = () => {
         const ratioX =
           Images.level[0].width /
-          ($scope.actualTileWidth * Images.level[$scope.level].cols),
+          ($scope.actualTileWidth * Images.level[$scope.level].cols);
 
-          ratioY =
+        const ratioY =
           Images.level[0].height /
           ($scope.actualTileHeight * Images.level[$scope.level].rows);
 
@@ -72,11 +72,11 @@
         lookupToolTip(e);
 
         //Rend le titre du tooltip editable ou pas
-        const ligneTitre =
-          e.target.parentNode.parentNode.parentNode.childNodes[1],
-          tdTitre = ligneTitre.childNodes[3],
-          ligneDesc = e.target.parentNode.parentNode.parentNode.childNodes[3],
-          divDesc = ligneDesc.childNodes[1].childNodes[1].childNodes[1];
+        const ligneTitre = e.target.parentNode.parentNode.parentNode.childNodes[1];
+        const tdTitre = ligneTitre.childNodes[3];
+
+        const ligneDesc = e.target.parentNode.parentNode.parentNode.childNodes[3];
+        const divDesc = ligneDesc.childNodes[1].childNodes[1].childNodes[1];
 
         if (tdTitre.contentEditable === 'true') {
           tdTitre.setAttribute('contenteditable', 'false');

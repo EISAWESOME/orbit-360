@@ -1,4 +1,5 @@
 {
+  "extends" : "standard",  
   "env": {
       "browser": true,
       "commonjs": true,
@@ -10,17 +11,15 @@
           "jsx": true
       },
       "sourceType": "module"
-  },
-  "extends" : "standard",  
+  },  
   "rules": {
      	
-      "semi" : ["warn", "always"],
-      "no-extra-semi" : "warn",
+      "semi" : ["error", "always"],
+      "no-extra-semi" : "error",
 
       "eqeqeq" : "off",
       "spaced-comment" : "off",
 
-      "no-var" : "warn",
-      "one-var" : "off"
+      "no-var" : "warn"
   }
 }

@@ -15,8 +15,8 @@
       //Cree un element pop (desc ou titre)
       this.createPop = (mode, popContent, pointX, pointY) => {
         if (!isPopDrawn) {
-          const popContainer = document.createElement('div'),
-            popText = document.createTextNode(popContent);
+          const popContainer = document.createElement('div');
+          const popText = document.createTextNode(popContent);
 
           let a = document.querySelector('orbitview');
           popContainer.appendChild(popText);
@@ -30,9 +30,9 @@
 
       //Supprime tout les elements pop
       this.deleteAllPop = () => {
-        let a = document.querySelector('orbitview'),
-          b = document.querySelector('.titrePop'),
-          c = document.querySelector('.descPop');
+        let a = document.querySelector('orbitview');
+        let b = document.querySelector('.titrePop');
+        let c = document.querySelector('.descPop');
         if (b) {
           a.removeChild(b);
         }
@@ -44,8 +44,8 @@
 
       //Supprime les element titrePop
       this.deleteTitrePop = () => {
-        let a = document.querySelector('orbitview'),
-          b = document.querySelector('.titrePop');
+        let a = document.querySelector('orbitview');
+        let b = document.querySelector('.titrePop');
         if (b) {
           a.removeChild(b);
         }

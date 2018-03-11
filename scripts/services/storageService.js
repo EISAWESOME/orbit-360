@@ -8,10 +8,9 @@
     '$rootScope',
     'Images',
     function ($http, $location, $mdToast, $rootScope, Images) {
-      let
-        xml = null,
-        currentIdTooltip = 0,
-        tooltips = [];
+      let xml = null;
+      let currentIdTooltip = 0;
+      let tooltips = [];
 
       const self = this;
 
@@ -68,7 +67,10 @@
 
       //Retourne titre, desc, et details du xml chargé si ils existent
       this.readXml = (dataXML) => {
-        let titre, description, details, lookupAngle = [];
+        let titre;
+        let description;
+        let details;
+        let lookupAngle = [];
 
         if (window.DOMParser) {
           // Standard
@@ -131,15 +133,15 @@
         const colPoints = xml.getElementsByTagName('PointInteret');
 
         for (let i = 0; i < colPoints.length; i++) {
-          const titre = colPoints[i].getElementsByTagName('Titre'),
-            description = colPoints[i].getElementsByTagName('Description'),
-            angle = colPoints[i].attributes[0].value,
-            coord = {
-              x: colPoints[i]
-                .getElementsByTagName('Coord')[0]
-                .getAttribute('x'),
-              y: colPoints[i].getElementsByTagName('Coord')[0].getAttribute('y')
-            };
+          const titre = colPoints[i].getElementsByTagName('Titre');
+          const description = colPoints[i].getElementsByTagName('Description');
+          const angle = colPoints[i].attributes[0].value;
+          const coord = {
+            x: colPoints[i]
+              .getElementsByTagName('Coord')[0]
+              .getAttribute('x'),
+            y: colPoints[i].getElementsByTagName('Coord')[0].getAttribute('y')
+          };
 
           let currentIdTooltip = colPoints[i].attributes[1].value;
 
@@ -196,12 +198,12 @@
       //Ecris un pin dans le xml
       this.writePin = (titre, desc, angle, coord, id) => {
         if (xml) {
-          const elmPoint = xml.createElement('PointInteret'),
-            elmTitre = xml.createElement('Titre'),
-            elmDesc = xml.createElement('Description'),
-            elmCoord = xml.createElement('Coord'),
-            cdataDesc = xml.createCDATASection(desc),
-            cdataTitre = xml.createCDATASection(titre);
+          const elmPoint = xml.createElement('PointInteret');
+          const elmTitre = xml.createElement('Titre');
+          const elmDesc = xml.createElement('Description');
+          const elmCoord = xml.createElement('Coord');
+          const cdataDesc = xml.createCDATASection(desc);
+          const cdataTitre = xml.createCDATASection(titre);
 
           elmPoint.setAttribute('Angle', angle);
           elmPoint.setAttribute('ID', id);
@@ -219,10 +221,9 @@
 
           //Ecris / update le XML dans le localstorage
           if (typeof (Storage) !== 'undefined') {
-            const
-              parser = new XMLSerializer(),
-              idPoint = elmPoint.getAttribute('ID'),
-              stringPoint = parser.serializeToString(elmPoint);
+            const parser = new XMLSerializer();
+            const idPoint = elmPoint.getAttribute('ID');
+            const stringPoint = parser.serializeToString(elmPoint);
 
             self.savePI(stringPoint, idPoint);
           }
@@ -239,19 +240,20 @@
           }
         };
 
-        const colPI = xml.getElementsByTagName('PointInteret'),
-          id2 = getPIByID(colPI, id),
-          currentTooltip = colPI[id2],
-          titreNode = currentTooltip.getElementsByTagName('Titre'),
-          descNode = currentTooltip.getElementsByTagName('Description');
+        const colPI = xml.getElementsByTagName('PointInteret');
+        const id2 = getPIByID(colPI, id);
+        const currentTooltip = colPI[id2];
+        const titreNode = currentTooltip.getElementsByTagName('Titre');
+        const descNode = currentTooltip.getElementsByTagName('Description');
 
         if (champ == 'desc') {
           tooltip.desc = valeurDesc;
           // ICI comme le texte dans le html est generer a partir de l'objet tooltip, en changeant l'objet, on change aussi le texte dans le html
           //On change donc le texte deux fois, d'ou le reset du curseur
           currentTooltip.removeChild(descNode[0]);
-          const newDesc = xml.createElement('Description'),
-            cdataDesc = xml.createCDATASection(valeurDesc);
+
+          const newDesc = xml.createElement('Description');
+          const cdataDesc = xml.createCDATASection(valeurDesc);
 
           newDesc.appendChild(cdataDesc);
           xml.getElementsByTagName('PointInteret')[id2].appendChild(newDesc);
@@ -260,8 +262,9 @@
         if (champ == 'titre') {
           tooltip.title = valeurTitre;
           currentTooltip.removeChild(titreNode[0]);
-          const newTitre = xml.createElement('Titre'),
-            cdataTitre = xml.createCDATASection(valeurTitre);
+
+          const newTitre = xml.createElement('Titre');
+          const cdataTitre = xml.createCDATASection(valeurTitre);
 
           newTitre.appendChild(cdataTitre);
           xml.getElementsByTagName('PointInteret')[id2].appendChild(newTitre);
@@ -315,17 +318,18 @@
         const oldProperties = xml.getElementsByTagName('properties')[0];
         xml.getElementsByTagName('sequence')[0].removeChild(oldProperties);
 
-        const properties = xml.createElement('properties'),
-          propTitre = xml.createElement('property'),
-          propDesc = propTitre.cloneNode(true);
+        const properties = xml.createElement('properties');
+        const propTitre = xml.createElement('property');
+        const propDesc = propTitre.cloneNode(true);
 
         propTitre.setAttribute('name', 'titre');
         propDesc.setAttribute('name', 'description');
-        const htmldataTitre = document.querySelector('#titreImage').innerHTML,
-          htmldataDesc = document.querySelector('#descImage').innerHTML;
 
-        const cdataTitre = xml.createCDATASection(htmldataTitre),
-          cdataDesc = xml.createCDATASection(htmldataDesc);
+        const htmldataTitre = document.querySelector('#titreImage').innerHTML;
+        const htmldataDesc = document.querySelector('#descImage').innerHTML;
+
+        const cdataTitre = xml.createCDATASection(htmldataTitre);
+        const cdataDesc = xml.createCDATASection(htmldataDesc);
 
         propTitre.appendChild(cdataTitre);
         propDesc.appendChild(cdataDesc);
