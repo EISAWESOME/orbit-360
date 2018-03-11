@@ -1,4 +1,4 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1314c96582d940ad9b025e63df68760e)](https://www.codacy.com/app/EISAWESOME/orbit-360?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=EISAWESOME/orbit-360&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1314c96582d940ad9b025e63df68760e)](https://www.codacy.com/app/EISAWESOME/orbit-360?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=EISAWESOME/orbit-360&amp;utm_campaign=Badge_Grade)  [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
 # Orbit 
 Projet HTML5 de visualisation 360 d'un objet à partir d'un grand nombre de photographies
