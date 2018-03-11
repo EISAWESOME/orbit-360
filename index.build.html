@@ -20,22 +20,21 @@
   <meta name="theme-color" content="#ffffff">
 
   <title>Orbit</title>
-
-
-  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  
   <script src="./lib/cssrelpreload.min.js"></script>
   
   <link rel="preload" href="./styles/styles.min.css" as="style" onload="this.rel='stylesheet'">
   <link rel="preload" href="./styles/angular-material.min.css" as="style" onload="this.rel='stylesheet'">
   <link rel="preload" href="./lib/font-awesome/css/font-awesome.min.css" as="style" onload="this.rel='stylesheet'">
   <link rel="preload" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" as="style" onload="this.rel='stylesheet'">
+  <link rel="preload"href="https://fonts.googleapis.com/css?family=Roboto" as="style" onload="this.rel='stylesheet'">
 
   <noscript>
     <h1 style="text-align:center">You need to enable JavaScript to use this app</h1>
   </noscript>
 </head>
 
-<body ng-controller="OrbitCtrl as orbit" ng-keyup="keymove($event);">
+<body ng-controller="OrbitCtrl" ng-keyup="keymove($event);">
 
   <h1 style="position: absolute; color: rgba(255, 255, 255, 0.603); z-index: 2; width: 100vw; height: 200px; top: 50%; left: 50%; text-align: center; margin-top: -100px; margin-left: -50vw;" 
   id="loadingMessage">Bienvenue à Orbit 360 ...</h1>
@@ -64,7 +63,7 @@
   <script src="./bundle.min.js"></script>
 
   <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase-app.js"></script>
   <script>
     // Initialize Firebase
     var config = {

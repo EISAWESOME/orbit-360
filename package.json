@@ -8,7 +8,9 @@
   "license": "Creative Common BY NC SA",
   "private": true,
   "scripts": {
-    "start": "gulp build-n-serve"
+    "build" : "gulp build",
+    "serve-s": "gulp ws-dev",
+    "serve-b": "gulp ws-build"
   },
   "dependencies": {
     "angular": "^1.6.9",

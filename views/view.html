@@ -19,12 +19,12 @@
 
   <div layout="column" class="canvasControls">
 
-    <div class="nofocus canvasButton" ng-click="zoomIn(); deleteAllPop()">
+    <div class="nofocus canvasButton" ng-click="zoomIn(); deleteAllPop()" alt="Zoom+">
       <!--<md-tooltip md-direction="left" md-delay="0.8">Zoom +</md-tooltip> -->
       <i class="fa fa-search-plus"></i>
     </div>
 
-    <div class="nofocus canvasButton" ng-click="zoomOut(); deleteAllPop()">
+    <div class="nofocus canvasButton" ng-click="zoomOut(); deleteAllPop()" alt="Zoom-">
       <!--  <md-tooltip md-direction="left" md-delay="0.8">Zoom -</md-tooltip> -->
       <i class="fa fa-search-minus"></i>
     </div>
@@ -32,12 +32,12 @@
     <div id="separateur"></div>
 
 
-    <div class="nofocus canvasButton" ng-click="toggleLeft(); deleteAllPop()">
+    <div class="nofocus canvasButton" ng-click="toggleLeft(); deleteAllPop()" alt="Ouvrir/Fermer menu">
       <!-- <md-tooltip md-direction="left" md-delay="0.8">Ouvrir/Fermer le menu</md-tooltip> -->
       <i class="fa fa-bars"></i>
     </div>
 
-    <div class="nofocus canvasButton" ng-click="editMode()">
+    <div class="nofocus canvasButton" ng-click="editMode()" alt="Mode édition">
       <!-- <md-tooltip md-direction="left" md-delay="0.8">Mode édition</md-tooltip> -->
       <i class="fa fa-pencil-square-o" ng-class="{'canvas-icon-selected' : isEditMode, 'canvas-icon' : !isEditMode }"></i>
     </div>
