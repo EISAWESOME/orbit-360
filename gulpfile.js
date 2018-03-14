@@ -19,6 +19,7 @@ gulp.task('index', function () {
 gulp.task('root', function () {
   return gulp.src([
     'sw.js',
+    '404.html',
     'orbit360.webmanifest',
     'robots.txt'
   ])

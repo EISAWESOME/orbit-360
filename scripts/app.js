@@ -16,7 +16,7 @@ const ob = angular.module('Orbit', [
  * -Finir la gestion du localStorage **DONE**
  *
  * UNE FOIS QUE TOUT CA EST FAIT
- * Faire un bundle de JS => Pas trop possible, il faudrait port en ES6
+ * Faire un bundle de JS
  *  rediger la doc v2
  *
  *  * TODO v2.1

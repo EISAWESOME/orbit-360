@@ -45,6 +45,9 @@
       // Initalisation de l'id des tooltip
       $scope.id = storageService.getId();
       //
+      //$scope.models = storageService.getModels();
+
+      $scope.selectedModel = '';
 
       $scope.lookupAngle = {};
       $scope.matchedTt = null;
@@ -72,7 +75,7 @@
       $scope.currentCursor = 'default';
       //
 
-      // Variables lié au tooltips
+      // Variables lié aux tooltips
       $scope.tooltips = storageService.getTooltips();
       $scope.tooltip = null;
       $scope.tooltipTitre = '';

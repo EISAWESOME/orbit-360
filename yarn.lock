@@ -94,6 +94,10 @@ angular-resource@^1.6.9:
   version "1.6.9"
   resolved "https://registry.yarnpkg.com/angular-resource/-/angular-resource-1.6.9.tgz#d02334b7cb96353e245966ad044c0c673df7b685"
 
+angular-route@^1.6.9:
+  version "1.6.9"
+  resolved "https://registry.yarnpkg.com/angular-route/-/angular-route-1.6.9.tgz#73c63cec6a8a6b924698aec635eac32aa41f5e2b"
+
 angular-ui-bootstrap@^2.5.6:
   version "2.5.6"
   resolved "https://registry.yarnpkg.com/angular-ui-bootstrap/-/angular-ui-bootstrap-2.5.6.tgz#23937322ec641a6fbee16498cc32452aa199e7c5"

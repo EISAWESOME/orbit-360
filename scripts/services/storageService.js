@@ -26,33 +26,26 @@
         return currentIdTooltip;
       };
 
-      /*
-      this.setId = (_xml) => {
-        xml = _xml;
-      };*/
-
       this.getTooltips = () => {
         return tooltips;
       };
-
-      /*
-      this.setTooltips = (_xml) => {
-        xml = _xml;
-      };*/
 
       //url: '../hyracotherium_pied-a-4-doigts/',
       //url: '../Axinite_prenite_epidote/',
       this.determineUrl = () => {
         //Si la paremetre url est renseigné
-
         /*
+        const path = '../models/' + $location.search().model + '/';
         if ($location.search().model) {
-          return '../' + $location.search().model + '/';
-        }
-        //Sinon on charge l'amonite par défaut
-        else {
-          */
-        return '../amonite/';
+          $http.get(path).then(() => {
+            console.log('Ok alt');
+            return path;
+          }, () => {
+            console.log('Default');
+            return '../models/amonite/';
+          });
+        } else {*/
+        return '../models/amonite/'; //Sinon on charge l'amonite par défaut
         //}
       };
 
@@ -117,7 +110,6 @@
                 ) {
                   titre = colProperties[i].textContent;
                 }
-
                 if (
                   colProperties[i].getAttribute('name') === 'description' &&
                   !description
@@ -182,10 +174,20 @@
       this.loadLocalStorage = () => {
         if (typeof (Storage) !== 'undefined') {
           currentIdTooltip = 0;
+          // TODO : Changer le 'p' -> prefix du model
           while (localStorage.getItem(`p${currentIdTooltip}`) && localStorage.getItem(`p${currentIdTooltip}`) != '') {
             let stringPi = localStorage.getItem(`p${currentIdTooltip}`);
-            const parser = new DOMParser();
-            const docPi = parser.parseFromString(stringPi, 'text/xml');
+            let docPi;
+            if (window.DOMParser) {
+              const parser = new DOMParser();
+              docPi = parser.parseFromString(stringPi, 'text/xml');
+            } else {
+              // IE
+              docPi = new ActiveXObject('Microsoft.XMLDOM');
+              docPi.async = 'false';
+              docPi.loadXML(stringPi);
+            }
+
             const elmPi = docPi.getElementsByTagName('PointInteret')[0];
 
             //Ajoute le point dans le XML

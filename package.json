@@ -8,7 +8,7 @@
   "license": "Creative Common BY NC SA",
   "private": true,
   "scripts": {
-    "build" : "gulp build",
+    "build": "gulp build",
     "serve-s": "gulp ws-dev",
     "serve-b": "gulp ws-build"
   },
