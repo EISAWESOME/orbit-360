@@ -1,4 +1,8 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1314c96582d940ad9b025e63df68760e)](https://www.codacy.com/app/EISAWESOME/orbit-360?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=EISAWESOME/orbit-360&amp;utm_campaign=Badge_Grade)  [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)  [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1314c96582d940ad9b025e63df68760e)](https://www.codacy.com/app/EISAWESOME/orbit-360?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=EISAWESOME/orbit-360&amp;utm_campaign=Badge_Grade) [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FEISAWESOME%2Forbit-360.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FEISAWESOME%2Forbit-360?ref=badge_shield)
+ [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)  [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FEISAWESOME%2Forbit-360.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FEISAWESOME%2Forbit-360?ref=badge_large)
 
 # Orbit v2
 Projet HTML5 de visualisation 360 d'un objet à partir d'un grand nombre de photographies
@@ -41,4 +45,3 @@ L'application est optimisée pour les appareil tactiles, et responsive.
 # Documentation
 
 Plus d'informations concernant l'utilisation de l'application sont disponibles dans le fichier ORBIT Manuel.pdf
-
